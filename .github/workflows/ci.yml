@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: bash scripts/ci/contracts-gate.sh
+      - run: pnpm --filter @vettrack/contracts exec tsc --noEmit
+      - run: pnpm --filter vettrack-expo exec tsc --noEmit
+      # - run: pnpm test   # enable after vitest scaffold

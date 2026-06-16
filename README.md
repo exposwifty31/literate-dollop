@@ -1,6 +1,8 @@
-# literate-dollop — VetTrack Expo (Horizon 1+)
+# literate-dollop — VetTrack Expo (canonical mobile repo)
 
-Expo / React Native shell for VetTrack mobile. Runs **alongside** the Capacitor app in [vettrack](https://github.com/exposwifty31/vettrack) until workflow parity and internal beta gates pass.
+**This repo is the source of truth** for VetTrack mobile strategy, `@vettrack/contracts`, Expo CI, and Phases 1–6.
+
+The production Capacitor app lives in **local** `~/vettrack` (GitLab maintenance only — not on GitHub). Use it read-only for port references.
 
 ## Stack
 
@@ -9,52 +11,80 @@ Expo / React Native shell for VetTrack mobile. Runs **alongside** the Capacitor 
 | Expo SDK | 56 (RN 0.85, New Architecture default) |
 | Navigation | Expo Router + typed routes |
 | Dev workflow | `expo-dev-client` + EAS Build |
-| Package manager | **pnpm 9.15.9** (match vettrack) |
-| Bundle IDs | `uk.vettrack.expo` (iOS/Android) — **not** `uk.vettrack.app` so Capacitor Build 14 and Expo can coexist on one device |
+| Package manager | **pnpm 9.15.9** |
+| Monorepo | `packages/contracts` + `apps/expo` |
+| Bundle IDs | `uk.vettrack.expo` — parallel to Capacitor `uk.vettrack.app` |
+
+## Repo layout
+
+```
+packages/contracts/     @vettrack/contracts — shared types (emergency + pending-sync)
+apps/expo/              Expo Router app
+docs/plans/             Mobile strategy master plan
+docs/adr/               Architecture decisions (ADR 001: expo-sqlite)
+.agents/skills/expo/    Agent skills for EAS, plugins, Clerk RN
+scripts/ci/             contracts-gate.sh
+```
 
 ## Prerequisites
 
-- Node.js 22+
+- Node.js 22+ (see `.nvmrc`)
 - [EAS CLI](https://docs.expo.dev/build/setup/): `pnpm add -g eas-cli`
-- Expo account linked: `eas login` then `eas init` (writes `extra.eas.projectId` into `app.config.ts`)
+- Expo account: `eas login` then `eas init`
+
+## Commands
+
+```bash
+pnpm install --frozen-lockfile
+pnpm contracts:gate
+pnpm --filter vettrack-expo start
+pnpm --filter vettrack-expo exec tsc --noEmit
+```
 
 ## Local development
 
 ```bash
-pnpm install
-cp .env.example .env
-pnpm start
+cp apps/expo/.env.example apps/expo/.env
+pnpm --filter vettrack-expo start
 ```
 
-Use a **development build** (not Expo Go) for anything touching NFC, push, or custom native code:
+Use a **development build** (not Expo Go) for NFC, push, or custom native code:
 
 ```bash
-eas build --profile development --platform ios
-# or
-eas build --profile development --platform android
+cd apps/expo && eas build --profile development --platform ios
 ```
 
 ## EAS profiles
 
 | Profile | Purpose |
 |---------|---------|
-| `development` | Dev client, internal distribution, `development` update channel |
-| `preview` | Internal QA APK/IPA, `preview` channel |
-| `production` | Store-bound binaries, fingerprint runtime version, auto-increment |
+| `development` | Dev client, internal distribution |
+| `preview` | Internal QA APK/IPA |
+| `production` | Store-bound binaries |
 
 ## Deep links
 
 - Custom scheme: `vettrack://`
-- Universal / app links: `https://vettrack.uk/app/*` (requires hosted `apple-app-site-association` + `assetlinks.json`)
+- Universal links: `https://vettrack.uk/app/*`
 
-## Migration phases (from master plan)
+## Migration phases
 
-1. **Done** — Bootstrap (`15a3b48`), EAS skeleton, ADR 001 offline storage (`b44db8e`)
-2. **Now** — pnpm lockfile commit, shared `@vettrack/contracts`, Clerk RN auth
-3. **Next** — NFC (`react-native-nfc-manager`), offline adapter implementation
-4. **Later** — SwiftUI `VetTrackControl` via config plugin, push (`expo-notifications`)
-5. **Gate** — Internal TestFlight / Play internal before public Capacitor retirement
+See [docs/plans/mobile-strategy-master.md](docs/plans/mobile-strategy-master.md).
 
-## Related VetTrack docs
+| Phase | Status |
+|-------|--------|
+| PR1 | Monorepo bootstrap + contracts + CI |
+| 1 | PendingSyncStore, emergency seam, Clerk Expo |
+| 2 | VetTrackControl config plugin |
+| 3 | NFC clinical vertical slice |
+| 6 | Capacitor kill-switch decision |
 
-Capacitor resubmission and NFC ship checklist live in the main `vettrack` repo under `docs/mobile/` and `RESUBMISSION_RUNBOOK.md`.
+## Agent context
+
+See [AGENTS.md](AGENTS.md) for agent quickstart, port references, and frozen doctrine.
+
+## Consuming contracts from local vettrack (optional)
+
+```json
+"@vettrack/contracts": "github:exposwifty31/literate-dollop#path:packages/contracts&branch=main"
+```
