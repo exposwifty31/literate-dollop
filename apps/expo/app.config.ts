@@ -59,7 +59,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   extra: {
     appEnv: APP_ENV,
     eas: {
-      projectId: process.env.EAS_PROJECT_ID,
+      projectId: process.env.EAS_PROJECT_ID ?? "5ec536d8-f991-4779-88d7-c1b7fa595cb5",
     },
   },
   updates: {

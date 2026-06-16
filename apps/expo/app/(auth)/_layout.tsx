@@ -1,14 +1,10 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { Redirect, Slot } from 'expo-router';
 
-const hasClerkPublishableKey = Boolean(process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY);
+import { isClerkActive } from '@/lib/auth/clerk-config';
 
-export default function AuthLayout() {
+function AuthLayoutWithClerk() {
   const { isSignedIn, isLoaded } = useAuth();
-
-  if (!hasClerkPublishableKey) {
-    return <Slot />;
-  }
 
   if (!isLoaded) {
     return null;
@@ -19,4 +15,12 @@ export default function AuthLayout() {
   }
 
   return <Slot />;
+}
+
+export default function AuthLayout() {
+  if (!isClerkActive) {
+    return <Slot />;
+  }
+
+  return <AuthLayoutWithClerk />;
 }

@@ -256,20 +256,3 @@ export class PendingSyncStore {
     await this.db.runAsync("DELETE FROM pending_sync WHERE status = 'synced'");
   }
 }
-
-export function wrapExpoSqlite(db: {
-  execAsync(sql: string): Promise<void>;
-  runAsync(sql: string, ...params: unknown[]): Promise<SqlRunResult>;
-  getFirstAsync<T>(sql: string, ...params: unknown[]): Promise<T | null>;
-  getAllAsync<T>(sql: string, ...params: unknown[]): Promise<T[]>;
-}): SqlExecutor {
-  return db;
-}
-
-export async function openPendingSyncStore(): Promise<PendingSyncStore> {
-  const SQLite = await import("expo-sqlite");
-  const db = await SQLite.openDatabaseAsync("vettrack-pending-sync.db");
-  const store = new PendingSyncStore(wrapExpoSqlite(db));
-  await store.init();
-  return store;
-}

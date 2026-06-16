@@ -3,9 +3,13 @@ import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-const hasClerkPublishableKey = Boolean(process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY);
+import {
+  clerkApiEnvMismatchWarning,
+  isClerkActive,
+  isClerkConfigured,
+} from "@/lib/auth/clerk-config";
 
-export default function SignInScreen() {
+function ClerkSignInForm() {
   const router = useRouter();
   const { signIn, setActive, isLoaded } = useSignIn();
   const [email, setEmail] = useState("");
@@ -29,7 +33,13 @@ export default function SignInScreen() {
         setError("Additional verification required — complete sign-in in Clerk dashboard.");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Sign-in failed");
+      const message = err instanceof Error ? err.message : "Sign-in failed";
+      const mismatch = clerkApiEnvMismatchWarning();
+      if (mismatch && /couldn't find your account/i.test(message)) {
+        setError(`${message} Check apps/expo/.env — ${mismatch}`);
+      } else {
+        setError(message);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -69,13 +79,28 @@ export default function SignInScreen() {
           <Text style={styles.buttonText}>Sign in</Text>
         )}
       </Pressable>
-      {!hasClerkPublishableKey ? (
+    </View>
+  );
+}
+
+export default function SignInScreen() {
+  if (!isClerkActive) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>VetTrack</Text>
+        <Text style={styles.body}>
+          {isClerkConfigured
+            ? "Sign-in requires an iOS or Android development build (not web preview)."
+            : "Clerk is not configured. Set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in apps/expo/.env."}
+        </Text>
         <Link href="/(app)/(tabs)" style={styles.skip}>
           Continue without Clerk (dev)
         </Link>
-      ) : null}
-    </View>
-  );
+      </View>
+    );
+  }
+
+  return <ClerkSignInForm />;
 }
 
 const styles = StyleSheet.create({
@@ -89,6 +114,10 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 8,
+  },
+  body: {
+    fontSize: 16,
+    lineHeight: 22,
   },
   input: {
     borderWidth: 1,

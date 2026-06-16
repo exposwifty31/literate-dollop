@@ -7,6 +7,7 @@
     "contracts:gate": "bash scripts/ci/contracts-gate.sh"
   },
   "devDependencies": {
+    "eas-cli": "^20.2.0",
     "typescript": "~6.0.3",
     "vitest": "^3.2.4"
   }

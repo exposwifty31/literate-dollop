@@ -1,9 +1,7 @@
 import type { PendingSyncCreateInput } from "@vettrack/contracts";
 import { assertPendingSyncEnqueueAllowed } from "@/lib/offline-policy";
-import {
-  openPendingSyncStore,
-  type PendingSyncStore,
-} from "@/lib/offline/pending-sync-store";
+import { openPendingSyncStore } from "@/lib/offline/open-pending-sync-store";
+import type { PendingSyncStore } from "@/lib/offline/pending-sync-store";
 
 let storePromise: Promise<PendingSyncStore> | null = null;
 

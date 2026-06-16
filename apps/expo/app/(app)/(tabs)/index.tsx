@@ -1,14 +1,50 @@
-import { StyleSheet } from 'react-native';
+import { useAuth, useUser } from "@clerk/clerk-expo";
+import { StyleSheet, Text, View } from "react-native";
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import { isClerkActive } from "@/lib/auth/clerk-config";
 
-export default function TabOneScreen() {
+const PHASE_1_ITEMS = [
+  "@vettrack/contracts wired",
+  "PendingSyncStore + offline seam",
+  "Clerk sign-in + /api/users/me",
+] as const;
+
+function SignedInHome() {
+  const { user } = useUser();
+
+  return (
+    <Text style={styles.subtitle} testID="home-signed-in-email">
+      Signed in as {user?.primaryEmailAddress?.emailAddress ?? "unknown"}
+    </Text>
+  );
+}
+
+function ClerkSignedInBanner() {
+  const { isSignedIn } = useAuth();
+  if (!isSignedIn) return null;
+  return <SignedInHome />;
+}
+
+export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(app)/(tabs)/index.tsx" />
+      <Text style={styles.title}>VetTrack</Text>
+      <Text style={styles.subtitle}>Expo mobile — Phase 1 foundation</Text>
+
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Exit criteria</Text>
+        {PHASE_1_ITEMS.map((item) => (
+          <Text key={item} style={styles.bullet}>
+            • {item}
+          </Text>
+        ))}
+      </View>
+
+      {isClerkActive ? <ClerkSignedInBanner /> : null}
+
+      <Text style={styles.hint}>
+        Use the Account tab to verify API auth or sign out. Product routes ship in Phase 3+.
+      </Text>
     </View>
   );
 }
@@ -16,16 +52,37 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    gap: 16,
+    padding: 24,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: "700",
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  subtitle: {
+    color: "#687076",
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  card: {
+    backgroundColor: "#f4f6f8",
+    borderRadius: 12,
+    gap: 8,
+    padding: 16,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  bullet: {
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  hint: {
+    color: "#687076",
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: 8,
   },
 });

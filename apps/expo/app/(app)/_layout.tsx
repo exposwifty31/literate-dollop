@@ -1,24 +1,34 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { Redirect, Stack } from 'expo-router';
 
-const hasClerkPublishableKey = Boolean(process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY);
+import { isClerkActive } from '@/lib/auth/clerk-config';
 
-export default function AppLayout() {
-  const { isSignedIn, isLoaded } = useAuth();
-
-  if (hasClerkPublishableKey) {
-    if (!isLoaded) {
-      return null;
-    }
-    if (!isSignedIn) {
-      return <Redirect href="/(auth)/sign-in" />;
-    }
-  }
-
+function AppStack() {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
     </Stack>
   );
+}
+
+function AppLayoutWithClerk() {
+  const { isSignedIn, isLoaded } = useAuth();
+
+  if (!isLoaded) {
+    return null;
+  }
+
+  if (!isSignedIn) {
+    return <Redirect href="/(auth)/sign-in" />;
+  }
+
+  return <AppStack />;
+}
+
+export default function AppLayout() {
+  if (!isClerkActive) {
+    return <AppStack />;
+  }
+
+  return <AppLayoutWithClerk />;
 }
