@@ -22,7 +22,7 @@ export interface OfflineRequestOptions {
   optimisticResult?: unknown;
 }
 
-export class ApiError extends Error {
+class ApiError extends Error {
   status: number;
   code?: string;
 
@@ -40,7 +40,7 @@ function resolveApiUrl(path: string): string {
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-export async function buildRequestHeaders(
+async function buildRequestHeaders(
   init: RequestInit = {},
 ): Promise<Record<string, string>> {
   const auth = await getAuthHeaders();

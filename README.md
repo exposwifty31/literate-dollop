@@ -29,7 +29,7 @@ scripts/ci/             contracts-gate.sh
 ## Prerequisites
 
 - Node.js 22+ (see `.nvmrc`)
-- [EAS CLI](https://docs.expo.dev/build/setup/): `pnpm add -g eas-cli`
+- [EAS CLI](https://docs.expo.dev/build/setup/): `pnpm dlx eas-cli` (no repo install required)
 - Expo account: `eas login` then `eas init`
 
 ## Commands
