@@ -33,7 +33,7 @@ export default function TabLayout() {
             />
           ),
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href="/(app)/modal" asChild>
               <Pressable style={{ marginRight: 15 }}>
                 {({ pressed }) => (
                   <SymbolView
@@ -45,6 +45,23 @@ export default function TabLayout() {
                 )}
               </Pressable>
             </Link>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="auth"
+        options={{
+          title: 'Auth',
+          tabBarIcon: ({ color }) => (
+            <SymbolView
+              name={{
+                ios: 'person.crop.circle',
+                android: 'person',
+                web: 'person',
+              }}
+              tintColor={color}
+              size={28}
+            />
           ),
         }}
       />

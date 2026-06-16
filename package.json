@@ -5,5 +5,9 @@
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run",
     "contracts:gate": "bash scripts/ci/contracts-gate.sh"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "vitest": "^3.2.4"
   }
 }
