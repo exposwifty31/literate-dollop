@@ -5,7 +5,7 @@ import type { PendingSyncStore } from "@/lib/offline/pending-sync-store";
 
 let storePromise: Promise<PendingSyncStore> | null = null;
 
-export async function getPendingSyncStore(): Promise<PendingSyncStore> {
+async function getPendingSyncStore(): Promise<PendingSyncStore> {
   if (!storePromise) {
     storePromise = openPendingSyncStore();
   }
@@ -34,14 +34,4 @@ export async function addPendingSync(op: PendingSyncCreateInput): Promise<number
 export async function getAllPendingSync() {
   const store = await getPendingSyncStore();
   return store.getAllPendingSync();
-}
-
-export async function recoverProcessingPendingSync(): Promise<number> {
-  const store = await getPendingSyncStore();
-  return store.recoverProcessingPendingSync();
-}
-
-export async function runStartupCleanup(): Promise<void> {
-  const store = await getPendingSyncStore();
-  return store.runStartupCleanup();
 }

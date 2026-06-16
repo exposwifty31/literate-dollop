@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 const rawClerkKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim() ?? "";
 
 /** Reject secret keys — Clerk publishable keys are pk_test_* / pk_live_* only. */
-export function assertValidClerkPublishableKey(key: string): string {
+function assertValidClerkPublishableKey(key: string): string {
   if (!key) return "";
   if (key.startsWith("sk_")) {
     throw new Error(
@@ -50,6 +50,3 @@ export const isClerkConfigured = clerkPublishableKey.length > 0;
  * Expo web preview skips Clerk (Phase 1 — use a development build on device).
  */
 export const isClerkActive = isClerkConfigured && Platform.OS !== "web";
-
-/** @deprecated Use isClerkActive for runtime gates; isClerkConfigured for env checks. */
-export const isClerkEnabled = isClerkActive;
