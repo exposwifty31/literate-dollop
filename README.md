@@ -20,8 +20,14 @@ The production Capacitor app lives in **local** `~/vettrack` (GitLab maintenance
 ```
 packages/contracts/     @vettrack/contracts — shared types (emergency + pending-sync)
 apps/expo/              Expo Router app
+  locales/              i18n dictionaries (en/he; Hebrew default)
+  src/lib/              api, offline seam, i18n (+ i18n-core/)
+  src/types/            domain types ported from vettrack (+ shared/ pure-type deps)
+  src/features/         feature logic (UI rebuilt native, not ported)
+plugins/vettrack-control/  Phase 2 native module home (scaffold)
 docs/plans/             Mobile strategy master plan
 docs/adr/               Architecture decisions (ADR 001: expo-sqlite)
+docs/porting-status.md  What's imported from vettrack vs deferred (milestone 1)
 .agents/skills/expo/    Agent skills for EAS, plugins, Clerk RN
 scripts/ci/             contracts-gate.sh
 ```

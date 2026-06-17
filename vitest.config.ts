@@ -9,6 +9,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@/lib": path.resolve(__dirname, "apps/expo/src/lib"),
+      "@/features": path.resolve(__dirname, "apps/expo/src/features"),
+      "@/types": path.resolve(__dirname, "apps/expo/src/types"),
       "@vettrack/contracts": path.resolve(__dirname, "packages/contracts/src/index.ts"),
       "@react-native-async-storage/async-storage": path.resolve(
         __dirname,

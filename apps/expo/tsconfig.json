@@ -8,6 +8,18 @@
       ],
       "@/lib/*": [
         "./src/lib/*"
+      ],
+      "@/types": [
+        "./src/types/index.ts"
+      ],
+      "@/types/*": [
+        "./src/types/*"
+      ],
+      "@/features/*": [
+        "./src/features/*"
+      ],
+      "@/hooks/*": [
+        "./src/hooks/*"
       ]
     }
   },
