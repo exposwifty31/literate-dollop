@@ -55,25 +55,35 @@ The engine drains the same `PendingSyncStore` that `api.request()` enqueues into
 
 ---
 
-## ⏸ Deferred (with reason + port notes)
+### Hooks layer (`claude/expo-port-api-sync-engine`, third pass)
 
-These are entangled with the two heavy modules and/or need an RN rewrite or a
-dependency not yet in `apps/expo`. Port them in the follow-up that lands
-`api.ts` + `sync-engine.ts`.
+All previously-deferred hooks/features are now ported. Added dep:
+`@tanstack/react-query`. New seams keep native concerns out of the logic layer.
 
-| Item | vettrack source | Blocking reason | Port note |
-|------|-----------------|-----------------|-----------|
-| api.ts typed catalog | `src/lib/api.ts` (1042 l) | incremental, not blocking | request core already ported; port the typed endpoint wrappers per hook/screen as needed |
-| use-auth | `src/hooks/use-auth.tsx` | uses `@clerk/clerk-react`, `@tanstack/react-query`; needs `offline-session` | swap to `@clerk/clerk-expo`; provide a query-client seam; populate `auth-store` + `setAuthStateRef`; port `offline-session` onto AsyncStorage |
-| use-sync | `src/hooks/use-sync.tsx` | `sync-engine` now available, but imports `dexie` `liveQuery` + needs a reactive store layer | wrap `onSyncStateChange`/`getSyncProgress` + `subscribeConflicts` in a hook; replace `liveQuery` with a store-change subscription |
-| use-push-notifications | `src/hooks/use-push-notifications.tsx` | web push / service worker | **rewrite** on `expo-notifications` (not a port) |
-| use-settings | `src/hooks/use-settings.tsx` | DOM theming (`document.classList`, `body.style`) | rewrite as RN theme context; reuse `setStoredLocale`/`applyLocaleDirection` |
-| useShiftChat | `src/features/shift-chat/hooks/useShiftChat.ts` | `@tanstack/react-query`, `sonner`, `shift-chat/api`→`api.ts` | port after `api.ts`; add query-client + toast seam |
-| shift-chat/api | `src/features/shift-chat/api.ts` | imports `@/lib/api` | trivial once `api.ts` lands |
-| useAutoSelectOrg | `src/features/auth/hooks/useAutoSelectOrg.ts` | `@clerk/clerk-react` org API + `capacitor-runtime` | re-express with `@clerk/clerk-expo`; drop Capacitor branch |
+| Item | vettrack source | adaptation |
+|------|-----------------|------------|
+| use-auth | `src/hooks/use-auth.tsx` | `@clerk/clerk-react`→`@clerk/clerk-expo`; `import.meta.env.VITE_*`→`process.env.EXPO_PUBLIC_*`; `window`/`safeReloadPage`/offline-sync-telemetry dropped; clinicId+role still server-derived |
+| use-sync | `src/hooks/use-sync.tsx` | Dexie `liveQuery`→`subscribeQueueChange` + `subscribeConflicts` re-read; engine seams |
+| use-settings | `src/hooks/use-settings.tsx` | DOM theming dropped (RN reads settings from context); keeps locale apply via `I18nManager` |
+| use-push-notifications | `src/hooks/use-push-notifications.tsx` | Web-Push/Service-Worker → `@/lib/push-provider` token seam (app wires `expo-notifications`); server `/api/push/*` contract preserved |
+| useShiftChat | `src/features/shift-chat/hooks/useShiftChat.ts` | `sonner`→`@/lib/toast` seam; react-query polling kept (no SSE pre-Phase 6) |
+| shift-chat/api | `src/features/shift-chat/api.ts` | copied verbatim (uses ported `@/lib/api` `request`) |
+| useAutoSelectOrg | `src/features/auth/hooks/useAutoSelectOrg.ts` | `@clerk/clerk-expo`; Capacitor URL-loop guard dropped (N/A in RN) |
+
+Support modules added: `auth-fetch`, `offline-session`, `user-settings-storage`,
+`local-entity-sync-state`, `safe-storage` (sync-over-AsyncStorage shim),
+`toast` seam, `push-provider` seam; `api.ts` gained `authFetchUsersMe` /
+`authPostUsersSync` / `bootstrapFetchWithTimeout`; `pending-sync-queue` gained a
+`subscribeQueueChange` emitter. Tests added: `local-entity-sync-state`,
+`auth-store`. **Suite: 56 pass · tsc clean · contracts:gate green.**
+
+**App-wiring TODO** (outside the logic layer): mount `QueryClientProvider` +
+`ClerkProvider`; call `hydrateSafeStorage()` + `hydrateStoredLocale()` at startup;
+`setToastHandler(...)`, `setPushProvider(...)` (expo-notifications),
+`initSyncEngine({ notifier, reporter, ... })`, and a NetInfo `subscribeOnline`.
 
 UI components (`*.tsx` under `src/features/*/components`, e.g. `DispenseSheet`,
-`ShiftChatPanel`) are **out of scope** — rebuilt native, not ported.
+`ShiftChatPanel`) remain **out of scope** — rebuilt native, not ported.
 
 ---
 

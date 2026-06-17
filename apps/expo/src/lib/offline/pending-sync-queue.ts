@@ -5,6 +5,30 @@ import type { PendingSyncStore } from "@/lib/offline/pending-sync-store";
 
 let storePromise: Promise<PendingSyncStore> | null = null;
 
+/**
+ * Queue-change notifier — replaces the web Dexie `liveQuery` reactivity.
+ * `use-sync` subscribes here and re-reads `getAllPendingSync()` to refresh the
+ * queue UI on enqueue / status transitions.
+ */
+const queueChangeListeners = new Set<() => void>();
+
+export function subscribeQueueChange(listener: () => void): () => void {
+  queueChangeListeners.add(listener);
+  return () => {
+    queueChangeListeners.delete(listener);
+  };
+}
+
+function notifyQueueChange(): void {
+  queueChangeListeners.forEach((fn) => {
+    try {
+      fn();
+    } catch {
+      // a listener throwing must not break queue mutations
+    }
+  });
+}
+
 async function getPendingSyncStore(): Promise<PendingSyncStore> {
   if (!storePromise) {
     storePromise = openPendingSyncStore();
@@ -28,7 +52,9 @@ export async function addPendingSync(op: PendingSyncCreateInput): Promise<number
     method: op.method,
   });
   const store = await getPendingSyncStore();
-  return store.addPendingSync(op);
+  const id = await store.addPendingSync(op);
+  notifyQueueChange();
+  return id;
 }
 
 export async function getAllPendingSync() {
@@ -49,17 +75,21 @@ export async function getPendingSyncById(id: number): Promise<PendingSync | unde
 
 export async function updatePendingSync(id: number, patch: Partial<PendingSync>): Promise<void> {
   const store = await getPendingSyncStore();
-  return store.updatePendingSync(id, patch);
+  await store.updatePendingSync(id, patch);
+  notifyQueueChange();
 }
 
 export async function removePendingSync(id: number): Promise<void> {
   const store = await getPendingSyncStore();
-  return store.removePendingSync(id);
+  await store.removePendingSync(id);
+  notifyQueueChange();
 }
 
 export async function recoverProcessingPendingSync(): Promise<number> {
   const store = await getPendingSyncStore();
-  return store.recoverProcessingPendingSync();
+  const count = await store.recoverProcessingPendingSync();
+  notifyQueueChange();
+  return count;
 }
 
 export async function runStartupCleanup(): Promise<void> {

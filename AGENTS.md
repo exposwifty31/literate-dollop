@@ -53,17 +53,18 @@ plugins/vettrack-control/           # Phase 2 native module home (scaffold only)
 
 Path aliases: `@/lib/*`, `@/types`, `@/types/*`, `@/features/*`, `@/hooks/*`.
 
-Heavy modules ported on `claude/expo-port-api-sync-engine`: **sync-engine** (offline
-replay on `PendingSyncStore`, seam-based) + support (`api-origin`, `auth-store`,
-`conflict-store`); `api.ts` request core was already present (typed endpoint catalog
-ported incrementally). **Still deferred:** `use-auth`, `use-sync`,
-`use-push-notifications`, `use-settings`, `useShiftChat`, `shift-chat/api`,
-`useAutoSelectOrg` — each needs a DOM→RN rewrite or a lib not in the Expo dep set
-(`@tanstack/react-query`, `sonner`, `@clerk/clerk-react`, `dexie`). See the
-porting-status doc.
+Logic-layer import is **complete** on `claude/expo-port-api-sync-engine`:
+sync-engine + support (`api-origin`, `auth-store`, `conflict-store`) and the full
+hooks layer (`use-auth`, `use-sync`, `use-settings`, `use-push-notifications`,
+`useShiftChat`, `shift-chat/api`, `useAutoSelectOrg`) plus support
+(`auth-fetch`, `offline-session`, `user-settings-storage`, `local-entity-sync-state`,
+`safe-storage`, `toast`/`push-provider` seams). Added dep: `@tanstack/react-query`.
 
-To wire the engine: `initSyncEngine({ notifier, reporter, invalidateQueries,
-clearQueries, onAuthHalt, subscribeOnline })` + `setAuthState`/`setAuthStateRef`.
+Native concerns sit behind seams the app must wire at startup: mount
+`QueryClientProvider` + Clerk; `hydrateSafeStorage()` + `hydrateStoredLocale()`;
+`setToastHandler`, `setPushProvider` (expo-notifications), `initSyncEngine({...})`,
+NetInfo `subscribeOnline`, `setAuthState`/`setAuthStateRef`. Only the **web UI**
+(`*.tsx` components/pages) stays out — rebuilt native. See `docs/porting-status.md`.
 
 ## i18n invariant (preserved on import)
 No hardcoded copy in source — text lives only in `locales/*.json`, accessed via `t`.

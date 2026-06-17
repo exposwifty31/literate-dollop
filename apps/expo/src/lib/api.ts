@@ -133,3 +133,45 @@ export type UsersMeResponse = {
 export async function fetchUsersMe(): Promise<UsersMeResponse> {
   return request<UsersMeResponse>("/api/users/me");
 }
+
+const BOOTSTRAP_TIMEOUT_MS = 10_000;
+
+/**
+ * Raw, timeout-bounded fetch that returns the `Response` without throwing on
+ * non-2xx (so the auth layer can branch on 401/403/404). Mirrors the web
+ * `bootstrapFetchWithTimeout` used by the auth provider during sign-in.
+ */
+async function bootstrapFetchWithTimeout(
+  path: string,
+  init: RequestInit = {},
+): Promise<Response> {
+  const headers = await buildRequestHeaders(init);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), BOOTSTRAP_TIMEOUT_MS);
+  try {
+    return await fetch(resolveApiUrl(path), {
+      ...init,
+      headers,
+      signal: init.signal ?? controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function authFetchUsersMe(init: RequestInit = {}): Promise<Response> {
+  return bootstrapFetchWithTimeout("/api/users/me", { credentials: "include", ...init });
+}
+
+export async function authPostUsersSync(
+  body: { clerkId: string; email: string; name: string },
+  init: RequestInit = {},
+): Promise<Response> {
+  const payload = JSON.stringify(body);
+  return bootstrapFetchWithTimeout("/api/users/sync", {
+    credentials: "include",
+    method: "POST",
+    ...init,
+    body: payload,
+  });
+}
