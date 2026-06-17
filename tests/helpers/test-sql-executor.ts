@@ -168,6 +168,12 @@ export function createTestSqlExecutor(): SqlExecutor {
     async getAllAsync<T>(sql: string, ...params: unknown[]): Promise<T[]> {
       const normalized = sql.replace(/\s+/g, " ").trim();
 
+      if (normalized.includes("conflict_payload IS NOT NULL")) {
+        return [...rows]
+          .filter((row) => row.conflict_payload != null)
+          .sort((a, b) => String(a.created_at).localeCompare(String(b.created_at))) as T[];
+      }
+
       if (normalized.includes("ORDER BY created_at ASC")) {
         return [...rows].sort((a, b) =>
           String(a.created_at).localeCompare(String(b.created_at)),

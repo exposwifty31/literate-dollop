@@ -125,6 +125,15 @@ export class PendingSyncStore {
     return rows.map(rowToPendingSync);
   }
 
+  async getConflictRows(): Promise<PendingSync[]> {
+    const rows = await this.db.getAllAsync<PendingSyncRow>(
+      `SELECT * FROM pending_sync
+       WHERE conflict_payload IS NOT NULL
+       ORDER BY created_at ASC`,
+    );
+    return rows.map(rowToPendingSync);
+  }
+
   async addPendingSync(op: PendingSyncCreateInput): Promise<number> {
     const row = materializeRow(op);
 

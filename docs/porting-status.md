@@ -26,6 +26,30 @@ and everything entangled with them to a focused follow-up.
 Tests added: `tests/i18n-interpolate.test.ts`, `tests/restock-session-reducer.test.ts`.
 Path aliases added: `@/types`, `@/types/*`, `@/features/*`, `@/hooks/*` (tsconfig + vitest).
 
+### Follow-up branch (`claude/expo-port-api-sync-engine`)
+
+| Item | vettrack source | destination | notes |
+|------|-----------------|-------------|-------|
+| **sync-engine** | `src/lib/sync-engine.ts` (511 l) | `apps/expo/src/lib/sync-engine.ts` | faithful FIFO/retry/circuit-breaker/crash-recovery port. Dexie→`PendingSyncStore`; `sonner`+i18n→`SyncNotifier` seam; `@sentry/react`→`SyncReporter` seam; `@tanstack/react-query`→`invalidateQueries`/`clearQueries` seams; `navigator.locks` dropped (single-threaded JS); `window` online→`subscribeOnline` seam (NetInfo); **Phase 9 post-sync reconciliation dropped** (realtime-adjacent — no SSE pre-Phase 6) |
+| api-origin | `src/lib/api-origin.ts` | same | `resolveApiUrl` via `EXPO_PUBLIC_API_URL`; existing `api.ts` de-duped onto it |
+| auth-store | `src/lib/auth-store.ts` | same | pure in-memory token/clinic holder — copied verbatim |
+| conflict-store | `src/lib/conflict-store.ts` | same | Dexie reads/writes → `PendingSyncStore`; React `useConflicts` dropped (kept React-free so the engine stays node-testable) — added `subscribeConflicts`/`getConflicts` |
+| store/queue extensions | — | `pending-sync-store.ts`, `offline/pending-sync-queue.ts` | added `getConflictRows`; queue now delegates `getPendingQueue`/`getPendingSyncById`/`updatePendingSync`/`removePendingSync`/`recoverProcessingPendingSync`/`runStartupCleanup`/`getConflictRows` |
+
+Tests added: `tests/sync-engine.test.ts` (replay→synced, conflict, 403→dead,
+401→halt, transient→dead). Total suite: **44 pass**.
+
+**Wiring the seams (app, later):** call `initSyncEngine({ notifier, reporter,
+invalidateQueries, clearQueries, onAuthHalt, subscribeOnline })` once at startup;
+populate `auth-store` (`setAuthState`) + `setAuthStateRef` from the auth layer.
+The engine drains the same `PendingSyncStore` that `api.request()` enqueues into.
+
+> Note: the web `api.ts` "port" is the **request core** — already implemented in
+> `apps/expo/src/lib/api.ts` (`request()` with emergency classifier + offline
+> enqueue). The 1042-line *typed endpoint catalog* is ported incrementally as
+> each hook/screen needs it (it is mechanical typed `request()` wrappers), not
+> dumped wholesale.
+
 **Gates:** `pnpm --filter vettrack-expo exec tsc --noEmit` ✅ · `pnpm test` ✅ (38) ·
 `pnpm contracts:gate` ✅. Contracts were already byte-identical between repos — no merge needed.
 
@@ -39,10 +63,9 @@ dependency not yet in `apps/expo`. Port them in the follow-up that lands
 
 | Item | vettrack source | Blocking reason | Port note |
 |------|-----------------|-----------------|-----------|
-| **api.ts** | `src/lib/api.ts` (1042 l) | heavy module (deferred by decision) | merge into existing `apps/expo/src/lib/api.ts`; strip `offline-db`(Dexie), `sonner`, server `shared/*` runtime imports; keep emergency classifier choke-point |
-| **sync-engine.ts** | `src/lib/sync-engine.ts` (511 l) | heavy module (deferred by decision) | rebind Dexie→`PendingSyncStore` (ADR 001); replace `sonner`/`@sentry/react`/direct `QueryClient` with seams |
-| use-auth | `src/hooks/use-auth.tsx` | depends on `api.ts` + `sync-engine.ts`; uses `@clerk/clerk-react`, `@tanstack/react-query` | swap to `@clerk/clerk-expo`; provide a query-client seam |
-| use-sync | `src/hooks/use-sync.tsx` | imports `dexie` + `offline-db` + `sync-engine` | rebuild on `PendingSyncStore` live-query equivalent |
+| api.ts typed catalog | `src/lib/api.ts` (1042 l) | incremental, not blocking | request core already ported; port the typed endpoint wrappers per hook/screen as needed |
+| use-auth | `src/hooks/use-auth.tsx` | uses `@clerk/clerk-react`, `@tanstack/react-query`; needs `offline-session` | swap to `@clerk/clerk-expo`; provide a query-client seam; populate `auth-store` + `setAuthStateRef`; port `offline-session` onto AsyncStorage |
+| use-sync | `src/hooks/use-sync.tsx` | `sync-engine` now available, but imports `dexie` `liveQuery` + needs a reactive store layer | wrap `onSyncStateChange`/`getSyncProgress` + `subscribeConflicts` in a hook; replace `liveQuery` with a store-change subscription |
 | use-push-notifications | `src/hooks/use-push-notifications.tsx` | web push / service worker | **rewrite** on `expo-notifications` (not a port) |
 | use-settings | `src/hooks/use-settings.tsx` | DOM theming (`document.classList`, `body.style`) | rewrite as RN theme context; reuse `setStoredLocale`/`applyLocaleDirection` |
 | useShiftChat | `src/features/shift-chat/hooks/useShiftChat.ts` | `@tanstack/react-query`, `sonner`, `shift-chat/api`→`api.ts` | port after `api.ts`; add query-client + toast seam |

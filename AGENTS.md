@@ -53,12 +53,17 @@ plugins/vettrack-control/           # Phase 2 native module home (scaffold only)
 
 Path aliases: `@/lib/*`, `@/types`, `@/types/*`, `@/features/*`, `@/hooks/*`.
 
-**Deferred to the follow-up that ports the two heavy modules** (`src/lib/api.ts`,
-`src/lib/sync-engine.ts`): `use-auth`, `use-sync`, `use-push-notifications`,
-`use-settings`, `useShiftChat`, `shift-chat/api`, `useAutoSelectOrg`. Each is
-entangled with the deferred modules and/or needs a DOM→RN rewrite or a lib not in
-the Expo dep set (`@tanstack/react-query`, `sonner`, `@clerk/clerk-react`, `dexie`).
-See the porting-status doc.
+Heavy modules ported on `claude/expo-port-api-sync-engine`: **sync-engine** (offline
+replay on `PendingSyncStore`, seam-based) + support (`api-origin`, `auth-store`,
+`conflict-store`); `api.ts` request core was already present (typed endpoint catalog
+ported incrementally). **Still deferred:** `use-auth`, `use-sync`,
+`use-push-notifications`, `use-settings`, `useShiftChat`, `shift-chat/api`,
+`useAutoSelectOrg` — each needs a DOM→RN rewrite or a lib not in the Expo dep set
+(`@tanstack/react-query`, `sonner`, `@clerk/clerk-react`, `dexie`). See the
+porting-status doc.
+
+To wire the engine: `initSyncEngine({ notifier, reporter, invalidateQueries,
+clearQueries, onAuthHalt, subscribeOnline })` + `setAuthState`/`setAuthStateRef`.
 
 ## i18n invariant (preserved on import)
 No hardcoded copy in source — text lives only in `locales/*.json`, accessed via `t`.

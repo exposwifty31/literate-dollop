@@ -1,4 +1,5 @@
 import type { PendingSyncType } from "@vettrack/contracts";
+import { resolveApiUrl } from "@/lib/api-origin";
 import { getAuthHeaders } from "@/lib/auth/get-auth-headers";
 import {
   classifyEmergencyEndpoint,
@@ -32,12 +33,6 @@ class ApiError extends Error {
     this.status = status;
     this.code = code;
   }
-}
-
-function resolveApiUrl(path: string): string {
-  const base = process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
 async function buildRequestHeaders(
