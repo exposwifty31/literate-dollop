@@ -10,7 +10,8 @@ function AppStack() {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="scan" options={{ title: 'Scan' }} />
+      <Stack.Screen name="scan" options={{ title: t.scanScreen.title }} />
+      <Stack.Screen name="equipment/[id]" options={{ title: t.nav.equipment }} />
     </Stack>
   );
 }

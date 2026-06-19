@@ -31,7 +31,7 @@ Path aliases added: `@/types`, `@/types/*`, `@/features/*`, `@/hooks/*` (tsconfi
 
 ---
 
-## ✅ Phase 3 (in progress)
+## ✅ Phase 3 — NFC equipment scan vertical slice (complete)
 
 | Item | destination | notes |
 |------|-------------|-------|
@@ -42,8 +42,22 @@ Path aliases added: `@/types`, `@/types/*`, `@/features/*`, `@/hooks/*` (tsconfi
 | **use-sync** | `apps/expo/src/hooks/use-sync.ts` | NetInfo → debounced `processQueue` |
 | **nfc-platform.ts** | `apps/expo/src/lib/nfc-platform.ts` | `react-native-nfc-manager` adapter |
 | **scan screen** | `apps/expo/app/(app)/scan.tsx` | NFC read → confirm → offline queue → replay |
+| **deep-link-return.ts** | `apps/expo/src/lib/linking/deep-link-return.ts` | `vettrack://scan` → `/scan` + auth returnTo |
+| **VetTrackControl plugin** | `plugins/vettrack-control/` | config plugin for widget + NFC hardware QA |
 
+**Exit gate:** 61 vitest tests pass, `tsc --noEmit` clean, PR #4 open.  
 Still deferred: full `api.ts` surface, use-auth, equipment cache tables, QR camera.
+
+---
+
+## 🔵 Phase 4 — Route parity Wave 1 (in progress)
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **equipment-list API** | `apps/expo/src/lib/api/equipment-list.ts` | `GET /api/equipment` + `GET /api/equipment/my` |
+| **Equipment list screen** | `apps/expo/app/(app)/(tabs)/equipment.tsx` | browse + search + status filter |
+| **My Equipment screen** | `apps/expo/app/(app)/(tabs)/my-equipment.tsx` | checked-out items for current user |
+| **Equipment detail screen** | `apps/expo/app/(app)/equipment/[id].tsx` | read-only detail view |
 
 ---
 
