@@ -4,10 +4,16 @@
   "scripts": {
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run",
-    "contracts:gate": "bash scripts/ci/contracts-gate.sh"
+    "contracts:gate": "bash scripts/ci/contracts-gate.sh",
+    "contracts:review": "tsx scripts/contracts-review-agent.ts"
   },
   "devDependencies": {
+    "@types/node": "^26.0.0",
     "typescript": "~6.0.3",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@cursor/sdk": "^1.0.19",
+    "tsx": "^4.22.4"
   }
 }

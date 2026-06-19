@@ -40,7 +40,9 @@
     "sterilized": "עבר חיטוי",
     "all": "כל הסטטוסים",
     "info": "מידע",
-    "neutral": "לא ידוע"
+    "neutral": "לא ידוע",
+    "critical": "קריטי",
+    "needs_attention": "דורש תשומת לב"
   },
   "layout": {
     "nav": {
@@ -534,6 +536,7 @@
     },
     "fields": {
       "name": {
+        "label": "שם",
         "placeholder": "לדוגמה: אוטוקלב יחידה א׳",
         "error": "שם הוא שדה חובה"
       },

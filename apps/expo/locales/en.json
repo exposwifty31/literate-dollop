@@ -40,7 +40,9 @@
     "sterilized": "Sterilized",
     "all": "All statuses",
     "info": "Info",
-    "neutral": "Unknown"
+    "neutral": "Unknown",
+    "critical": "Critical",
+    "needs_attention": "Needs Attention"
   },
   "layout": {
     "nav": {
@@ -534,6 +536,7 @@
     },
     "fields": {
       "name": {
+        "label": "Name",
         "placeholder": "e.g. Autoclave Unit A",
         "error": "Name is required"
       },

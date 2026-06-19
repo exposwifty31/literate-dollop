@@ -1,0 +1,13 @@
+{
+  "plugins": {
+    "cursor-sdk": {
+      "enabled": true
+    },
+    "thermos": {
+      "enabled": true
+    },
+    "pstack": {
+      "enabled": true
+    }
+  }
+}

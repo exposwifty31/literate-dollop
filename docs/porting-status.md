@@ -50,14 +50,25 @@ Still deferred: full `api.ts` surface, use-auth, equipment cache tables, QR came
 
 ---
 
-## 🔵 Phase 4 — Route parity Wave 1 (in progress)
+## ✅ Phase 4 — Route parity Wave 1 (complete)
 
 | Item | destination | notes |
 |------|-------------|-------|
 | **equipment-list API** | `apps/expo/src/lib/api/equipment-list.ts` | `GET /api/equipment` + `GET /api/equipment/my` |
 | **Equipment list screen** | `apps/expo/app/(app)/(tabs)/equipment.tsx` | browse + search + status filter |
 | **My Equipment screen** | `apps/expo/app/(app)/(tabs)/my-equipment.tsx` | checked-out items for current user |
-| **Equipment detail screen** | `apps/expo/app/(app)/equipment/[id].tsx` | read-only detail view |
+| **Equipment detail screen** | `apps/expo/app/(app)/equipment/[id].tsx` | detail view + checkout/return/update-status actions |
+
+---
+
+## 🔵 Phase 4 — Route parity Wave 2 (in progress)
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **equipment-actions API** | `apps/expo/src/lib/api/equipment-actions.ts` | `PATCH /api/equipment/:id` + `/checkout` + `/return` + `POST /api/equipment` |
+| **Update status screen** | `apps/expo/app/(app)/equipment/[id]/update-status.tsx` | status picker; optimistic-concurrency `version` field; 409 → conflict error |
+| **Checkout / return inline** | `apps/expo/app/(app)/equipment/[id].tsx` | primary action buttons; re-fetches on success |
+| **New equipment screen** | `apps/expo/app/(app)/equipment/new.tsx` | create form (name required; serial/model/manufacturer/location optional) |
 
 ---
 

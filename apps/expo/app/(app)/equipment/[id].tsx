@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { fetchEquipmentById } from "@/lib/api/equipment-list";
+import { checkoutEquipment, returnEquipment } from "@/lib/api/equipment-actions";
 import { t } from "@/lib/i18n";
 import type { Equipment, EquipmentStatus } from "@/types/equipment";
 
@@ -75,6 +76,8 @@ export default function EquipmentDetailScreen() {
   const [equipment, setEquipment] = useState<Equipment | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -93,6 +96,34 @@ export default function EquipmentDetailScreen() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  const handleCheckout = async () => {
+    if (!id || actionLoading) return;
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      const result = await checkoutEquipment(id);
+      setEquipment(result.equipment);
+    } catch {
+      setActionError(t.equipmentDetail.toast.checkoutFailed(""));
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleReturn = async () => {
+    if (!id || actionLoading) return;
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      const result = await returnEquipment(id);
+      setEquipment(result.equipment);
+    } catch {
+      setActionError(t.equipmentDetail.toast.returnFailed(""));
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -183,16 +214,71 @@ export default function EquipmentDetailScreen() {
         ) : null}
       </View>
 
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => router.push("/scan")}
-        style={({ pressed }) => [
-          styles.button,
-          { backgroundColor: colors.tint, opacity: pressed ? 0.85 : 1 },
-        ]}
-      >
-        <Text style={styles.buttonText}>{t.nav.equipmentScan}</Text>
-      </Pressable>
+      {actionError ? (
+        <Text style={styles.actionErrorText}>{actionError}</Text>
+      ) : null}
+
+      <View style={styles.actionsRow}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push("/scan")}
+          style={({ pressed }) => [
+            styles.secondaryButton,
+            { borderColor: colors.tint, opacity: pressed ? 0.75 : 1 },
+          ]}
+        >
+          <Text style={[styles.secondaryButtonText, { color: colors.tint }]}>
+            {t.nav.equipmentScan}
+          </Text>
+        </Pressable>
+
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push(`/equipment/${id}/update-status`)}
+          style={({ pressed }) => [
+            styles.secondaryButton,
+            { borderColor: colors.tint, opacity: pressed ? 0.75 : 1 },
+          ]}
+        >
+          <Text style={[styles.secondaryButtonText, { color: colors.tint }]}>
+            {t.equipmentDetail.updateStatusTitle}
+          </Text>
+        </Pressable>
+      </View>
+
+      {equipment.checkedOutById ? (
+        <Pressable
+          accessibilityRole="button"
+          disabled={actionLoading}
+          onPress={() => { void handleReturn(); }}
+          style={({ pressed }) => [
+            styles.button,
+            { backgroundColor: "#0891b2", opacity: actionLoading || pressed ? 0.7 : 1 },
+          ]}
+        >
+          {actionLoading ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>{t.equipmentList.quickAction.return}</Text>
+          )}
+        </Pressable>
+      ) : (
+        <Pressable
+          accessibilityRole="button"
+          disabled={actionLoading}
+          onPress={() => { void handleCheckout(); }}
+          style={({ pressed }) => [
+            styles.button,
+            { backgroundColor: "#16a34a", opacity: actionLoading || pressed ? 0.7 : 1 },
+          ]}
+        >
+          {actionLoading ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>{t.equipmentList.quickAction.checkout}</Text>
+          )}
+        </Pressable>
+      )}
     </ScrollView>
   );
 }
@@ -268,7 +354,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
-    minHeight: 48,
+    minHeight: 52,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
@@ -278,6 +364,28 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",
+  },
+  actionsRow: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  secondaryButton: {
+    flex: 1,
+    minHeight: 52,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 12,
+    borderWidth: 1.5,
+  },
+  secondaryButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  actionErrorText: {
+    color: "#dc2626",
+    fontSize: 14,
+    textAlign: "center",
   },
   errorText: {
     fontSize: 16,
