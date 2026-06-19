@@ -31,6 +31,36 @@ Path aliases added: `@/types`, `@/types/*`, `@/features/*`, `@/hooks/*` (tsconfi
 
 ---
 
+## ✅ Phase 3 — NFC equipment scan vertical slice (complete)
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **network.ts** | `apps/expo/src/lib/network.ts` | NetInfo connectivity + test hooks |
+| **equipment-id.ts** | `apps/expo/src/lib/equipment-id.ts` | pure URL → equipment UUID |
+| **equipment-scan API** | `apps/expo/src/lib/api/equipment-scan.ts` | scan mutation + `X-Client-Timestamp` |
+| **sync-engine.ts** | `apps/expo/src/lib/sync-engine.ts` | thin port on `PendingSyncStore`; `sync-ui-seam` replaces sonner/Sentry |
+| **use-sync** | `apps/expo/src/hooks/use-sync.ts` | NetInfo → debounced `processQueue` |
+| **nfc-platform.ts** | `apps/expo/src/lib/nfc-platform.ts` | `react-native-nfc-manager` adapter |
+| **scan screen** | `apps/expo/app/(app)/scan.tsx` | NFC read → confirm → offline queue → replay |
+| **deep-link-return.ts** | `apps/expo/src/lib/linking/deep-link-return.ts` | `vettrack://scan` → `/scan` + auth returnTo |
+| **VetTrackControl plugin** | `plugins/vettrack-control/` | config plugin for widget + NFC hardware QA |
+
+**Exit gate:** 61 vitest tests pass, `tsc --noEmit` clean, PR #4 open.  
+Still deferred: full `api.ts` surface, use-auth, equipment cache tables, QR camera.
+
+---
+
+## 🔵 Phase 4 — Route parity Wave 1 (in progress)
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **equipment-list API** | `apps/expo/src/lib/api/equipment-list.ts` | `GET /api/equipment` + `GET /api/equipment/my` |
+| **Equipment list screen** | `apps/expo/app/(app)/(tabs)/equipment.tsx` | browse + search + status filter |
+| **My Equipment screen** | `apps/expo/app/(app)/(tabs)/my-equipment.tsx` | checked-out items for current user |
+| **Equipment detail screen** | `apps/expo/app/(app)/equipment/[id].tsx` | read-only detail view |
+
+---
+
 ## ⏸ Deferred (with reason + port notes)
 
 These are entangled with the two heavy modules and/or need an RN rewrite or a
@@ -39,10 +69,10 @@ dependency not yet in `apps/expo`. Port them in the follow-up that lands
 
 | Item | vettrack source | Blocking reason | Port note |
 |------|-----------------|-----------------|-----------|
-| **api.ts** | `src/lib/api.ts` (1042 l) | heavy module (deferred by decision) | merge into existing `apps/expo/src/lib/api.ts`; strip `offline-db`(Dexie), `sonner`, server `shared/*` runtime imports; keep emergency classifier choke-point |
-| **sync-engine.ts** | `src/lib/sync-engine.ts` (511 l) | heavy module (deferred by decision) | rebind Dexie→`PendingSyncStore` (ADR 001); replace `sonner`/`@sentry/react`/direct `QueryClient` with seams |
-| use-auth | `src/hooks/use-auth.tsx` | depends on `api.ts` + `sync-engine.ts`; uses `@clerk/clerk-react`, `@tanstack/react-query` | swap to `@clerk/clerk-expo`; provide a query-client seam |
-| use-sync | `src/hooks/use-sync.tsx` | imports `dexie` + `offline-db` + `sync-engine` | rebuild on `PendingSyncStore` live-query equivalent |
+| **api.ts** | `src/lib/api.ts` (1042 l) | partial — scan endpoints only for Phase 3 | merge remaining endpoints in follow-up; strip Dexie/sonner |
+| **sync-engine.ts** | `src/lib/sync-engine.ts` (511 l) | ✅ thin port landed (Phase 3) | conflict UI, Sentry, QueryClient invalidation still deferred |
+| use-auth | `src/hooks/use-auth.tsx` | depends on full `api.ts`; uses `@clerk/clerk-react`, `@tanstack/react-query` | swap to `@clerk/clerk-expo`; provide a query-client seam |
+| use-sync | `src/hooks/use-sync.tsx` | ✅ rebuilt (Phase 3) | mounted from root layout |
 | use-push-notifications | `src/hooks/use-push-notifications.tsx` | web push / service worker | **rewrite** on `expo-notifications` (not a port) |
 | use-settings | `src/hooks/use-settings.tsx` | DOM theming (`document.classList`, `body.style`) | rewrite as RN theme context; reuse `setStoredLocale`/`applyLocaleDirection` |
 | useShiftChat | `src/features/shift-chat/hooks/useShiftChat.ts` | `@tanstack/react-query`, `sonner`, `shift-chat/api`→`api.ts` | port after `api.ts`; add query-client + toast seam |
@@ -56,6 +86,7 @@ UI components (`*.tsx` under `src/features/*/components`, e.g. `DispenseSheet`,
 
 ## 🔵 / 🔴 (per Import Manifest)
 
-- 🔵 SwiftUI `VetTrackControl` + native NFC: Phase 2 / Phase 3 — home scaffolded at `plugins/vettrack-control/`.
+- 🔵 SwiftUI `VetTrackControl`: Phase 2 — plugin at `plugins/vettrack-control/`.
+- 🔵 NFC equipment scan: Phase 3 — `nfc-platform.ts` + `/scan` screen (dev build required).
 - 🔴 Not imported (stays in vettrack): `server/**`, `migrations/**`, `src/pages/**`,
   `src/components/ui/**`, Capacitor `ios/android`, Vite/PWA/service-worker.

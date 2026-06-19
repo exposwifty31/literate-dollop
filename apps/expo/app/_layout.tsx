@@ -5,6 +5,10 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { useSync } from '@/hooks/use-sync';
+import { isClerkActive } from '@/lib/auth/clerk-config';
+import { useSyncAuthBridgeWithClerk, useSyncAuthBridgeWithoutClerk } from '@/hooks/use-sync-auth-bridge';
+import { usePendingSyncStartup } from '@/lib/offline/use-pending-sync-startup';
 import { VetTrackClerkProvider } from '@/src/providers/clerk-provider';
 
 export {
@@ -44,9 +48,12 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  usePendingSyncStartup();
+  useSync();
 
   return (
     <VetTrackClerkProvider>
+      <SyncAuthBridge />
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(app)" />
@@ -55,4 +62,21 @@ function RootLayoutNav() {
       </ThemeProvider>
     </VetTrackClerkProvider>
   );
+}
+
+function SyncAuthBridge() {
+  if (isClerkActive) {
+    return <SyncAuthBridgeClerk />;
+  }
+  return <SyncAuthBridgeFallback />;
+}
+
+function SyncAuthBridgeClerk() {
+  useSyncAuthBridgeWithClerk();
+  return null;
+}
+
+function SyncAuthBridgeFallback() {
+  useSyncAuthBridgeWithoutClerk();
+  return null;
 }

@@ -1,7 +1,14 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
+# Superpowers plugin ephemeral local state (brainstorm servers, video frames, PIDs)
+/.superpowers/
+
+# Agent harness / eval artifacts (local-only; not source)
+/gan-harness/
+
 # dependencies
 node_modules/
+.pnpm-store/
 package-lock.json
 
 # Expo

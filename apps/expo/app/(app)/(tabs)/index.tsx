@@ -1,20 +1,16 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
-import { StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { isClerkActive } from "@/lib/auth/clerk-config";
-
-const PHASE_1_ITEMS = [
-  "@vettrack/contracts wired",
-  "PendingSyncStore + offline seam",
-  "Clerk sign-in + /api/users/me",
-] as const;
+import { t } from "@/lib/i18n";
 
 function SignedInHome() {
   const { user } = useUser();
 
   return (
     <Text style={styles.subtitle} testID="home-signed-in-email">
-      Signed in as {user?.primaryEmailAddress?.emailAddress ?? "unknown"}
+      {t.home.signedInAs(user?.primaryEmailAddress?.emailAddress ?? t.home.signedInUnknown)}
     </Text>
   );
 }
@@ -26,25 +22,44 @@ function ClerkSignedInBanner() {
 }
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>VetTrack</Text>
-      <Text style={styles.subtitle}>Expo mobile — Phase 1 foundation</Text>
+      <Text style={styles.title}>{t.home.appName}</Text>
+      <Text style={styles.subtitle}>{t.home.phaseSubtitle}</Text>
 
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Exit criteria</Text>
-        {PHASE_1_ITEMS.map((item) => (
+        <Text style={styles.cardTitle}>{t.home.phase1Title}</Text>
+        {t.home.phase1Items.map((item) => (
           <Text key={item} style={styles.bullet}>
             • {item}
           </Text>
         ))}
       </View>
 
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>{t.home.phase3Title}</Text>
+        {t.home.phase3Items.map((item) => (
+          <Text key={item} style={styles.bullet}>
+            • {item}
+          </Text>
+        ))}
+      </View>
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t.home.scanCta}
+        onPress={() => router.push("/scan")}
+        style={({ pressed }) => [styles.scanButton, { opacity: pressed ? 0.85 : 1 }]}
+        testID="home-scan-cta"
+      >
+        <Text style={styles.scanButtonText}>{t.home.scanCta}</Text>
+      </Pressable>
+
       {isClerkActive ? <ClerkSignedInBanner /> : null}
 
-      <Text style={styles.hint}>
-        Use the Account tab to verify API auth or sign out. Product routes ship in Phase 3+.
-      </Text>
+      <Text style={styles.hint}>{t.home.hint}</Text>
     </View>
   );
 }
@@ -78,6 +93,19 @@ const styles = StyleSheet.create({
   bullet: {
     fontSize: 15,
     lineHeight: 22,
+  },
+  scanButton: {
+    backgroundColor: "#0a7ea4",
+    minHeight: 48,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  scanButtonText: {
+    color: "#fff",
+    fontSize: 17,
+    fontWeight: "600",
   },
   hint: {
     color: "#687076",

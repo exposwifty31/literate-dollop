@@ -1,6 +1,9 @@
 import type { ExpoConfig, ConfigContext } from "expo/config";
 
 const APP_ENV = process.env.APP_ENV ?? "development";
+const EAS_PROJECT_ID =
+  process.env.EAS_PROJECT_ID ?? "5ec536d8-f991-4779-88d7-c1b7fa595cb5";
+const APPLE_TEAM_ID = process.env.APPLE_TEAM_ID;
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -15,7 +18,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     supportsTablet: true,
     // Parallel to Capacitor (uk.vettrack.app) during internal beta — separate install on device.
     bundleIdentifier: "uk.vettrack.expo",
+    ...(APPLE_TEAM_ID ? { appleTeamId: APPLE_TEAM_ID } : {}),
     associatedDomains: ["applinks:vettrack.uk"],
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+      NFCReaderUsageDescription:
+        "VetTrack reads equipment NFC tags to record scans and checkout.",
+    },
   },
   android: {
     package: "uk.vettrack.expo",
@@ -52,6 +61,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         backgroundColor: "#ffffff",
       },
     ],
+    "@vettrack/vettrack-control-plugin",
+    [
+      "react-native-nfc-manager",
+      {
+        nfcPermission: "VetTrack reads equipment NFC tags to record scans and checkout.",
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,
@@ -59,11 +75,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   extra: {
     appEnv: APP_ENV,
     eas: {
-      projectId: process.env.EAS_PROJECT_ID ?? "5ec536d8-f991-4779-88d7-c1b7fa595cb5",
+      projectId: EAS_PROJECT_ID,
     },
   },
   updates: {
-    url: process.env.EAS_UPDATE_URL,
+    url: process.env.EAS_UPDATE_URL ?? `https://u.expo.dev/${EAS_PROJECT_ID}`,
   },
   runtimeVersion: {
     policy: "fingerprint",

@@ -714,7 +714,24 @@
     "shiftSummary": "Shift summary",
     "scanQrCode": "Scan QR",
     "addEquipment": "Add equipment",
-    "browseEquipment": "Browse equipment"
+    "browseEquipment": "Browse equipment",
+    "appName": "VetTrack",
+    "phaseSubtitle": "Expo mobile — Phase 3 (NFC equipment scan)",
+    "phase1Title": "Phase 1 exit (complete)",
+    "phase1Items": [
+      "@vettrack/contracts wired",
+      "PendingSyncStore + offline seam",
+      "Clerk sign-in + /api/users/me"
+    ],
+    "phase3Title": "Phase 3 in progress",
+    "phase3Items": [
+      "NFC equipment scan vertical slice",
+      "Offline-first sync engine + replay"
+    ],
+    "signedInAs": "Signed in as {email}",
+    "signedInUnknown": "unknown",
+    "scanCta": "Scan equipment",
+    "hint": "Use the Account tab to verify API auth. Rebuild the iOS dev client after plugin changes."
   },
   "equipment": {
     "title": "Equipment",
@@ -3252,6 +3269,20 @@
     "openingEquipment": "Opening equipment…",
     "signInFirst": "Sign in first, then re-scan the tag."
   },
+  "scanScreen": {
+    "title": "Equipment scan",
+    "scanCta": "Scan NFC tag",
+    "confirmCta": "Confirm scan",
+    "cancel": "Cancel",
+    "scanning": "Hold near tag…",
+    "resolvedLabel": "Equipment ID",
+    "successTitle": "Scan recorded",
+    "queuedTitle": "Queued for sync",
+    "syncedTitle": "Synced",
+    "failedTitle": "Sync failed",
+    "retry": "Retry sync",
+    "unsupported": "NFC is not available on this device"
+  },
   "staleCheckout": {
     "pushTitle": "Equipment still checked out",
     "pushBody": "This device has been checked out a while. If you're done, please return it."
@@ -3364,6 +3395,7 @@
   "nav": {
     "today": "Today",
     "equipment": "Equipment",
+    "myEquipment": "My Equipment",
     "equipmentAll": "All equipment",
     "equipmentTasks": "Tasks",
     "equipmentScan": "Scan",

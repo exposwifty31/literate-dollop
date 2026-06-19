@@ -3,6 +3,7 @@ import { Tabs } from "expo-router";
 
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
+import { t } from "@/lib/i18n";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -17,7 +18,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: t.nav.today,
           tabBarIcon: ({ color }) => (
             <SymbolView
               name={{
@@ -32,9 +33,43 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="equipment"
+        options={{
+          title: t.nav.equipment,
+          tabBarIcon: ({ color }) => (
+            <SymbolView
+              name={{
+                ios: "list.bullet",
+                android: "list",
+                web: "list",
+              }}
+              tintColor={color}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="my-equipment"
+        options={{
+          title: t.nav.myEquipment,
+          tabBarIcon: ({ color }) => (
+            <SymbolView
+              name={{
+                ios: "tray.full",
+                android: "inbox",
+                web: "inbox",
+              }}
+              tintColor={color}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="auth"
         options={{
-          title: "Account",
+          title: t.nav.admin,
           tabBarIcon: ({ color }) => (
             <SymbolView
               name={{

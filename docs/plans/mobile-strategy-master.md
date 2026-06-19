@@ -1,7 +1,7 @@
 # VetTrack Mobile Strategy — Master Plan
 
 **Canonical repo:** [exposwifty31/literate-dollop](https://github.com/exposwifty31/literate-dollop)  
-**Production maintenance (local only):** `~/vettrack` — Capacitor Build 15, GitLab origin if configured. Read-only port reference.
+**Production maintenance:** `~/vettrack` — Capacitor Build 15 ([`exposwifty31/vettrack`](https://github.com/exposwifty31/vettrack) on GitHub; GitLab declared canonical, GitHub ahead in practice until P0-1 resolves). Read-only port reference.
 
 ---
 
@@ -20,7 +20,7 @@ Execute Expo/React Native migration alongside Capacitor until workflow parity an
 | **PR1** | Monorepo bootstrap, `@vettrack/contracts` in-repo, CI | `contracts:gate` + typecheck green on GitHub Actions |
 | **1** | Contracts wired, offline seam, Clerk Expo | Three exit criteria below |
 | **2** | VetTrackControl config plugin (Swift widget) | Dev build with widget target |
-| **3** | Clinical vertical slice (NFC med-task flow) | One end-to-end offline-capable workflow |
+| **3** | NFC equipment scan vertical slice ([spec](../superpowers/specs/2026-06-17-phase3-nfc-equipment-scan-design.md)) | One end-to-end offline-capable workflow |
 | **4–5** | Route parity expansion | Per-route checklist |
 | **6** | Capacitor kill-switch | Go/no-go on `uk.vettrack.app` retirement |
 
@@ -47,7 +47,7 @@ flowchart TD
   emergency --> clerk
   clerk --> exit[Phase 1 exit gate]
   exit --> phase2[Phase 2 config plugin]
-  exit --> phase3[Phase 3 NFC vertical slice]
+  exit --> phase3[Phase 3 NFC equipment scan]
 ```
 
 1. Add `vitest` + `expo-sqlite` to `apps/expo`
