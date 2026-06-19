@@ -777,6 +777,16 @@
     "gatewayCode": {
       "label": "Doorway gateway code",
       "placeholder": "e.g. GW-101"
+    },
+    "list": {
+      "empty": {
+        "message": "No rooms found",
+        "subMessage": "Rooms will appear here once added."
+      },
+      "errors": {
+        "loadFailed": "Failed to load rooms. Try again."
+      },
+      "equipment": "{total} equipment · {available} available · {inUse} in use"
     }
   },
   "app": {

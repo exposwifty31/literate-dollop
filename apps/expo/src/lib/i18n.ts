@@ -462,7 +462,14 @@ const translations = {
         tr(d.equipment.rfidAttention.checkedOutMismatch, { room, holder }),
     },
   },
-  rooms: d.rooms,
+  rooms: {
+    ...d.rooms,
+    list: {
+      ...d.rooms.list,
+      equipment: (total: number, available: number, inUse: number) =>
+        tr(d.rooms.list.equipment, { total, available, inUse }),
+    },
+  },
 
   app: d.app,
 

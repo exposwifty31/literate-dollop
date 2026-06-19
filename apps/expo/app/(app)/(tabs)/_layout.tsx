@@ -67,6 +67,23 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="rooms"
+        options={{
+          title: t.nav.rooms,
+          tabBarIcon: ({ color }) => (
+            <SymbolView
+              name={{
+                ios: "door.left.hand.open",
+                android: "meeting_room",
+                web: "meeting_room",
+              }}
+              tintColor={color}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="auth"
         options={{
           title: t.nav.admin,
