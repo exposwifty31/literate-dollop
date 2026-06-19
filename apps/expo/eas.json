@@ -10,7 +10,8 @@
       "channel": "development",
       "ios": {
         "resourceClass": "m-medium",
-        "simulator": false
+        "simulator": false,
+        "credentialsSource": "remote"
       },
       "android": {
         "buildType": "apk"
@@ -23,7 +24,8 @@
       "distribution": "internal",
       "channel": "preview",
       "ios": {
-        "simulator": false
+        "simulator": false,
+        "credentialsSource": "remote"
       },
       "android": {
         "buildType": "apk"
@@ -35,6 +37,9 @@
     "production": {
       "channel": "production",
       "autoIncrement": true,
+      "ios": {
+        "credentialsSource": "remote"
+      },
       "env": {
         "APP_ENV": "production"
       }
