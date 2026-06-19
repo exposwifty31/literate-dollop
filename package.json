@@ -8,12 +8,10 @@
     "contracts:review": "tsx scripts/contracts-review-agent.ts"
   },
   "devDependencies": {
+    "@cursor/sdk": "^1.0.19",
     "@types/node": "^26.0.0",
+    "tsx": "^4.22.4",
     "typescript": "~6.0.3",
     "vitest": "^3.2.4"
-  },
-  "dependencies": {
-    "@cursor/sdk": "^1.0.19",
-    "tsx": "^4.22.4"
   }
 }

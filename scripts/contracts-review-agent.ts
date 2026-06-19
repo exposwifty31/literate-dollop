@@ -20,7 +20,7 @@
  *   2 — gate failed or agent run failed
  */
 
-import { execSync } from "child_process";
+import { execFileSync, execSync } from "child_process";
 import { writeFileSync } from "fs";
 import { Agent, CursorAgentError } from "@cursor/sdk";
 
@@ -50,12 +50,18 @@ function gateGreen(): boolean {
 
 function getContractsDiff(): string {
   try {
-    return run(
-      `git diff ${BASE}...HEAD -- packages/contracts/src/ packages/contracts/package.json`
+    return execFileSync(
+      "git",
+      ["diff", `${BASE}...HEAD`, "--", "packages/contracts/src/", "packages/contracts/package.json"],
+      { cwd: process.cwd(), encoding: "utf8" }
     ).trim();
   } catch {
     // If the base branch doesn't exist locally, diff against HEAD
-    return run("git diff HEAD~1...HEAD -- packages/contracts/src/ packages/contracts/package.json").trim();
+    return execFileSync(
+      "git",
+      ["diff", "HEAD~1...HEAD", "--", "packages/contracts/src/", "packages/contracts/package.json"],
+      { cwd: process.cwd(), encoding: "utf8" }
+    ).trim();
   }
 }
 

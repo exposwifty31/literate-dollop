@@ -72,8 +72,8 @@ export default function UpdateStatusScreen() {
 
   const load = useCallback(async () => {
     if (!id) return;
-    setLoading(true);
     setLoadError(null);
+    setLoading(true);
     try {
       const eq = await fetchEquipmentById(id);
       setEquipment(eq);
@@ -144,7 +144,7 @@ export default function UpdateStatusScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <Text style={[styles.equipmentName, { color: colors.text }]}>{equipment.name}</Text>
-        <Text style={[styles.sectionLabel, { color: "#687076" }]}>
+        <Text style={[styles.sectionLabel, { color: colors.text + "99" }]}>
           {t.equipmentDetail.statusLabel}
         </Text>
 

@@ -69,6 +69,8 @@ Still deferred: full `api.ts` surface, use-auth, equipment cache tables, QR came
 | **Update status screen** | `apps/expo/app/(app)/equipment/[id]/update-status.tsx` | status picker; optimistic-concurrency `version` field; 409 → conflict error |
 | **Checkout / return inline** | `apps/expo/app/(app)/equipment/[id].tsx` | primary action buttons; re-fetches on success |
 | **New equipment screen** | `apps/expo/app/(app)/equipment/new.tsx` | create form (name required; serial/model/manufacturer/location optional) |
+| **Alerts API helper** | `apps/expo/src/lib/api/alerts.ts` | `GET /api/alerts` + `PATCH /api/alerts/:id/read` |
+| **Alerts tab route** | `apps/expo/app/(app)/(tabs)/alerts.tsx` | notification feed; unread badge; mark-as-read |
 
 ---
 
