@@ -534,6 +534,7 @@
     },
     "fields": {
       "name": {
+        "label": "Name",
         "placeholder": "e.g. Autoclave Unit A",
         "error": "Name is required"
       },
