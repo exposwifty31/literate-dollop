@@ -1,0 +1,97 @@
+name: Contracts Review
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'packages/contracts/**'
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history so `git diff $BASE_REF...HEAD` resolves correctly
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run contracts review agent
+        id: agent
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+        run: |
+          pnpm contracts:review \
+            --base ${{ github.base_ref }} \
+            --out /tmp/contracts-review.md
+        # Exit 0  → gate green, agent finished
+        # Exit 1  → startup failure (bad key, network) — block the job
+        # Exit 2  → gate failed or agent run errored — block the job
+
+      - name: Write to step summary
+        if: always()
+        run: |
+          if [ -f /tmp/contracts-review.md ]; then
+            echo "## Contracts Review" >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/contracts-review.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "_No contracts-review output (agent may not have run)._" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Post PR comment
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const outPath = '/tmp/contracts-review.md';
+
+            let body;
+            if (fs.existsSync(outPath)) {
+              body = `## Contracts Review (Cursor Agent)\n\n${fs.readFileSync(outPath, 'utf8')}`;
+            } else {
+              body = `## Contracts Review (Cursor Agent)\n\n⚠️ Agent output not found — check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.`;
+            }
+
+            // Update existing bot comment rather than stacking new ones
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.find(
+              c => c.user?.type === 'Bot' && c.body?.startsWith('## Contracts Review (Cursor Agent)')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
