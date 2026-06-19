@@ -43,35 +43,35 @@ These pages **do not exist in the RN target** — removed from vettrack at migra
 | Account / auth debug | `/(app)/(tabs)/auth` | ✅ Phase 1 |
 | NFC equipment scan | `/(app)/scan` | ✅ Phase 3 |
 
-### Wave 1 — Equipment core (Phase 4, in progress)
+### Wave 1 — Equipment core (✅ Complete)
 
-| vettrack reference | Expo route | Priority | API endpoints |
-|-------------------|-----------|----------|---------------|
-| `equipment-list.tsx` | `/(app)/(tabs)/equipment` | **P0** | `GET /api/equipment?q&status&page&limit` |
-| `my-equipment.tsx` | `/(app)/(tabs)/my-equipment` | **P0** | `GET /api/equipment/my` |
-| `equipment-detail.tsx` | `/(app)/equipment/[id]` | **P0** | `GET /api/equipment/:id` |
+| vettrack reference | Expo route | Priority | API endpoints | Status |
+|-------------------|-----------|----------|---------------|--------|
+| `equipment-list.tsx` | `/(app)/(tabs)/equipment` | **P0** | `GET /api/equipment?q&status&page&limit` | ✅ Complete |
+| `my-equipment.tsx` | `/(app)/(tabs)/my-equipment` | **P0** | `GET /api/equipment/my` | ✅ Complete |
+| `equipment-detail.tsx` | `/(app)/equipment/[id]` | **P0** | `GET /api/equipment/:id` | ✅ Complete |
 
-### Wave 2 — Equipment actions (Phase 4 follow-up)
+### Wave 2 — Equipment actions (✅ Complete)
 
-| vettrack reference | Expo route | Priority | Notes |
-|-------------------|-----------|----------|-------|
-| Status update (sheet) | `/(app)/equipment/[id]/update-status` | P1 | `PATCH /api/equipment/:id` |
-| Checkout / return (inline) | Inline in detail | P1 | `POST /api/equipment/:id/checkout` + `/return` |
-| New equipment | `/(app)/equipment/new` | P2 | `POST /api/equipment` |
+| vettrack reference | Expo route | Priority | Notes | Status |
+|-------------------|-----------|----------|-------|--------|
+| Status update (sheet) | `/(app)/equipment/[id]/update-status` | P1 | `PATCH /api/equipment/:id` | ✅ Complete |
+| Checkout / return (inline) | Inline in detail | P1 | `POST /api/equipment/:id/checkout` + `/return` | ✅ Complete |
+| New equipment | `/(app)/equipment/new` | P2 | `POST /api/equipment` | ✅ Complete |
 
-### Wave 3 — Shift (Phase 5)
+### Wave 3 — Shift (🔵 In progress — Phase 5)
 
-| vettrack reference | Expo route | Priority | Notes |
-|-------------------|-----------|----------|-------|
-| `home.tsx` (active shift) | `/(app)/(tabs)/index` (extend) | P1 | Shift summary, handover CTA |
-| `handoff.tsx` | `/(app)/shift/handoff` | P2 | Shift handover flow |
+| vettrack reference | Expo route | Priority | Notes | Status |
+|-------------------|-----------|----------|-------|--------|
+| `home.tsx` (active shift) | `/(app)/(tabs)/index` (extend) | P1 | Shift summary, handover CTA | 🔵 In progress (Phase 5) |
+| `handoff.tsx` | `/(app)/shift/handoff` | P2 | Shift handover flow | 🔵 In progress (Phase 5) |
 
-### Wave 4 — Rooms / alerts (Phase 5)
+### Wave 4 — Rooms / alerts (🔵 In progress — Phase 5)
 
-| vettrack reference | Expo route | Priority | Notes |
-|-------------------|-----------|----------|-------|
-| `rooms-list.tsx` | `/(app)/(tabs)/rooms` | P2 | Room browse + equipment per room |
-| `alerts.tsx` | `/(app)/(tabs)/alerts` | P2 | Critical + overdue alerts |
+| vettrack reference | Expo route | Priority | Notes | Status |
+|-------------------|-----------|----------|-------|--------|
+| `rooms-list.tsx` | `/(app)/(tabs)/rooms` | P2 | Room browse + equipment per room | 🔵 In progress (Phase 5) |
+| `alerts.tsx` | `/(app)/(tabs)/alerts` | P2 | Critical + overdue alerts | 🔵 In progress (Phase 5) |
 
 ---
 
@@ -84,6 +84,19 @@ All endpoints require `Authorization: Bearer <token>` (Clerk JWT).
 | `GET /api/equipment` | `{ items: Equipment[], total, page, pageSize, hasMore }` | `?q=&status=&page=&limit=` |
 | `GET /api/equipment/my` | `Equipment[]` | Checked-out by current user |
 | `GET /api/equipment/:id` | `Equipment` | Full detail |
+
+## API surface (Phase 5 additions)
+
+| Endpoint | Response | Notes |
+|----------|----------|-------|
+| `PATCH /api/equipment/:id` | `Equipment` | Status update with `version` optimistic concurrency |
+| `POST /api/equipment/:id/checkout` | `QuickScanToggleResult` | — |
+| `POST /api/equipment/:id/return` | `QuickScanToggleResult` | — |
+| `POST /api/equipment` | `Equipment` | Create new equipment |
+| `GET /api/shifts/current` | `ShiftHandoverSummary \| null` | 404 → null |
+| `POST /api/shifts/:id/handoff` | `void` | End active shift |
+| `GET /api/rooms` | `Room[]` | All rooms with equipment counts |
+| `GET /api/alerts` | `Alert[]` | Active equipment alerts |
 
 ---
 
