@@ -67,6 +67,23 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="alerts"
+        options={{
+          title: t.nav.alerts,
+          tabBarIcon: ({ color }) => (
+            <SymbolView
+              name={{
+                ios: "bell.badge",
+                android: "notifications",
+                web: "notifications",
+              }}
+              tintColor={color}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="auth"
         options={{
           title: t.nav.admin,
