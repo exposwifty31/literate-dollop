@@ -16,6 +16,7 @@ export default defineConfig({
         __dirname,
         "tests/mocks/async-storage.ts",
       ),
+      "expo-linking": path.resolve(__dirname, "tests/mocks/expo-linking.ts"),
     },
   },
 });

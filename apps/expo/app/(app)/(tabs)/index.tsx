@@ -9,6 +9,11 @@ const PHASE_1_ITEMS = [
   "Clerk sign-in + /api/users/me",
 ] as const;
 
+const PHASE_2_ITEMS = [
+  "VetTrackControl config plugin registered",
+  "iOS Control Center scan widget (dev build)",
+] as const;
+
 function SignedInHome() {
   const { user } = useUser();
 
@@ -29,11 +34,20 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>VetTrack</Text>
-      <Text style={styles.subtitle}>Expo mobile — Phase 1 foundation</Text>
+      <Text style={styles.subtitle}>Expo mobile — Phase 2 (VetTrackControl)</Text>
 
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Exit criteria</Text>
+        <Text style={styles.cardTitle}>Phase 1 exit (complete)</Text>
         {PHASE_1_ITEMS.map((item) => (
+          <Text key={item} style={styles.bullet}>
+            • {item}
+          </Text>
+        ))}
+      </View>
+
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Phase 2 in progress</Text>
+        {PHASE_2_ITEMS.map((item) => (
           <Text key={item} style={styles.bullet}>
             • {item}
           </Text>
@@ -43,7 +57,8 @@ export default function HomeScreen() {
       {isClerkActive ? <ClerkSignedInBanner /> : null}
 
       <Text style={styles.hint}>
-        Use the Account tab to verify API auth or sign out. Product routes ship in Phase 3+.
+        Use the Account tab to verify API auth. Rebuild the iOS dev client after plugin changes.
+        Clinical routes ship in Phase 3+.
       </Text>
     </View>
   );

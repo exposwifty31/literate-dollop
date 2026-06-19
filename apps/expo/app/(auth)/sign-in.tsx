@@ -1,5 +1,5 @@
 import { useSignIn } from "@clerk/clerk-expo";
-import { Link, useRouter } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -8,9 +8,11 @@ import {
   isClerkActive,
   isClerkConfigured,
 } from "@/lib/auth/clerk-config";
+import { resolvePostAuthHref } from "@/lib/linking/deep-link-return";
 
 function ClerkSignInForm() {
   const router = useRouter();
+  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
   const { signIn, setActive, isLoaded } = useSignIn();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +30,7 @@ function ClerkSignInForm() {
       });
       if (attempt.status === "complete" && attempt.createdSessionId) {
         await setActive({ session: attempt.createdSessionId });
-        router.replace("/(app)/(tabs)");
+        router.replace(resolvePostAuthHref(returnTo));
       } else {
         setError("Additional verification required — complete sign-in in Clerk dashboard.");
       }

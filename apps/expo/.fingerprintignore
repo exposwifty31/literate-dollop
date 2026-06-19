@@ -1,0 +1,2 @@
+# EAS injects env-specific files during builds; local paths differ.
+.eas/**/*

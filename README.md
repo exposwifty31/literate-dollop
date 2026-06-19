@@ -2,7 +2,7 @@
 
 **This repo is the source of truth** for VetTrack mobile strategy, `@vettrack/contracts`, Expo CI, and Phases 1–6.
 
-The production Capacitor app lives in **local** `~/vettrack` (GitLab maintenance only — not on GitHub). Use it read-only for port references.
+The production Capacitor app lives in **local** `~/vettrack` ([`exposwifty31/vettrack`](https://github.com/exposwifty31/vettrack) on GitHub; GitLab is declared canonical but GitHub `origin` is ahead in practice — treat GitHub as primary until P0-1 resolves). Use it read-only for port references.
 
 ## Stack
 
@@ -60,6 +60,15 @@ Use a **development build** (not Expo Go) for NFC, push, or custom native code:
 cd apps/expo && eas build --profile development --platform ios
 ```
 
+### Phase 3 NFC testing
+
+- Dev build required — `react-native-nfc-manager` does not run in Expo Go.
+- Start Metro for the dev client: `pnpm --filter vettrack-expo start -- --dev-client --lan`
+- Connect the device via `exp://<LAN-IP>:8081` (or scan the QR from the dev client).
+- Uninstall the Capacitor VetTrack app on the test device if both are installed (`vettrack://` scheme collision).
+- Rebuild after adding the NFC config plugin: `eas build --profile development --platform ios` (and Android when testing both).
+- Manual acceptance: airplane-mode scan → queued → reconnect → auto sync → synced state on `/scan`.
+
 ## EAS profiles
 
 | Profile | Purpose |
@@ -82,12 +91,13 @@ See [docs/plans/mobile-strategy-master.md](docs/plans/mobile-strategy-master.md)
 | PR1 | Monorepo bootstrap + contracts + CI |
 | 1 | PendingSyncStore, emergency seam, Clerk Expo |
 | 2 | VetTrackControl config plugin |
-| 3 | NFC clinical vertical slice |
+| 3 | NFC equipment scan vertical slice (in progress) |
 | 6 | Capacitor kill-switch decision |
 
 ## Agent context
 
-See [AGENTS.md](AGENTS.md) for agent quickstart, port references, and frozen doctrine.
+See [AGENTS.md](AGENTS.md) for agent quickstart, port references, and frozen doctrine.  
+Cross-repo runbook: [docs/governance/expo-agent-brief-2026-06-19.md](docs/governance/expo-agent-brief-2026-06-19.md).
 
 ## Consuming contracts from local vettrack (optional)
 

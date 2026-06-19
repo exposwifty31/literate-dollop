@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { usePendingSyncStartup } from '@/lib/offline/use-pending-sync-startup';
 import { VetTrackClerkProvider } from '@/src/providers/clerk-provider';
 
 export {
@@ -44,6 +45,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  usePendingSyncStartup();
 
   return (
     <VetTrackClerkProvider>

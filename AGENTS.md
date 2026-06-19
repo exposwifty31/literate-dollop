@@ -4,8 +4,9 @@
 Mobile strategy + `@vettrack/contracts` + Expo app.  
 **GitHub:** `exposwifty31/literate-dollop` (only remote for agent work).
 
-## Production app (local maintenance — not on GitHub)
-`~/vettrack` — Capacitor Build 15 + full web/server (GitLab `origin` if present).  
+## Production app (monolith — on GitHub)
+`~/vettrack` — Capacitor Build 15 + full web/server.  
+**GitHub:** [`exposwifty31/vettrack`](https://github.com/exposwifty31/vettrack) — GitLab is declared canonical but GitHub `origin` is ahead in practice; treat GitHub as primary for pull and port references until P0-1 (remote reconciliation) resolves.  
 Read-only for port references. Do not add Expo code there.
 
 ## Consuming contracts elsewhere (human maintenance)
@@ -68,6 +69,17 @@ on import (kept the `BroadcastKey` type contract).
 ## Frozen doctrine
 Code Blue mutations never queue offline. Emergency classifier runs before SQLite write.
 ADR 001: expo-sqlite PendingSyncStore, not Dexie/WatermelonDB.
+
+## Ship lane (EAS / store builds)
+Dev tree: this repo. Ship tree: `../literate-dollop-ship` (git worktree on `main`, clean only).
+See [`docs/mobile/expo-ship-worktree-lane-prompt.md`](docs/mobile/expo-ship-worktree-lane-prompt.md).
+Pre-ship verify: `bash scripts/eas-build-from-clean-tree.sh --verify-only` (from ship worktree).
+
+## Cross-repo context
+
+- **Brief + governance runbook:** [`docs/governance/expo-agent-brief-2026-06-19.md`](docs/governance/expo-agent-brief-2026-06-19.md) — authoritative cross-repo narrative; read this before making decisions that touch the monolith API surface.
+- **Parity audit:** `LITERATE_DOLLOP_PARITY_REPORT.md` lives in the vettrack monolith repo (`exposwifty31/vettrack`).
+- **Contracts bump discipline:** see [`docs/contracts-bump-runbook.md`](docs/contracts-bump-runbook.md). On **every PR touching `packages/contracts`**: run `pnpm contracts:gate` AND open a companion issue/PR in vettrack to bump the `github:` dep so both sides stay byte-identical.
 
 ## Skills
 `.agents/skills/expo/` — use for EAS, config plugins, Clerk RN patterns.

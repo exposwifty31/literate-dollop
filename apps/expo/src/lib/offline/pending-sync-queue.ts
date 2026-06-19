@@ -35,3 +35,10 @@ export async function getAllPendingSync() {
   const store = await getPendingSyncStore();
   return store.getAllPendingSync();
 }
+
+/** ADR 001 startup guard — recover stuck rows and prune synced/dead entries. */
+export async function initializePendingSyncOnStartup(): Promise<void> {
+  const store = await getPendingSyncStore();
+  await store.recoverProcessingPendingSync();
+  await store.runStartupCleanup();
+}
