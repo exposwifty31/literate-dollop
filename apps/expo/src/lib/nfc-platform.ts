@@ -14,19 +14,33 @@ function toUint8Array(payload: number[] | Uint8Array): Uint8Array {
   return payload instanceof Uint8Array ? payload : Uint8Array.from(payload);
 }
 
+function ndefRecordType(type: number[] | string): string {
+  if (typeof type === "string") return type;
+  return String.fromCharCode(...type);
+}
+
+/** react-native-nfc-manager returns a string; tolerate legacy object shapes in tests. */
+function ndefTextFromDecoded(decoded: unknown): string {
+  if (typeof decoded === "string") return decoded;
+  if (decoded && typeof decoded === "object" && "text" in decoded) {
+    const text = (decoded as { text: unknown }).text;
+    return typeof text === "string" ? text : "";
+  }
+  return "";
+}
+
 function parseNdefPayload(payload: NfcReadPayload, records: NdefRecord[] | undefined): NfcReadPayload {
   if (!records?.length) return payload;
   for (const record of records) {
     if (record.tnf === Ndef.TNF_WELL_KNOWN && record.type) {
-      const type = String.fromCharCode(...record.type);
+      const type = ndefRecordType(record.type);
       if (type === "U") {
         const url = Ndef.uri.decodePayload(toUint8Array(record.payload));
         if (url) payload.url = url;
       } else if (type === "T") {
-        const decoded = Ndef.text.decodePayload(toUint8Array(record.payload)) as
-          | string
-          | { lang: string; text: string };
-        const text = typeof decoded === "string" ? decoded : decoded.text;
+        const text = ndefTextFromDecoded(
+          Ndef.text.decodePayload(toUint8Array(record.payload)),
+        );
         if (text) {
           payload.text = text;
         }
@@ -38,7 +52,7 @@ function parseNdefPayload(payload: NfcReadPayload, records: NdefRecord[] | undef
 
 type NdefRecord = {
   tnf: number;
-  type?: number[];
+  type?: number[] | string;
   payload: number[] | Uint8Array;
 };
 

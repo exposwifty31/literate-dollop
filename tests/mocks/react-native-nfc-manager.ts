@@ -4,7 +4,11 @@ export const Ndef = {
     decodePayload: (_payload: number[] | Uint8Array) => "",
   },
   text: {
-    decodePayload: (_payload: number[] | Uint8Array) => ({ lang: "en", text: "" }),
+    decodePayload: (payload: number[] | Uint8Array) => {
+      const bytes = payload instanceof Uint8Array ? payload : Uint8Array.from(payload);
+      const languageCodeLength = bytes[0] & 0x3f;
+      return String.fromCharCode(...bytes.slice(languageCodeLength + 1));
+    },
   },
 };
 

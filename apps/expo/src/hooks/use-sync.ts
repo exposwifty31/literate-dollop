@@ -9,8 +9,20 @@ export function useSync(): void {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
+    function scheduleProcessQueue() {
+      if (!isMounted) return;
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        if (!isMounted) return;
+        timerRef.current = null;
+        void processQueue();
+      }, DEBOUNCE_MS);
+    }
+
     void primeNetworkState().then(() => {
-      scheduleProcessQueue();
+      if (isMounted) scheduleProcessQueue();
     });
 
     const unsubscribe = subscribeOnline((online) => {
@@ -18,15 +30,12 @@ export function useSync(): void {
     });
 
     return () => {
+      isMounted = false;
       unsubscribe();
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
     };
-
-    function scheduleProcessQueue() {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => {
-        void processQueue();
-      }, DEBOUNCE_MS);
-    }
   }, []);
 }
