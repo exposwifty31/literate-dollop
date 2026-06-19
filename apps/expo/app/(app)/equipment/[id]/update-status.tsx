@@ -46,8 +46,9 @@ function statusLabel(status: EquipmentStatus): string {
     case "sterilized":
       return t.status.sterilized;
     case "critical":
+      return t.status.critical;
     case "needs_attention":
-      return t.status.info;
+      return t.status.needs_attention;
     default: {
       const _exhaustive: never = status;
       return _exhaustive;

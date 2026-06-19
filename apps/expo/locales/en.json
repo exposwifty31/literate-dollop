@@ -40,7 +40,9 @@
     "sterilized": "Sterilized",
     "all": "All statuses",
     "info": "Info",
-    "neutral": "Unknown"
+    "neutral": "Unknown",
+    "critical": "Critical",
+    "needs_attention": "Needs Attention"
   },
   "layout": {
     "nav": {

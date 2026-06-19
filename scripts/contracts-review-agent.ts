@@ -169,7 +169,7 @@ diff -u ~/literate-dollop/packages/contracts/src/pending-sync.ts \\
 
     if (result.status === "error") {
       console.error(`\n[contracts-review] Agent run failed (run ${runId}).`);
-      process.exit(2);
+      throw Object.assign(new Error("agent-run-failed"), { exitCode: 2 });
     }
 
     if (OUT_FILE) {
@@ -183,7 +183,7 @@ diff -u ~/literate-dollop/packages/contracts/src/pending-sync.ts \\
     if (err instanceof CursorAgentError) {
       console.error(`\n[contracts-review] Startup failed: ${err.message}`);
       console.error(`  Retryable: ${err.isRetryable}`);
-      process.exit(1);
+      throw Object.assign(err, { exitCode: 1 });
     }
     throw err;
   } finally {
@@ -191,4 +191,7 @@ diff -u ~/literate-dollop/packages/contracts/src/pending-sync.ts \\
   }
 }
 
-main();
+main().catch((err: unknown) => {
+  const code = (err as { exitCode?: number }).exitCode ?? 2;
+  process.exit(code);
+});
