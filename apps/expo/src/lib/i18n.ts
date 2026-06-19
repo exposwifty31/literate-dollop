@@ -431,6 +431,26 @@ const translations = {
     signedInAs: (email: string) => tr(d.home.signedInAs, { email }),
   },
 
+  shiftCard: {
+    noActiveShift: d.shiftCard.noActiveShift,
+    itemsOut: (count: number) => tr(d.shiftCard.itemsOut, { count }),
+    shiftStartedAt: (time: string) => tr(d.shiftCard.shiftStartedAt, { time }),
+    endShiftCta: d.shiftCard.endShiftCta,
+  },
+
+  handoff: {
+    title: d.handoff.title,
+    confirmCta: d.handoff.confirmCta,
+    unreturnedWarning: (count: number) => tr(d.handoff.unreturnedWarning, { count }),
+    noItemsOut: d.handoff.noItemsOut,
+    success: d.handoff.success,
+    loadError: d.handoff.loadError,
+    saveError: d.handoff.saveError,
+    noShiftError: d.handoff.noShiftError,
+    alreadyEnded: d.handoff.alreadyEnded,
+    cancel: d.handoff.cancel,
+  },
+
   equipment: {
     ...d.equipment,
     rfidLastSeen: {
@@ -442,7 +462,14 @@ const translations = {
         tr(d.equipment.rfidAttention.checkedOutMismatch, { room, holder }),
     },
   },
-  rooms: d.rooms,
+  rooms: {
+    ...d.rooms,
+    list: {
+      ...d.rooms.list,
+      equipment: (total: number, available: number, inUse: number) =>
+        tr(d.rooms.list.equipment, { total, available, inUse }),
+    },
+  },
 
   app: d.app,
 

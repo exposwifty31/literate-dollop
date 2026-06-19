@@ -69,8 +69,35 @@ Still deferred: full `api.ts` surface, use-auth, equipment cache tables, QR came
 | **Update status screen** | `apps/expo/app/(app)/equipment/[id]/update-status.tsx` | status picker; optimistic-concurrency `version` field; 409 → conflict error |
 | **Checkout / return inline** | `apps/expo/app/(app)/equipment/[id].tsx` | primary action buttons; re-fetches on success |
 | **New equipment screen** | `apps/expo/app/(app)/equipment/new.tsx` | create form (name required; serial/model/manufacturer/location optional) |
-| **Alerts API helper** | `apps/expo/src/lib/api/alerts.ts` | `GET /api/alerts` + `PATCH /api/alerts/:id/read` |
-| **Alerts tab route** | `apps/expo/app/(app)/(tabs)/alerts.tsx` | notification feed; unread badge; mark-as-read |
+
+
+---
+
+## ✅ Phase 4 — Route parity Wave 2 (complete)
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **equipment-actions API** | `apps/expo/src/lib/api/equipment-actions.ts` | `PATCH /api/equipment/:id`, `POST /checkout`, `/return`, `/api/equipment` |
+| **Status update screen** | `apps/expo/app/(app)/equipment/[id]/update-status.tsx` | status update with optimistic concurrency |
+| **New equipment screen** | `apps/expo/app/(app)/equipment/new.tsx` | create new equipment |
+| **Inline checkout/return** | `apps/expo/app/(app)/equipment/[id].tsx` | inline checkout + return actions in detail view |
+| **i18n keys** | `apps/expo/locales/{en,he}.json` | `status.critical`, `status.needs_attention`, `newEquipment.fields.name.label` |
+
+---
+
+## 🔵 Phase 5 — Shift + Rooms + Alerts (in progress)
+
+### Wave 3 — Shift
+- [ ] `apps/expo/src/lib/api/shift.ts` — `GET /api/shifts/current`, `POST /api/shifts/:id/handoff`
+- [ ] Extend `/(app)/(tabs)/index` with shift summary card
+- [ ] `apps/expo/app/(app)/shift/handoff.tsx` — shift handoff confirmation screen
+
+### Wave 4 — Rooms + Alerts
+- [ ] `apps/expo/src/lib/api/rooms.ts` — `GET /api/rooms`
+- [ ] `apps/expo/app/(app)/(tabs)/rooms.tsx` — rooms list tab
+- [ ] `apps/expo/src/lib/api/alerts.ts` — `GET /api/alerts`
+- [ ] `apps/expo/app/(app)/(tabs)/alerts.tsx` — alerts tab
+- [ ] Update `_layout.tsx` to include rooms + alerts tabs
 
 ---
 

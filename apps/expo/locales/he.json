@@ -719,22 +719,41 @@
     "addEquipment": "הוסף ציוד",
     "browseEquipment": "עיין בציוד",
     "appName": "VetTrack",
-    "phaseSubtitle": "אפליקציית Expo — שלב 3 (סריקת ציוד NFC)",
+    "phaseSubtitle": "אקספו מובייל — שלב 5 (משמרת, חדרים, התראות)",
     "phase1Title": "יציאת שלב 1 (הושלם)",
     "phase1Items": [
       "@vettrack/contracts מחובר",
       "PendingSyncStore + שכבת אופליין",
       "התחברות Clerk + /api/users/me"
     ],
-    "phase3Title": "שלב 3 בתהליך",
+    "phase3Title": "שלב 4 הושלם",
     "phase3Items": [
-      "פרוסה אנכית לסריקת ציוד NFC",
-      "מנוע סנכרון אופליין + השמעה חוזרת"
+      "רשימת ציוד, פרטים וחיפוש",
+      "קבלה / החזרה / עדכון סטטוס",
+      "יצירת ציוד חדש"
     ],
     "signedInAs": "מחובר בתור {email}",
     "signedInUnknown": "לא ידוע",
     "scanCta": "סריקת ציוד",
     "hint": "השתמש בלשונית החשבון כדי לאמת אימות API. בנה מחדש את לקוח ה-Dev של iOS לאחר שינויי תוסף."
+  },
+  "shiftCard": {
+    "noActiveShift": "אין משמרת פעילה",
+    "itemsOut": "{count} פריטים מחוץ",
+    "shiftStartedAt": "התחיל {time}",
+    "endShiftCta": "סיים משמרת"
+  },
+  "handoff": {
+    "title": "סיום משמרת",
+    "confirmCta": "אישור סיום משמרת",
+    "unreturnedWarning": "{count} פריטים עדיין לא הוחזרו",
+    "noItemsOut": "כל הציוד הוחזר",
+    "success": "המשמרת הסתיימה בהצלחה",
+    "loadError": "נכשל בטעינת נתוני המשמרת",
+    "saveError": "נכשל בסיום המשמרת. אנא נסה שוב.",
+    "noShiftError": "אין משמרת פעילה לסיים",
+    "alreadyEnded": "משמרת זו כבר הסתיימה",
+    "cancel": "ביטול"
   },
   "equipment": {
     "title": "ציוד",
@@ -758,6 +777,16 @@
     "gatewayCode": {
       "label": "מזהה שער RFID",
       "placeholder": "לדוגמה GW-101"
+    },
+    "list": {
+      "empty": {
+        "message": "לא נמצאו חדרים",
+        "subMessage": "חדרים יופיעו כאן לאחר שיתווספו."
+      },
+      "errors": {
+        "loadFailed": "טעינת החדרים נכשלה. נסה שוב."
+      },
+      "equipment": "{total} ציוד · {available} זמין · {inUse} בשימוש"
     }
   },
   "app": {
