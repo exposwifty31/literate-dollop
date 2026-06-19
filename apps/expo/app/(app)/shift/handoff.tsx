@@ -19,6 +19,7 @@ export default function ShiftHandoffScreen() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   const loadShift = useCallback(async () => {
     setLoading(true);
@@ -41,6 +42,14 @@ export default function ShiftHandoffScreen() {
     void loadShift();
   }, [loadShift]);
 
+  useEffect(() => {
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [timeoutId]);
+
   const handleConfirm = useCallback(async () => {
     if (!shift?.openShiftSession) {
       setSaveError(t.handoff.noShiftError);
@@ -52,9 +61,10 @@ export default function ShiftHandoffScreen() {
       await submitShiftHandoff(shift.openShiftSession.id);
       setSuccess(true);
       // Navigate back after a brief success state
-      setTimeout(() => {
+      const id = setTimeout(() => {
         router.back();
       }, 1200);
+      setTimeoutId(id);
     } catch (err: unknown) {
       if ((err as { status?: number }).status === 409) {
         setSaveError(t.handoff.alreadyEnded);
