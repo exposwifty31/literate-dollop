@@ -111,7 +111,7 @@ export default function RoomsScreen() {
               textColor={colors.text}
               badgeBackgroundColor={colors.text + "1a"}
               badgeTextColor={colors.text}
-              onPress={() => router.push(`/rooms/${item.id}`)}
+              onPress={() => router.push({ pathname: '/rooms/[id]', params: { id: item.id } })}
             />
           )}
           onRefresh={load}
