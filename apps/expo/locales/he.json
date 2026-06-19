@@ -755,6 +755,16 @@
     "gatewayCode": {
       "label": "מזהה שער RFID",
       "placeholder": "לדוגמה GW-101"
+    },
+    "list": {
+      "empty": {
+        "message": "לא נמצאו חדרים",
+        "subMessage": "חדרים יופיעו כאן לאחר שיתווספו."
+      },
+      "errors": {
+        "loadFailed": "טעינת החדרים נכשלה. נסה שוב."
+      },
+      "equipment": "{total} ציוד · {available} זמין · {inUse} בשימוש"
     }
   },
   "app": {
