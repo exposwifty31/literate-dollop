@@ -20,6 +20,8 @@ const BASE_HEADERS: Record<string, string> = {
 export interface OfflineRequestOptions {
   offlineType: PendingSyncType;
   optimisticResult?: unknown;
+  clientTimestamp?: number;
+  onEnqueued?: (id: number) => void;
 }
 
 class ApiError extends Error {
@@ -104,8 +106,8 @@ export async function request<T>(
     }
 
     if (isNetworkError(err) && offline) {
-      const clientTimestamp = Date.now();
-      await addPendingSync({
+      const clientTimestamp = offline.clientTimestamp ?? Date.now();
+      const pendingSyncId = await addPendingSync({
         type: offline.offlineType,
         endpoint: url,
         method: (init.method as string) || "GET",
@@ -118,6 +120,7 @@ export async function request<T>(
           ? JSON.stringify(offline.optimisticResult)
           : undefined,
       });
+      offline.onEnqueued?.(pendingSyncId);
 
       if (offline.optimisticResult !== undefined) {
         return offline.optimisticResult as T;

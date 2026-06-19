@@ -426,7 +426,10 @@ const translations = {
 
   auth: d.auth,
 
-  home: d.home,
+  home: {
+    ...d.home,
+    signedInAs: (email: string) => tr(d.home.signedInAs, { email }),
+  },
 
   equipment: {
     ...d.equipment,
@@ -538,6 +541,8 @@ const translations = {
     alreadyToggledRecently: d.equipmentNfc.alreadyToggledRecently,
     toggling: (name: string) => tr(d.equipmentNfc.toggling, { name }),
   },
+
+  scanScreen: d.scanScreen,
 
   nfcEntry: {
     openingEquipment: d.nfcEntry.openingEquipment,

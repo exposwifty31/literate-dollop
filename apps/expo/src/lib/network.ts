@@ -1,3 +1,5 @@
+import NetInfo from "@react-native-community/netinfo";
+
 export class TimeoutError extends Error {
   constructor(ms: number) {
     super(`Request timed out after ${ms}ms`);
@@ -13,16 +15,41 @@ export class OfflineResponseError extends Error {
 }
 
 let forcedOffline = false;
+let cachedOnline = true;
 
 /** Test hook — force offline classification without mutating NetInfo. */
 export function setForcedOfflineForTests(value: boolean): void {
   forcedOffline = value;
 }
 
-export function isOnline(): boolean {
-  if (forcedOffline) return false;
+function readOnline(isConnected: boolean | null, isInternetReachable: boolean | null): boolean {
+  if (isConnected !== true) return false;
+  if (isInternetReachable === false) return false;
   return true;
 }
+
+/** Call once at app startup (from use-sync or root layout). */
+export async function primeNetworkState(): Promise<void> {
+  const state = await NetInfo.fetch();
+  cachedOnline = readOnline(state.isConnected, state.isInternetReachable);
+}
+
+export function isOnline(): boolean {
+  if (forcedOffline) return false;
+  return cachedOnline;
+}
+
+export function subscribeOnline(callback: (online: boolean) => void): () => void {
+  return NetInfo.addEventListener((state) => {
+    cachedOnline = readOnline(state.isConnected, state.isInternetReachable);
+    callback(isOnline());
+  });
+}
+
+// Keep cachedOnline in sync with NetInfo after primeNetworkState.
+NetInfo.addEventListener((state) => {
+  cachedOnline = readOnline(state.isConnected, state.isInternetReachable);
+});
 
 export function isNetworkError(err: unknown): boolean {
   if (err instanceof TimeoutError) return true;

@@ -714,7 +714,24 @@
     "shiftSummary": "סיכום משמרת",
     "scanQrCode": "סרוק QR",
     "addEquipment": "הוסף ציוד",
-    "browseEquipment": "עיין בציוד"
+    "browseEquipment": "עיין בציוד",
+    "appName": "VetTrack",
+    "phaseSubtitle": "אפליקציית Expo — שלב 3 (סריקת ציוד NFC)",
+    "phase1Title": "יציאת שלב 1 (הושלם)",
+    "phase1Items": [
+      "@vettrack/contracts מחובר",
+      "PendingSyncStore + שכבת אופליין",
+      "התחברות Clerk + /api/users/me"
+    ],
+    "phase3Title": "שלב 3 בתהליך",
+    "phase3Items": [
+      "פרוסה אנכית לסריקת ציוד NFC",
+      "מנוע סנכרון אופליין + השמעה חוזרת"
+    ],
+    "signedInAs": "מחובר בתור {email}",
+    "signedInUnknown": "לא ידוע",
+    "scanCta": "סריקת ציוד",
+    "hint": "השתמש בלשונית החשבון כדי לאמת אימות API. בנה מחדש את לקוח ה-Dev של iOS לאחר שינויי תוסף."
   },
   "equipment": {
     "title": "ציוד",
@@ -3251,6 +3268,20 @@
   "nfcEntry": {
     "openingEquipment": "פותח ציוד…",
     "signInFirst": "יש להתחבר תחילה ואז לסרוק שוב."
+  },
+  "scanScreen": {
+    "title": "סריקת ציוד",
+    "scanCta": "סרוק תג NFC",
+    "confirmCta": "אשר סריקה",
+    "cancel": "ביטול",
+    "scanning": "קרב את התג…",
+    "resolvedLabel": "מזהה ציוד",
+    "successTitle": "הסריקה נרשמה",
+    "queuedTitle": "בתור לסנכרון",
+    "syncedTitle": "סונכרן",
+    "failedTitle": "הסנכרון נכשל",
+    "retry": "נסה שוב לסנכרן",
+    "unsupported": "NFC אינו זמין במכשיר זה"
   },
   "staleCheckout": {
     "pushTitle": "ציוד עדיין בשימוש",
