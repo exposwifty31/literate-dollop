@@ -716,17 +716,18 @@
     "addEquipment": "Add equipment",
     "browseEquipment": "Browse equipment",
     "appName": "VetTrack",
-    "phaseSubtitle": "Expo mobile — Phase 3 (NFC equipment scan)",
+    "phaseSubtitle": "Expo mobile — Phase 5 (shift, rooms, alerts)",
     "phase1Title": "Phase 1 exit (complete)",
     "phase1Items": [
       "@vettrack/contracts wired",
       "PendingSyncStore + offline seam",
       "Clerk sign-in + /api/users/me"
     ],
-    "phase3Title": "Phase 3 in progress",
+    "phase3Title": "Phase 4 complete",
     "phase3Items": [
-      "NFC equipment scan vertical slice",
-      "Offline-first sync engine + replay"
+      "Equipment list, detail, and search",
+      "Checkout / return / status update",
+      "New equipment creation"
     ],
     "signedInAs": "Signed in as {email}",
     "signedInUnknown": "unknown",
