@@ -70,6 +70,7 @@ Still deferred: full `api.ts` surface, use-auth, equipment cache tables, QR came
 | **Checkout / return inline** | `apps/expo/app/(app)/equipment/[id].tsx` | primary action buttons; re-fetches on success |
 | **New equipment screen** | `apps/expo/app/(app)/equipment/new.tsx` | create form (name required; serial/model/manufacturer/location optional) |
 
+
 ---
 
 ## ✅ Phase 4 — Route parity Wave 2 (complete)
