@@ -5,6 +5,7 @@
 
 # Agent harness / eval artifacts (local-only; not source)
 /gan-harness/
+/.claude/
 
 # dependencies
 node_modules/
