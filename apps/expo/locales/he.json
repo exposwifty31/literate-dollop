@@ -733,6 +733,24 @@
     "scanCta": "סריקת ציוד",
     "hint": "השתמש בלשונית החשבון כדי לאמת אימות API. בנה מחדש את לקוח ה-Dev של iOS לאחר שינויי תוסף."
   },
+  "shiftCard": {
+    "noActiveShift": "אין משמרת פעילה",
+    "itemsOut": "{count} פריטים מחוץ",
+    "shiftStartedAt": "התחיל {time}",
+    "endShiftCta": "סיים משמרת"
+  },
+  "handoff": {
+    "title": "סיום משמרת",
+    "confirmCta": "אישור סיום משמרת",
+    "unreturnedWarning": "{count} פריטים עדיין לא הוחזרו",
+    "noItemsOut": "כל הציוד הוחזר",
+    "success": "המשמרת הסתיימה בהצלחה",
+    "loadError": "נכשל בטעינת נתוני המשמרת",
+    "saveError": "נכשל בסיום המשמרת. אנא נסה שוב.",
+    "noShiftError": "אין משמרת פעילה לסיים",
+    "alreadyEnded": "משמרת זו כבר הסתיימה",
+    "cancel": "ביטול"
+  },
   "equipment": {
     "title": "ציוד",
     "scanQr": "סרוק QR",
