@@ -737,6 +737,24 @@
     "scanCta": "Scan equipment",
     "hint": "Use the Account tab to verify API auth. Rebuild the iOS dev client after plugin changes."
   },
+  "shiftCard": {
+    "noActiveShift": "No active shift",
+    "itemsOut": "{count} items out",
+    "shiftStartedAt": "Started {time}",
+    "endShiftCta": "End Shift"
+  },
+  "handoff": {
+    "title": "End Shift",
+    "confirmCta": "Confirm End of Shift",
+    "unreturnedWarning": "{count} items still checked out",
+    "noItemsOut": "All equipment returned",
+    "success": "Shift ended successfully",
+    "loadError": "Failed to load shift data",
+    "saveError": "Failed to end shift. Please try again.",
+    "noShiftError": "No active shift to end",
+    "alreadyEnded": "This shift has already been ended",
+    "cancel": "Cancel"
+  },
   "equipment": {
     "title": "Equipment",
     "scanQr": "Scan QR",
