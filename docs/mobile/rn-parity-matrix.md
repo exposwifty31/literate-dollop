@@ -59,19 +59,19 @@ These pages **do not exist in the RN target** — removed from vettrack at migra
 | Checkout / return (inline) | Inline in detail | P1 | `POST /api/equipment/:id/checkout` + `/return` | ✅ Complete |
 | New equipment | `/(app)/equipment/new` | P2 | `POST /api/equipment` | ✅ Complete |
 
-### Wave 3 — Shift (🔵 In progress — Phase 5)
+### Wave 3 — Shift (✅ Complete)
 
 | vettrack reference | Expo route | Priority | Notes | Status |
 |-------------------|-----------|----------|-------|--------|
-| `home.tsx` (active shift) | `/(app)/(tabs)/index` (extend) | P1 | Shift summary, handover CTA | 🔵 In progress (Phase 5) |
-| `handoff.tsx` | `/(app)/shift/handoff` | P2 | Shift handover flow | 🔵 In progress (Phase 5) |
+| `home.tsx` (active shift) | `/(app)/(tabs)/index` (extend) | P1 | Shift summary, handover CTA | ✅ Complete |
+| `handoff.tsx` | `/(app)/shift/handoff` | P2 | Shift handover flow | ✅ Complete |
 
-### Wave 4 — Rooms / alerts (🔵 In progress — Phase 5)
+### Wave 4 — Rooms / alerts (✅ Complete)
 
 | vettrack reference | Expo route | Priority | Notes | Status |
 |-------------------|-----------|----------|-------|--------|
-| `rooms-list.tsx` | `/(app)/(tabs)/rooms` | P2 | Room browse + equipment per room | 🔵 In progress (Phase 5) |
-| `alerts.tsx` | `/(app)/(tabs)/alerts` | P2 | Critical + overdue alerts | 🔵 In progress (Phase 5) |
+| `rooms-list.tsx` | `/(app)/(tabs)/rooms` | P2 | Room browse + equipment per room | ✅ Complete |
+| `alerts.tsx` | `/(app)/(tabs)/alerts` | P2 | Critical + overdue alerts | ✅ Complete |
 
 ---
 

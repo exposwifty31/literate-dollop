@@ -115,23 +115,7 @@ export default function HomeScreen() {
       <Text style={styles.title}>{t.home.appName}</Text>
       <Text style={styles.subtitle}>{t.home.phaseSubtitle}</Text>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>{t.home.phase1Title}</Text>
-        {t.home.phase1Items.map((item) => (
-          <Text key={item} style={styles.bullet}>
-            • {item}
-          </Text>
-        ))}
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>{t.home.phase3Title}</Text>
-        {t.home.phase3Items.map((item) => (
-          <Text key={item} style={styles.bullet}>
-            • {item}
-          </Text>
-        ))}
-      </View>
+      <ShiftSummaryCard />
 
       <Pressable
         accessibilityRole="button"
@@ -142,8 +126,6 @@ export default function HomeScreen() {
       >
         <Text style={styles.scanButtonText}>{t.home.scanCta}</Text>
       </Pressable>
-
-      <ShiftSummaryCard />
 
       {isClerkActive ? <ClerkSignedInBanner /> : null}
 
@@ -165,21 +147,6 @@ const styles = StyleSheet.create({
   subtitle: {
     color: "#687076",
     fontSize: 16,
-    lineHeight: 22,
-  },
-  card: {
-    backgroundColor: "#f4f6f8",
-    borderRadius: 12,
-    gap: 8,
-    padding: 16,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  bullet: {
-    fontSize: 15,
     lineHeight: 22,
   },
   scanButton: {

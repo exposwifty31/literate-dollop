@@ -31,6 +31,17 @@ Path aliases added: `@/types`, `@/types/*`, `@/features/*`, `@/hooks/*` (tsconfi
 
 ---
 
+## ✅ Phase 2 — VetTrackControl config plugin (complete)
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **VetTrackControl Swift** | `plugins/vettrack-control/ios/` | `VetTrackScanControl.swift`, `OpenScanIntent.swift`, `Info.plist`, `expo-target.config.js` |
+| **config plugin** | `plugins/vettrack-control/withVetTrackControl.js` | syncs `CURRENT_PROJECT_VERSION` from `EAS_BUILD_IOS_BUILD_NUMBER`; targets iOS 18 WidgetKit extension |
+
+**Exit gate:** `vettrack-control-plugin.test.ts` — 4/4 tests pass.
+
+---
+
 ## ✅ Phase 3 — NFC equipment scan vertical slice (complete)
 
 | Item | destination | notes |
@@ -45,7 +56,7 @@ Path aliases added: `@/types`, `@/types/*`, `@/features/*`, `@/hooks/*` (tsconfi
 | **deep-link-return.ts** | `apps/expo/src/lib/linking/deep-link-return.ts` | `vettrack://scan` → `/scan` + auth returnTo |
 | **VetTrackControl plugin** | `plugins/vettrack-control/` | config plugin for widget + NFC hardware QA |
 
-**Exit gate:** 61 vitest tests pass, `tsc --noEmit` clean, PR #4 open.  
+**Exit gate:** 75 vitest tests pass, `tsc --noEmit` clean.  
 Still deferred: full `api.ts` surface, use-auth, equipment cache tables, QR camera.
 
 ---
@@ -61,18 +72,6 @@ Still deferred: full `api.ts` surface, use-auth, equipment cache tables, QR came
 
 ---
 
-## 🔵 Phase 4 — Route parity Wave 2 (in progress)
-
-| Item | destination | notes |
-|------|-------------|-------|
-| **equipment-actions API** | `apps/expo/src/lib/api/equipment-actions.ts` | `PATCH /api/equipment/:id` + `/checkout` + `/return` + `POST /api/equipment` |
-| **Update status screen** | `apps/expo/app/(app)/equipment/[id]/update-status.tsx` | status picker; optimistic-concurrency `version` field; 409 → conflict error |
-| **Checkout / return inline** | `apps/expo/app/(app)/equipment/[id].tsx` | primary action buttons; re-fetches on success |
-| **New equipment screen** | `apps/expo/app/(app)/equipment/new.tsx` | create form (name required; serial/model/manufacturer/location optional) |
-
-
----
-
 ## ✅ Phase 4 — Route parity Wave 2 (complete)
 
 | Item | destination | notes |
@@ -85,19 +84,26 @@ Still deferred: full `api.ts` surface, use-auth, equipment cache tables, QR came
 
 ---
 
-## 🔵 Phase 5 — Shift + Rooms + Alerts (in progress)
+## ✅ Phase 5 — Shift + Rooms + Alerts (complete)
 
 ### Wave 3 — Shift
-- [ ] `apps/expo/src/lib/api/shift.ts` — `GET /api/shifts/current`, `POST /api/shifts/:id/handoff`
-- [ ] Extend `/(app)/(tabs)/index` with shift summary card
-- [ ] `apps/expo/app/(app)/shift/handoff.tsx` — shift handoff confirmation screen
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **shift API** | `apps/expo/src/lib/api/shift.ts` | `GET /api/shifts/current` (404 → null) + `POST /api/shifts/:id/handoff` |
+| **ShiftSummaryCard** | `apps/expo/app/(app)/(tabs)/index.tsx` | shift card on home tab; "End shift" CTA navigates to handoff screen |
+| **shift handoff screen** | `apps/expo/app/(app)/shift/handoff.tsx` | unreturned-items summary + confirm/cancel; 409 handled |
 
 ### Wave 4 — Rooms + Alerts
-- [ ] `apps/expo/src/lib/api/rooms.ts` — `GET /api/rooms`
-- [ ] `apps/expo/app/(app)/(tabs)/rooms.tsx` — rooms list tab
-- [ ] `apps/expo/src/lib/api/alerts.ts` — `GET /api/alerts`
-- [ ] `apps/expo/app/(app)/(tabs)/alerts.tsx` — alerts tab
-- [ ] Update `_layout.tsx` to include rooms + alerts tabs
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **rooms API** | `apps/expo/src/lib/api/rooms.ts` | `GET /api/rooms`, `GET /api/rooms/:id` |
+| **rooms list tab** | `apps/expo/app/(app)/(tabs)/rooms.tsx` | FlatList with equipment count badges; navigates to room detail |
+| **room detail screen** | `apps/expo/app/(app)/rooms/[id].tsx` | name + floor display |
+| **alerts API** | `apps/expo/src/lib/api/alerts.ts` | `GET /api/alerts` |
+| **alerts tab** | `apps/expo/app/(app)/(tabs)/alerts.tsx` | severity-badged alert list; inline refresh banner on stale data |
+| **tabs layout** | `apps/expo/app/(app)/(tabs)/_layout.tsx` | rooms + alerts tabs added alongside equipment and my-equipment |
 
 ---
 
@@ -126,7 +132,7 @@ UI components (`*.tsx` under `src/features/*/components`, e.g. `DispenseSheet`,
 
 ## 🔵 / 🔴 (per Import Manifest)
 
-- 🔵 SwiftUI `VetTrackControl`: Phase 2 — plugin at `plugins/vettrack-control/`.
-- 🔵 NFC equipment scan: Phase 3 — `nfc-platform.ts` + `/scan` screen (dev build required).
+- ✅ SwiftUI `VetTrackControl`: Phase 2 — plugin at `plugins/vettrack-control/` (4 tests passing).
+- ✅ NFC equipment scan: Phase 3 — `nfc-platform.ts` + `/scan` screen (dev build required).
 - 🔴 Not imported (stays in vettrack): `server/**`, `migrations/**`, `src/pages/**`,
   `src/components/ui/**`, Capacitor `ios/android`, Vite/PWA/service-worker.
