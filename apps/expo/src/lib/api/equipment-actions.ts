@@ -20,7 +20,7 @@ export async function patchEquipmentStatus(
 export async function checkoutEquipment(id: string): Promise<QuickScanToggleResult> {
   return request<QuickScanToggleResult>(
     `/api/equipment/${encodeURIComponent(id)}/checkout`,
-    { method: "POST", body: JSON.stringify({}) },
+    { method: "POST" },
   );
 }
 

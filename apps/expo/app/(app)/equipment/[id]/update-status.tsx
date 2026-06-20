@@ -12,49 +12,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
+import { STATUSES, STATUS_HEX_COLORS, statusLabel } from "@/constants/statusColors";
 import { fetchEquipmentById } from "@/lib/api/equipment-list";
 import { patchEquipmentStatus } from "@/lib/api/equipment-actions";
 import { t } from "@/lib/i18n";
 import type { Equipment, EquipmentStatus } from "@/types/equipment";
-
-const STATUSES: EquipmentStatus[] = [
-  "ok",
-  "issue",
-  "maintenance",
-  "sterilized",
-  "critical",
-  "needs_attention",
-];
-
-const STATUS_COLORS: Record<EquipmentStatus, string> = {
-  ok: "#16a34a",
-  issue: "#dc2626",
-  maintenance: "#d97706",
-  sterilized: "#0891b2",
-  critical: "#b91c1c",
-  needs_attention: "#c2410c",
-};
-
-function statusLabel(status: EquipmentStatus): string {
-  switch (status) {
-    case "ok":
-      return t.status.ok;
-    case "issue":
-      return t.status.issue;
-    case "maintenance":
-      return t.status.maintenance;
-    case "sterilized":
-      return t.status.sterilized;
-    case "critical":
-      return t.status.critical;
-    case "needs_attention":
-      return t.status.needs_attention;
-    default: {
-      const _exhaustive: never = status;
-      return _exhaustive;
-    }
-  }
-}
 
 export default function UpdateStatusScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -150,7 +112,7 @@ export default function UpdateStatusScreen() {
 
         {STATUSES.map((status) => {
           const isSelected = selected === status;
-          const color = STATUS_COLORS[status];
+          const color = STATUS_HEX_COLORS[status];
           return (
             <Pressable
               key={status}
