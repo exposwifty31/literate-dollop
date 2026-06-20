@@ -719,19 +719,7 @@
     "addEquipment": "Add equipment",
     "browseEquipment": "Browse equipment",
     "appName": "VetTrack",
-    "phaseSubtitle": "Expo mobile — Phase 5 (shift, rooms, alerts)",
-    "phase1Title": "Phase 1 exit (complete)",
-    "phase1Items": [
-      "@vettrack/contracts wired",
-      "PendingSyncStore + offline seam",
-      "Clerk sign-in + /api/users/me"
-    ],
-    "phase3Title": "Phase 4 complete",
-    "phase3Items": [
-      "Equipment list, detail, and search",
-      "Checkout / return / status update",
-      "New equipment creation"
-    ],
+    "phaseSubtitle": "Your shift at a glance",
     "signedInAs": "Signed in as {email}",
     "signedInUnknown": "unknown",
     "scanCta": "Scan equipment",

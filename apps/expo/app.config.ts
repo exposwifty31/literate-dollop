@@ -53,6 +53,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     "expo-router",
     "expo-dev-client",
     "expo-secure-store",
+    "expo-web-browser",
     [
       "expo-splash-screen",
       {

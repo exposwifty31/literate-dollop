@@ -719,19 +719,7 @@
     "addEquipment": "הוסף ציוד",
     "browseEquipment": "עיין בציוד",
     "appName": "VetTrack",
-    "phaseSubtitle": "אקספו מובייל — שלב 5 (משמרת, חדרים, התראות)",
-    "phase1Title": "יציאת שלב 1 (הושלם)",
-    "phase1Items": [
-      "@vettrack/contracts מחובר",
-      "PendingSyncStore + שכבת אופליין",
-      "התחברות Clerk + /api/users/me"
-    ],
-    "phase3Title": "שלב 4 הושלם",
-    "phase3Items": [
-      "רשימת ציוד, פרטים וחיפוש",
-      "קבלה / החזרה / עדכון סטטוס",
-      "יצירת ציוד חדש"
-    ],
+    "phaseSubtitle": "המשמרת שלך במבט אחד",
     "signedInAs": "מחובר בתור {email}",
     "signedInUnknown": "לא ידוע",
     "scanCta": "סריקת ציוד",
