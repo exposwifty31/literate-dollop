@@ -78,7 +78,7 @@ Hebrew locale is the default; ensure Hebrew strings are added alongside English.
 **Linked plan step:** PLAN.md Step 3
 
 **What to do:**
-Add `getEquipmentByTagId(tagId: string)` to the API layer (`src/features/equipment/api.ts` or equivalent). Implement offline-first: return from cache if warm, else fetch from network, else queue a sync mutation via `PendingSyncStore`. The Code Blue enforcement call chain must be preserved — `classifyEmergencyEndpoint` before any queue write.
+Add `getEquipmentByTagId(tagId: string)` to the API layer (`src/features/equipment/api.ts` or equivalent). Fetch from network; if offline, queue a sync mutation via `PendingSyncStore`. The Code Blue enforcement call chain must be preserved — `classifyEmergencyEndpoint` before any queue write. Cache tables are deferred to Phase 3b — do not implement caching here.
 
 **Acceptance criteria:**
 - [ ] `classifyEmergencyEndpoint` is called before any `PendingSyncStore` write
