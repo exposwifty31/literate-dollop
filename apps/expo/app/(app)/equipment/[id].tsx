@@ -12,39 +12,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
+import { STATUS_HEX_COLORS, statusLabel } from "@/constants/statusColors";
 import { fetchEquipmentById } from "@/lib/api/equipment-list";
 import { checkoutEquipment, returnEquipment } from "@/lib/api/equipment-actions";
 import { t } from "@/lib/i18n";
-import type { Equipment, EquipmentStatus } from "@/types/equipment";
-
-const STATUS_COLORS: Record<string, string> = {
-  ok: "#16a34a",
-  issue: "#dc2626",
-  maintenance: "#d97706",
-  sterilized: "#0891b2",
-  critical: "#b91c1c",
-  needs_attention: "#c2410c",
-};
-
-function statusLabel(status: EquipmentStatus): string {
-  switch (status) {
-    case "ok":
-      return t.status.ok;
-    case "issue":
-      return t.status.issue;
-    case "maintenance":
-      return t.status.maintenance;
-    case "sterilized":
-      return t.status.sterilized;
-    case "critical":
-    case "needs_attention":
-      return t.status.info;
-    default: {
-      const _exhaustive: never = status;
-      return _exhaustive;
-    }
-  }
-}
+import type { Equipment } from "@/types/equipment";
 
 function DetailRow({
   label,
@@ -97,29 +69,19 @@ export default function EquipmentDetailScreen() {
     void load();
   }, [load]);
 
-  const handleCheckout = async () => {
+  const handleAction = async (action: "checkout" | "return") => {
     if (!id || actionLoading) return;
     setActionLoading(true);
     setActionError(null);
     try {
-      const result = await checkoutEquipment(id);
+      const result = await (action === "checkout" ? checkoutEquipment : returnEquipment)(id);
       setEquipment(result.equipment);
     } catch {
-      setActionError(t.equipmentDetail.toast.checkoutFailed(""));
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleReturn = async () => {
-    if (!id || actionLoading) return;
-    setActionLoading(true);
-    setActionError(null);
-    try {
-      const result = await returnEquipment(id);
-      setEquipment(result.equipment);
-    } catch {
-      setActionError(t.equipmentDetail.toast.returnFailed(""));
+      setActionError(
+        action === "checkout"
+          ? t.equipmentDetail.toast.checkoutFailed("")
+          : t.equipmentDetail.toast.returnFailed(""),
+      );
     } finally {
       setActionLoading(false);
     }
@@ -152,7 +114,7 @@ export default function EquipmentDetailScreen() {
     );
   }
 
-  const statusColor = STATUS_COLORS[equipment.status] ?? "#687076";
+  const statusColor = STATUS_HEX_COLORS[equipment.status] ?? "#687076";
 
   return (
     <ScrollView
@@ -250,7 +212,7 @@ export default function EquipmentDetailScreen() {
         <Pressable
           accessibilityRole="button"
           disabled={actionLoading}
-          onPress={() => { void handleReturn(); }}
+          onPress={() => { void handleAction("return"); }}
           style={({ pressed }) => [
             styles.button,
             { backgroundColor: "#0891b2", opacity: actionLoading || pressed ? 0.7 : 1 },
@@ -266,7 +228,7 @@ export default function EquipmentDetailScreen() {
         <Pressable
           accessibilityRole="button"
           disabled={actionLoading}
-          onPress={() => { void handleCheckout(); }}
+          onPress={() => { void handleAction("checkout"); }}
           style={({ pressed }) => [
             styles.button,
             { backgroundColor: "#16a34a", opacity: actionLoading || pressed ? 0.7 : 1 },

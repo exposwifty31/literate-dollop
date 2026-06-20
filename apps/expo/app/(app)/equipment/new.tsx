@@ -26,9 +26,7 @@ interface FormState {
   location: string;
 }
 
-interface FormErrors {
-  name?: string;
-}
+type FormErrors = Partial<Record<keyof FormState, string>>;
 
 function validate(form: FormState): FormErrors {
   const errors: FormErrors = {};
@@ -57,7 +55,7 @@ export default function NewEquipmentScreen() {
 
   const setField = (field: keyof FormState) => (value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
-    if (errors[field as keyof FormErrors]) {
+    if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
