@@ -23,7 +23,7 @@ Bundle ID: `uk.vettrack.expo` — NOT `uk.vettrack.app` until Phase 6 go/no-go.
 | Phase | What is unlocked | Exit criteria before next phase |
 |-------|-----------------|----------------------------------|
 | **PR1** | Monorepo bootstrap, `@vettrack/contracts` in-repo, CI green | `pnpm contracts:gate` + typecheck green on GitHub Actions |
-| **1** | Offline seam, Clerk Expo | (1) contracts v0.1.0+ imported by apps/expo; (2) PendingSyncStore + integration test passing; (3) Clerk Expo sign-in + authenticated API call on device |
+| **1** | Offline seam, Clerk Expo | (1) contracts v0.1.0+ imported by apps/expo; (2) PendingSyncStore + integration test passing; (3) Clerk Expo sign-in + authenticated API call on device; (4) `src/lib/offline-emergency-block.ts` ported and verified before any SQLite write |
 | **2** | VetTrackControl config plugin | Dev build with widget target running on device |
 | **3** | NFC equipment scan vertical slice | One end-to-end offline-capable NFC workflow |
 | **4–5** | Route parity expansion | Per-route checklist |
