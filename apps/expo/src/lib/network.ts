@@ -30,8 +30,12 @@ function readOnline(isConnected: boolean | null, isInternetReachable: boolean | 
 
 /** Call once at app startup (from use-sync or root layout). */
 export async function primeNetworkState(): Promise<void> {
-  const state = await NetInfo.fetch();
-  cachedOnline = readOnline(state.isConnected, state.isInternetReachable);
+  try {
+    const state = await NetInfo.fetch();
+    cachedOnline = readOnline(state.isConnected, state.isInternetReachable);
+  } catch {
+    // Native module absent; leave cachedOnline at its current value.
+  }
 }
 
 export function isOnline(): boolean {
@@ -40,16 +44,29 @@ export function isOnline(): boolean {
 }
 
 export function subscribeOnline(callback: (online: boolean) => void): () => void {
-  return NetInfo.addEventListener((state) => {
-    cachedOnline = readOnline(state.isConnected, state.isInternetReachable);
-    callback(isOnline());
-  });
+  try {
+    return NetInfo.addEventListener((state) => {
+      cachedOnline = readOnline(state.isConnected, state.isInternetReachable);
+      callback(isOnline());
+    });
+  } catch {
+    return () => {};
+  }
 }
 
 // Keep cachedOnline in sync with NetInfo after primeNetworkState.
-NetInfo.addEventListener((state) => {
-  cachedOnline = readOnline(state.isConnected, state.isInternetReachable);
-});
+// Guard: native module absent in Expo Go / builds where netinfo isn't linked.
+// Without this try-catch the throw at module-init time poisons the entire
+// network.ts → api.ts → equipment-actions.ts import chain and causes
+// expo-router to receive `undefined` for any screen that imports those modules.
+try {
+  NetInfo.addEventListener((state) => {
+    cachedOnline = readOnline(state.isConnected, state.isInternetReachable);
+  });
+} catch {
+  // isOnline() will return the initial cached value (true) until a real build
+  // with the native module is installed.
+}
 
 export function isNetworkError(err: unknown): boolean {
   if (err instanceof TimeoutError) return true;
