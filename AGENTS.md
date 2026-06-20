@@ -1,5 +1,22 @@
 # AGENTS.md — literate-dollop
 
+> Mirrors CLAUDE.md — keep both files in sync when you update either.
+> Read by OpenAI Codex, GitHub Copilot Workspace, Aider, Cline, Roo Code, and similar tools.
+
+## Start Here — read these files before writing any code
+
+1. `CLAUDE.md` — project context, stack, frozen doctrine, known traps
+2. `PLAN.md` — what is currently in scope (Phase 3 NFC scan)
+3. `TASKS.md` — your specific task and acceptance criteria
+4. `DEFINITION_OF_DONE.md` — what "done" means for every task
+5. Every file you plan to modify
+
+Supporting docs: `docs/ARCHITECTURE.md`, `docs/CONVENTIONS.md`, `docs/DECISIONS.md`.
+
+If any of these are missing or incomplete, say so before proceeding.
+
+---
+
 ## Canonical repo
 Mobile strategy + `@vettrack/contracts` + Expo app.  
 **GitHub:** `exposwifty31/literate-dollop` (only remote for agent work).
@@ -83,3 +100,16 @@ Pre-ship verify: `bash scripts/eas-build-from-clean-tree.sh --verify-only` (from
 
 ## Skills
 `.agents/skills/expo/` — use for EAS, config plugins, Clerk RN patterns.
+
+## Agent Prompts
+Ready-to-use prompts in `prompts/`:
+- `prompts/plan.md` — use before planning a new feature; output goes into `PLAN.md`
+- `prompts/execute.md` — use when assigning a task from `TASKS.md` to an agent
+- `prompts/review.md` — use after an agent completes a task, before merging
+
+## Cursor Rules
+Project rules in `.cursor/rules/` apply to every Cursor edit session:
+- `00-core-behavior.mdc` — session start protocol, prime directive, hard stops
+- `01-anti-patterns.mdc` — AI code tells to avoid (comment theater, TODO abandonment, swallowed errors, etc.)
+- `02-workflow.mdc` — required phases: orient → clarify → plan → implement → verify → document
+- `03-testing.mdc` — what counts as a test, coverage requirements, AAA structure
