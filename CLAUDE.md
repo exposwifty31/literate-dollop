@@ -24,7 +24,7 @@
 | Runtime | React Native via Expo SDK (managed workflow) |
 | Framework | Expo Router (file-based navigation) |
 | Database | `expo-sqlite` — `PendingSyncStore` adapter (ADR 001) |
-| Testing | Vitest 3 (59 tests on main) |
+| Testing | Vitest 3 |
 | Package manager | pnpm 9.15.9 (workspace) |
 | Auth | `@clerk/clerk-expo` + SecureStore |
 | Hosting | EAS Build → App Store / Google Play |

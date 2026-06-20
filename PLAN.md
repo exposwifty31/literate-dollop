@@ -61,7 +61,7 @@ Build a thin vertical slice following the spec in `docs/superpowers/specs/2026-0
 
 1. **NFC adapter** (`src/lib/nfc-platform.ts`) — platform-agnostic interface over `expo-nfc`; returns tag ID.
 2. **Scan screen** (`app/(tabs)/scan.tsx`) — prompts user to hold device to tag; calls NFC adapter; navigates to equipment detail.
-3. **Equipment API** (thin slice of `api.ts`) — `GET /equipment/:tagId`; uses offline-first pattern: hit cache → fallback to network → queue on failure.
+3. **Equipment API** (thin slice of `api.ts`) — `GET /equipment/:tagId`; network fetch with offline fallback: fetch from network → queue mutation on failure.
 4. **Sync replay** — existing `PendingSyncStore` enqueue/replay path extended with equipment mutation type.
 
 Each layer is independently testable. Tests run before the next layer starts.
@@ -112,13 +112,12 @@ Each layer is independently testable. Tests run before the next layer starts.
 
 **Files to change:**
 - `apps/expo/src/lib/api.ts` (or `src/features/equipment/api.ts`) — `getEquipmentByTagId(tagId)` only; no full api.ts port
-- `tests/equipment-api.test.ts` — online success, offline cache hit, offline cache miss (queue mutation)
+- `tests/equipment-api.test.ts` — online success, offline queue mutation
 
 **Exit criteria:**
 - [ ] `classifyEmergencyEndpoint` called before any queue write (existing Code Blue enforcement)
-- [ ] Returns cached record when offline and cache is warm
-- [ ] Queues sync mutation when offline and cache is cold
-- [ ] Tests cover all three paths
+- [ ] Queues sync mutation when offline
+- [ ] Tests cover both paths (online success, offline queue)
 
 **Status:** `not started`
 

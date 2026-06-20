@@ -39,7 +39,7 @@ Create `apps/expo/src/lib/nfc-platform.ts` with a platform-agnostic interface ov
 - `packages/contracts` — no contract change needed for the adapter layer
 
 **Notes:**
-Check `apps/expo/package.json` first — verify `expo-nfc` is listed as a dependency before writing the import. If it is missing, note it in your response and add it.
+Check `apps/expo/package.json` first — verify `expo-nfc` is listed as a dependency before writing the import. If it is missing, note it in your response and open a follow-up task for `apps/expo/package.json` rather than adding it within this task.
 
 ---
 
@@ -82,9 +82,8 @@ Add `getEquipmentByTagId(tagId: string)` to the API layer (`src/features/equipme
 
 **Acceptance criteria:**
 - [ ] `classifyEmergencyEndpoint` is called before any `PendingSyncStore` write
-- [ ] Returns cached record when offline and cache is warm
-- [ ] Queues sync mutation when offline and cache is cold
-- [ ] Tests cover all three paths (online, offline-warm, offline-cold)
+- [ ] Queues sync mutation when offline
+- [ ] Tests cover both paths (online success, offline queue)
 - [ ] `pnpm contracts:gate` passes (no contracts changed)
 - [ ] Tests pass (full suite)
 
@@ -135,7 +134,7 @@ Create `apps/expo/app/equipment/[tagId].tsx`. Fetch the equipment record via the
 Write `tests/integration/nfc-scan-offline-replay.test.ts` covering the end-to-end offline slice: NFC tag read → fetch equipment (cache miss) → queue mutation in `PendingSyncStore` → network restores → replay. Also assert that a Code Blue endpoint is blocked and never reaches the queue.
 
 **Acceptance criteria:**
-- [ ] Test passes with network mocked as offline throughout
+- [ ] Test covers offline queueing phase then network restoration for replay (offline-then-online flow)
 - [ ] Asserts Code Blue mutation is blocked (never written to SQLite)
 - [ ] Asserts normal equipment mutation queues successfully
 - [ ] Asserts replay removes the item from the pending queue
