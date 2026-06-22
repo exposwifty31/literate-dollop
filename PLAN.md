@@ -11,165 +11,155 @@
 
 | | |
 |-|-|
-| **Feature / Sprint** | Phase 3 — NFC Equipment Scan vertical slice |
+| **Feature / Sprint** | Reach Horizon 7 — orchestrated climb to Capacitor retirement |
 | **Author** | Dan |
-| **Created** | 2026-06-17 |
-| **Last updated** | 2026-06-20 |
+| **Created** | 2026-06-22 |
+| **Last updated** | 2026-06-22 |
 | **Status** | `in-progress` |
-| **Branch** | `claude/inspiring-hamilton-9fn4iw` |
+| **Branch** | `claude/reach-horizon-7-0vqq5o` (per-horizon child branches → PR → `main`) |
 | **Tasks** | See TASKS.md |
-| **Spec** | `docs/superpowers/specs/2026-06-17-phase3-nfc-equipment-scan-design.md` |
+| **Governance** | `docs/governance/expo-agent-brief-2026-06-19.md` |
+
+> The completed Phase 3 NFC vertical slice plan is recorded in
+> `docs/porting-status.md` §Phase 3 (75 tests, exit met). Its spec remains at
+> `docs/superpowers/specs/2026-06-17-phase3-nfc-equipment-scan-design.md`.
 
 ---
 
 ## Problem
 
-Phase 1 exit criteria are met (contracts, PendingSyncStore, Clerk Expo). The app has no clinically useful screens yet. A vet tech should be able to scan an NFC tag on equipment, view the record, and queue an offline sync — all without network connectivity. No such workflow exists in the Expo app today.
+The remaining VetTrack Expo migration horizons (H4, H6, H7) must be delivered to
+reach **H7 — Capacitor retirement / kill-switch cutover**. Planning docs had
+drifted from reality (they claimed H3 was still in progress); this sprint
+reconciles status and executes the remaining climb under a repeatable per-horizon
+delivery loop, pausing at safety/product sign-off gates.
 
 ---
 
 ## Goal
 
-Deliver one end-to-end offline-capable NFC equipment scan workflow: scan tag → load equipment record → queue offline mutation if needed → replay on reconnect.
+Traverse `H4 → H6 → H7` via one-branch-per-horizon PRs that pass CI, honoring
+frozen doctrine and the documented sign-off gates, ending at the real sign-off:
+Capacitor retirement.
+
+---
+
+## True horizon status (source: `docs/porting-status.md` + `rn-parity-matrix.md`)
+
+| Horizon | Status |
+|---|---|
+| H1 workspace / contracts / Clerk / PendingSyncStore | ✅ complete |
+| H2 VetTrackControl config plugin | ✅ complete (4/4 tests) |
+| H3 NFC equipment scan slice | ✅ complete (75 tests) |
+| H5 RN parity waves 1–4 (equipment, actions, shift, rooms, alerts) | ✅ complete |
+| **H4 SSE realtime + native push** | ⏸ not started — Gate A |
+| **H6 cutover / coexistence banner** | ⏸ not started — Gate B |
+| **H7 Capacitor kill-switch retirement** | ⏸ not started — Gate C (terminal) |
 
 ---
 
 ## Out of Scope
 
-- Full `api.ts` port (~1042 LOC) — only scan-specific endpoints.
-- SSE / push notifications (H4).
-- `equipment/board` ward kiosk view (web-only).
-- ER/patient/hospitalization screens (June 2026 scope cut).
-- VetTrackControl plugin landing on `main` (H2 track — separate branch).
-- Phase 3b cache tables for equipment/rooms in PendingSyncStore.
+- Executing any frozen-doctrine item before its sign-off gate clears.
+- Full `api.ts` port (~1042 LOC) — scan-only API until parity matrix defines waves.
+- ER / patient / hospitalization screens (June 2026 scope cut).
+- Ward kiosk (`/equipment/board`) — permanently web-only.
+- Deleting Capacitor references in `vettrack` before the written H7 kill-switch.
 
 ---
 
 ## Constraints
 
-- Code Blue mutations must never reach the queue — enforcement at `api.request()` is non-negotiable.
-- No new packages without noting them in the task response.
-- NFC adapter must be platform-agnostic (expo-nfc wrapper pattern, not direct native call in feature code).
-- All copy through `t()` — no inline strings.
-- `packages/contracts` changes require a companion vettrack dep bump.
+- Code Blue mutations never reach the queue — `classifyEmergencyEndpoint` at
+  `api.request()` is non-negotiable, including new realtime/push paths.
+- No WebSockets; SSE only, and only after Gate A written approval.
+- No Dexie / WatermelonDB — `PendingSyncStore` (expo-sqlite) only.
+- All copy through `t()`; Hebrew default, RTL via `I18nManager`.
+- `packages/contracts` changes require a companion vettrack `github:` dep bump.
+- New npm packages noted explicitly in the PR response.
 
 ---
 
-## Approach
+## Per-horizon delivery loop
 
-Build a thin vertical slice following the spec in `docs/superpowers/specs/2026-06-17-phase3-nfc-equipment-scan-design.md`. The slice has four layers:
+For each horizon: cut `claude/horizon-<n>-<slug>` from fresh `main` → write code
+→ `/code-review` (+ `/security-review` for H4/H7) → run local gates → commit &
+push → open PR → subscribe + drive CI green → address review comments → merge →
+update docs → next horizon. Stops only at a sign-off gate or H7 merge.
 
-1. **NFC adapter** (`src/lib/nfc-platform.ts`) — platform-agnostic interface over `expo-nfc`; returns tag ID.
-2. **Scan screen** (`app/(tabs)/scan.tsx`) — prompts user to hold device to tag; calls NFC adapter; navigates to equipment detail.
-3. **Equipment API** (thin slice of `api.ts`) — `GET /equipment/:tagId`; network fetch with offline fallback: fetch from network → queue mutation on failure.
-4. **Sync replay** — existing `PendingSyncStore` enqueue/replay path extended with equipment mutation type.
+Local gates (mirror `.github/workflows/ci.yml`):
 
-Each layer is independently testable. Tests run before the next layer starts.
+```bash
+pnpm install --frozen-lockfile
+pnpm contracts:gate                              # if contracts touched
+pnpm --filter @vettrack/contracts exec tsc --noEmit
+pnpm --filter vettrack-expo exec tsc --noEmit
+pnpm test
+```
+
+---
+
+## Sign-off gates
+
+- **Gate A (before H4):** written SSE approval (Decision Record) resolving the
+  "No SSE before H6" vs "SSE at H4" doc contradiction, **and** confirmation the
+  monolith push endpoint (`POST /api/push-subscriptions/native`, vettrack P3-5)
+  exists.
+- **Gate B (before H6):** product decision that Expo may be messaged as primary
+  and a coexistence/sunset banner is wanted now.
+- **Gate C (before H7, the real sign-off):** a written Capacitor kill-switch
+  criteria doc (`docs/mobile/capacitor-kill-switch.md`, E-P3-4 / vettrack P3-7)
+  **and** a product go/no-go on bundle cutover.
 
 ---
 
 ## Steps
 
-### Step 1: NFC platform adapter
+### Step 0 — Doc reconciliation (housekeeping) — `in-progress`
 
-**Goal:** Isolate `expo-nfc` behind a platform-agnostic interface so feature code does not import the native module directly.
+Align `PLAN.md`, `TASKS.md`, `CLAUDE.md` with the true horizon status above;
+mark H5 exit in `docs/mobile/rn-parity-matrix.md`. Docs-only; validates the
+delivery pipeline. No frozen-doctrine risk.
 
-**Files to change:**
-- `apps/expo/src/lib/nfc-platform.ts` — create adapter with `startScan(): Promise<string>` and `stopScan(): Promise<void>`
-- `tests/nfc-platform.test.ts` — unit tests with mocked native module
+### Step 1 — H4: SSE realtime + native push — `blocked: Gate A`
 
-**Exit criteria:**
-- [ ] Adapter compiles with no TS errors
-- [ ] Mock-based unit tests pass for success and permission-denied paths
-- [ ] No `expo-nfc` import outside `nfc-platform.ts`
+SSE client transport in `apps/expo/src/lib/realtime/` consuming
+`apps/expo/src/types/realtime-events.ts`; `expo-notifications` rewrite of push;
+register against monolith endpoint. Code Blue stays online-only (tests assert no
+emergency mutation reaches `PendingSyncStore`). Reuse
+`apps/expo/src/lib/offline-emergency-block.ts` + `offline-policy.ts`.
 
-**Status:** `not started`
+### Step 2 — H6: cutover / coexistence banner — `blocked: Gate B`
 
----
+In-app Expo-primary / Capacitor-sunset banner; all copy in
+`apps/expo/locales/{en,he}.json` via `t()`. Reinforce `vettrack://` deep-link
+collision handling (`apps/expo/src/lib/linking/deep-link-return.ts`). No
+Capacitor deletion here.
 
-### Step 2: Scan screen
+### Step 3 — H7: Capacitor kill-switch retirement — `blocked: Gate C`
 
-**Goal:** A screen that initiates an NFC scan and navigates to equipment detail on tag read.
-
-**Files to change:**
-- `apps/expo/app/(tabs)/scan.tsx` — scan screen using NFC adapter
-- `locales/en.json`, `locales/he.json` — add scan copy keys
-- `tests/scan-screen.test.tsx` — render + interaction tests
-
-**Exit criteria:**
-- [ ] Screen renders prompt copy via `t()` — no inline strings
-- [ ] On tag read, navigates to detail route with tag ID param
-- [ ] On error / permission denied, shows localised error message
-- [ ] Tests cover: initial render, tag read success, permission denied, stop scan on unmount
-
-**Status:** `not started`
-
----
-
-### Step 3: Equipment API (scan-only slice)
-
-**Goal:** Fetch equipment record by tag ID with offline fallback.
-
-**Files to change:**
-- `apps/expo/src/lib/api.ts` (or `src/features/equipment/api.ts`) — `getEquipmentByTagId(tagId)` only; no full api.ts port
-- `tests/equipment-api.test.ts` — online success, offline queue mutation
-
-**Exit criteria:**
-- [ ] `classifyEmergencyEndpoint` called before any queue write (existing Code Blue enforcement)
-- [ ] Queues sync mutation when offline
-- [ ] Tests cover both paths (online success, offline queue)
-
-**Status:** `not started`
-
----
-
-### Step 4: Equipment detail screen
-
-**Goal:** Display equipment record from API; allow queuing an offline update.
-
-**Files to change:**
-- `apps/expo/app/equipment/[tagId].tsx` — detail screen
-- `locales/en.json`, `locales/he.json` — add equipment detail copy keys
-- `tests/equipment-detail.test.tsx` — render + mutation tests
-
-**Exit criteria:**
-- [ ] Displays equipment name, status, last-scan timestamp
-- [ ] "Log scan" action queues a mutation via existing `PendingSyncStore`
-- [ ] Offline banner visible when device is offline
-- [ ] All copy through `t()`
-
-**Status:** `not started`
-
----
-
-### Step 5: Integration test — full scan→queue→replay flow
-
-**Goal:** Verify the end-to-end slice in a single test without network.
-
-**Files to change:**
-- `tests/integration/nfc-scan-offline-replay.test.ts` — airplane-mode scan → enqueue → replay
-
-**Exit criteria:**
-- [ ] Test passes with network mocked as offline
-- [ ] Asserts Code Blue mutation is blocked (never reaches queue)
-- [ ] Asserts normal equipment mutation queues and replays successfully
-- [ ] `pnpm test` green
-
-**Status:** `not started`
+Author `docs/mobile/capacitor-kill-switch.md` first; execute cutover per Phase 6
+go/no-go (`uk.vettrack.app` → `uk.vettrack.expo`); coordinate companion vettrack
+PR to remove Capacitor refs only after the written kill-switch. Terminal.
 
 ---
 
 ## Testing Plan
 
-- Unit tests per layer (Steps 1–4).
-- Integration test for full offline flow (Step 5).
-- Manual QA: uninstall Capacitor app → install Expo dev build → scan physical NFC tag → put device in airplane mode → observe queue → restore network → observe replay.
+- Every horizon: full local gates green before push; CI green before merge.
+- H4: SSE reconnect/resume + push registration tests; Code-Blue-never-queued
+  assertion (`tests/code-blue-offline.test.ts` pattern); `/security-review`.
+- H6: banner render + en/he i18n parity tests; deep-link collision test.
+- H7: kill-switch doc review; contracts parity diff vs vettrack
+  `node_modules/@vettrack/contracts`; manual store/bundle QA.
 
 ---
 
 ## Rollback Plan
 
-All work is on feature branch `claude/inspiring-hamilton-9fn4iw`. If merged and broken: revert the merge commit. No schema migration involved — `PendingSyncStore` already exists. No contract change needed unless equipment mutation type is new (flag in task notes if so).
+Per-horizon PRs to `main`; revert the merge commit to roll back a horizon. H4/H6
+add no schema migration. H7 cutover rollback path is defined in the kill-switch
+doc (Gate C deliverable).
 
 ---
 
@@ -177,8 +167,9 @@ All work is on feature branch `claude/inspiring-hamilton-9fn4iw`. If merged and 
 
 | Question | Owner | Status |
 |----------|-------|--------|
-| Does the equipment mutation type already exist in `@vettrack/contracts`? | Dan | `open` |
-| Is `expo-nfc` already in `apps/expo/package.json`? | Agent | `open` — check before Step 1 |
+| Resolve "No SSE before H6" vs "SSE at H4" doctrine contradiction (Gate A) | Dan / product | `open` |
+| Does monolith `POST /api/push-subscriptions/native` exist yet (vettrack P3-5)? | vettrack | `open` |
+| Product go/no-go on Capacitor cutover (Gate C) | Product | `open` |
 
 ---
 
@@ -186,5 +177,6 @@ All work is on feature branch `claude/inspiring-hamilton-9fn4iw`. If merged and 
 
 | Decision | Rationale |
 |----------|-----------|
-| Thin API slice instead of full `api.ts` port | Avoids premature surface area; parity matrix not yet authored (E-P2-3) |
-| NFC behind platform adapter | Keeps feature code testable without native hardware |
+| One branch + PR per horizon, looping to `main` | Operator-requested delivery cadence; isolates each horizon for review/rollback |
+| Pause at sign-off gates rather than execute frozen doctrine | Honors safety doctrine + product/cross-repo dependencies |
+| Reconcile docs first (Step 0) | Planning docs had drifted from `porting-status.md`; validates the pipeline before gated work |

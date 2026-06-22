@@ -1,9 +1,14 @@
 # RN Parity Matrix — literate-dollop
 
-**Updated:** 2026-06-19  
+**Updated:** 2026-06-22  
 **Scope:** VetTrack Expo (post–June 2026 scope cut — equipment-first, no ER/patient/medication)  
 **Source:** vettrack `src/pages/` — read-only port reference  
 **Governance ref:** [`docs/governance/expo-agent-brief-2026-06-19.md`](../governance/expo-agent-brief-2026-06-19.md)
+
+> **H5 exit met (2026-06-22).** Parity Waves 0–4 are complete (see Wave map below;
+> detail in [`docs/porting-status.md`](../porting-status.md)). This matrix existing
+> satisfies the E-P2-2 / P2-8 blocker. Remaining climb is H4 → H6 → H7 (see
+> [`PLAN.md`](../../PLAN.md)).
 
 ---
 

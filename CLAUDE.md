@@ -100,17 +100,26 @@ Fixed. Do not introduce alternatives without a Decision Record in `docs/DECISION
 
 ## Current Work
 
-> See `PLAN.md` for full details.
+> See `PLAN.md` for full details. Horizon status reconciled 2026-06-22 against
+> `docs/porting-status.md` + `docs/mobile/rn-parity-matrix.md` (source of truth).
 
-**Feature / Sprint:** Phase 3 — NFC Equipment Scan vertical slice
+**Feature / Sprint:** Reach Horizon 7 — orchestrated climb to Capacitor retirement
 **Status:** in progress
-**Branch:** `claude/inspiring-hamilton-9fn4iw`
-**Out of scope right now:**
-- SSE / push notification port (H4)
+**Branch:** `claude/reach-horizon-7-0vqq5o` (per-horizon child branches → PR → `main`)
+
+**Horizons complete:** H1 (workspace/contracts/Clerk/PendingSyncStore), H2
+(VetTrackControl plugin — landed, 4/4 tests), H3 (NFC equipment scan slice — 75
+tests), H5 (RN parity waves 1–4: equipment, actions, shift, rooms, alerts).
+
+**Remaining climb:** H4 (SSE realtime + native push) → H6 (cutover/coexistence
+banner) → H7 (Capacitor kill-switch retirement). Each is gated — see PLAN.md
+sign-off gates.
+
+**Out of scope right now (until their sign-off gate clears):**
+- SSE / push notification port (H4 — needs written SSE approval + monolith push endpoint)
 - Full `api.ts` port (~1042 LOC) — scan-only API until parity matrix defines waves
-- ER/patient/hospitalization screens
-- VetTrackControl plugin landing on main (H2 — separate branch)
-- Capacitor retirement planning (H7)
+- ER/patient/hospitalization screens (June 2026 scope cut)
+- Capacitor cutover / retirement (H6–H7 — needs product go/no-go + kill-switch doc)
 
 ---
 
@@ -123,7 +132,7 @@ Fixed. Do not introduce alternatives without a Decision Record in `docs/DECISION
 | i18n | Hebrew is the default locale; `I18nManager.isRTL` must be respected | Always use `t()` — never inline copy |
 | Path collision | Capacitor (`uk.vettrack.app`) and Expo (`uk.vettrack.expo`) may share `vettrack://` deep-link scheme | Uninstall Capacitor build on QA devices before NFC testing |
 | Startup sequence | `PendingSyncStore.runStartupCleanup()` must be called before any queue consumer | Enforce via app init guard |
-| VetTrackControl plugin | Scaffolded but not merged to main | Phase 2 work — do not depend on it in Phase 3 features |
+| VetTrackControl plugin | Landed on `main` (Phase 2 / H2 complete — `vettrack-control-plugin.test.ts` 4/4) | Config plugin at `plugins/vettrack-control/`; dev build required for NFC hardware QA |
 
 ---
 
