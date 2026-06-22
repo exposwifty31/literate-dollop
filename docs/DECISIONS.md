@@ -29,6 +29,7 @@
 | ADR-003 | Thin API slice per feature (no monolithic api.ts port) | `accepted` | 2026-06-20 | Below |
 | ADR-004 | NFC behind platform adapter — no direct expo-nfc import in feature code | `accepted` | 2026-06-20 | Below |
 | ADR-005 | Realtime (SSE) + native push at H4; "No SSE before H6" superseded | `accepted` | 2026-06-22 | `docs/adr/005-realtime-h4-sse-push.md` |
+| ADR-006 | Capacitor retirement via env kill-switch (H7); reversible by config | `accepted` | 2026-06-22 | `docs/adr/006-capacitor-kill-switch.md` |
 
 ---
 

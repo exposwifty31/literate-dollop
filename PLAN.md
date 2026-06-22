@@ -135,11 +135,13 @@ Flag-gated, dismissible Expo-primary / Capacitor-sunset banner; copy in
 `app/(app)/_layout.tsx`. Deep-link coexistence locked by regression tests in
 `tests/deep-link-return.test.ts`. No Capacitor deletion (that is H7).
 
-### Step 3 — H7: Capacitor kill-switch retirement — `blocked: Gate C`
+### Step 3 — H7: Capacitor kill-switch retirement — ✅ `done (Expo-side)` (Gate C cleared, GO)
 
-Author `docs/mobile/capacitor-kill-switch.md` first; execute cutover per Phase 6
-go/no-go (`uk.vettrack.app` → `uk.vettrack.expo`); coordinate companion vettrack
-PR to remove Capacitor refs only after the written kill-switch. Terminal.
+Kill-switch runbook (`docs/mobile/capacitor-kill-switch.md`) + ADR-006 +
+reversible `EXPO_PUBLIC_CAPACITOR_RETIRED` flag + retired banner variant shipped.
+Product go/no-go = GO. **External handoffs remain** (not executable from this
+repo): EAS/App Store publish, flip the kill-switch env var post-cutover, and the
+vettrack Capacitor-path removal (P3-7). See runbook §5.
 
 ---
 

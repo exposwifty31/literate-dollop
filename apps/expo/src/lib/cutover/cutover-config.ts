@@ -10,6 +10,14 @@
 
 export interface CutoverFlags {
   bannerEnabled: boolean;
+  /**
+   * H7 kill-switch. `true` once the Capacitor build (`uk.vettrack.app`) has been
+   * retired and Expo (`uk.vettrack.expo`) is the sole store path. **Default
+   * false** — product go/no-go authorizes the path, but this flag is flipped to
+   * `true` only AFTER the external store cutover completes (see
+   * `docs/mobile/capacitor-kill-switch.md`).
+   */
+  capacitorRetired: boolean;
 }
 
 function envFlag(value: string | undefined, fallback: boolean): boolean {
@@ -20,6 +28,7 @@ function envFlag(value: string | undefined, fallback: boolean): boolean {
 function readEnvFlags(): CutoverFlags {
   return {
     bannerEnabled: envFlag(process.env.EXPO_PUBLIC_CUTOVER_BANNER_ENABLED, true),
+    capacitorRetired: envFlag(process.env.EXPO_PUBLIC_CAPACITOR_RETIRED, false),
   };
 }
 
@@ -37,4 +46,9 @@ export function getCutoverFlags(): CutoverFlags {
 
 export function isCutoverBannerEnabled(): boolean {
   return getCutoverFlags().bannerEnabled;
+}
+
+/** H7 kill-switch — Capacitor retired, Expo is the sole store path. */
+export function isCapacitorRetired(): boolean {
+  return getCutoverFlags().capacitorRetired;
 }

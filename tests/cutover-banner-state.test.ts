@@ -2,10 +2,11 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   computeCutoverBannerVisible,
   dismissCutoverBanner,
+  getCutoverBannerVariant,
   isCutoverBannerDismissed,
   resolveCutoverBannerVisible,
 } from "@/lib/cutover/cutover-banner-state";
-import { setCutoverFlagsForTests } from "@/lib/cutover/cutover-config";
+import { isCapacitorRetired, setCutoverFlagsForTests } from "@/lib/cutover/cutover-config";
 import { clearMockAsyncStorage } from "./mocks/async-storage";
 import enDict from "../apps/expo/locales/en.json";
 import heDict from "../apps/expo/locales/he.json";
@@ -45,6 +46,21 @@ describe("resolveCutoverBannerVisible", () => {
   });
 });
 
+describe("H7 kill-switch (capacitorRetired)", () => {
+  afterEach(() => setCutoverFlagsForTests(null));
+
+  it("defaults to not-retired (coexistence) — flips only after the store cutover", () => {
+    setCutoverFlagsForTests(null);
+    expect(isCapacitorRetired()).toBe(false);
+    expect(getCutoverBannerVariant()).toBe("coexistence");
+  });
+
+  it("selects the retired banner variant when the kill-switch is on", () => {
+    setCutoverFlagsForTests({ capacitorRetired: true });
+    expect(getCutoverBannerVariant()).toBe("retired");
+  });
+});
+
 describe("cutover banner copy parity", () => {
   it("defines identical key sets in en and he", () => {
     const en = enDict as { cutoverBanner: Record<string, string> };
@@ -54,5 +70,11 @@ describe("cutover banner copy parity", () => {
     for (const value of Object.values(he.cutoverBanner)) {
       expect(value.trim().length).toBeGreaterThan(0);
     }
+  });
+
+  it("includes the retired variant keys in both locales", () => {
+    const en = enDict as { cutoverBanner: Record<string, string> };
+    expect(en.cutoverBanner.retiredTitle).toBeTruthy();
+    expect(en.cutoverBanner.retiredMessage).toBeTruthy();
   });
 });
