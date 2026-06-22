@@ -9,155 +9,103 @@
 
 ## In Progress
 
-_(No tasks currently assigned to an agent — pick from Ready to Start)_
+### TASK-0: Doc reconciliation (Reach Horizon 7 — Step 0)
+**Priority:** `high`
+**Linked plan step:** PLAN.md Step 0
+
+**What to do:**
+Align `PLAN.md`, `TASKS.md`, and `CLAUDE.md` with the true horizon status
+(`docs/porting-status.md` + `docs/mobile/rn-parity-matrix.md`): H1–H3 + H5
+complete, H2 plugin landed, H4/H6/H7 remaining. Mark H5 exit in the parity
+matrix. Docs-only — validates the per-horizon delivery pipeline.
+
+**Acceptance criteria:**
+- [ ] PLAN.md describes the Reach Horizon 7 climb (not stale Phase 3)
+- [ ] TASKS.md Phase-3 NFC tasks moved to Completed; H4/H6/H7 seeded
+- [ ] CLAUDE.md Current Work + VetTrackControl trap corrected
+- [ ] `pnpm test` + tsc green (pipeline check)
 
 ---
 
-## Ready to Start
+## Ready to Start (gated — see PLAN.md sign-off gates)
 
-### TASK-1: NFC platform adapter
+### TASK-H4: SSE realtime + native push  *(blocked: Gate A)*
 **Priority:** `high`
 **Linked plan step:** PLAN.md Step 1
 
 **What to do:**
-Create `apps/expo/src/lib/nfc-platform.ts` with a platform-agnostic interface over `expo-nfc`. Export `startScan(): Promise<string>` (returns tag ID) and `stopScan(): Promise<void>`. No `expo-nfc` import should appear outside this file. Add unit tests using a mocked native module.
+SSE client transport in `apps/expo/src/lib/realtime/` consuming
+`apps/expo/src/types/realtime-events.ts`; `expo-notifications` rewrite of push;
+register against the monolith push endpoint. Code Blue stays online-only.
+
+**Blocked by (Gate A):**
+- Written SSE approval (Decision Record) resolving "No SSE before H6" vs "SSE at H4"
+- Monolith `POST /api/push-subscriptions/native` (vettrack P3-5) exists
 
 **Acceptance criteria:**
-- [ ] Adapter compiles with no TS errors
-- [ ] Tests cover: success path, permission-denied error, stop-scan
-- [ ] No `expo-nfc` import outside `nfc-platform.ts`
-- [ ] Build/type-check passes with no new errors
-- [ ] Tests pass (full suite)
-- [ ] No TODO comments in delivered code
-
-**Files in scope:**
-- `apps/expo/src/lib/nfc-platform.ts`
-- `tests/nfc-platform.test.ts`
-
-**Files NOT in scope:**
-- Any screen files — screens come in TASK-2
-- `packages/contracts` — no contract change needed for the adapter layer
-
-**Notes:**
-Check `apps/expo/package.json` first — verify `expo-nfc` is listed as a dependency before writing the import. If it is missing, note it in your response and open a follow-up task for `apps/expo/package.json` rather than adding it within this task.
+- [ ] No emergency mutation reaches `PendingSyncStore` from any realtime/push path
+- [ ] SSE reconnect/resume (monotonic `id`/`outboxId`) + backoff tested
+- [ ] Push registration tested; `expo-notifications` noted as new package in PR
+- [ ] `/security-review` run; full gates green
 
 ---
 
-### TASK-2: Scan screen
-**Priority:** `high`
+### TASK-H6: Cutover / coexistence banner  *(blocked: Gate B)*
+**Priority:** `medium`
 **Linked plan step:** PLAN.md Step 2
 
 **What to do:**
-Create `apps/expo/app/(tabs)/scan.tsx`. The screen calls the NFC adapter from TASK-1 and navigates to the equipment detail route (`/equipment/[tagId]`) on a successful tag read. Add all copy to `locales/en.json` and `locales/he.json` using the `t()` accessor. Add render and interaction tests.
+In-app Expo-primary / Capacitor-sunset banner; all copy via `t()` in
+`apps/expo/locales/{en,he}.json`. Reinforce `vettrack://` deep-link collision
+handling (`apps/expo/src/lib/linking/deep-link-return.ts`). No Capacitor deletion.
+
+**Blocked by (Gate B):** product decision to message Expo as primary now.
 
 **Acceptance criteria:**
-- [ ] Screen renders prompt copy via `t()` — no inline strings
-- [ ] On tag read, navigates to `/equipment/[tagId]` with tag ID as param
-- [ ] On permission denied, shows localised error message (does not crash)
-- [ ] On unmount, calls `stopScan()`
-- [ ] Tests pass (full suite)
-- [ ] No TODO comments
-
-**Files in scope:**
-- `apps/expo/app/(tabs)/scan.tsx`
-- `apps/expo/locales/en.json`
-- `apps/expo/locales/he.json`
-- `tests/scan-screen.test.tsx`
-
-**Files NOT in scope:**
-- `apps/expo/src/lib/nfc-platform.ts` — completed in TASK-1
-- Equipment detail screen — TASK-4
-
-**Notes:**
-Hebrew locale is the default; ensure Hebrew strings are added alongside English. Consult `apps/expo/src/lib/i18n.ts` for the typed `t` accessor pattern.
+- [ ] Banner renders with en/he copy (no inline strings); RTL respected
+- [ ] Deep-link collision handling test
+- [ ] Full gates green
 
 ---
 
-### TASK-3: Equipment API — scan-only slice
-**Priority:** `high`
+### TASK-H7: Capacitor kill-switch retirement  *(blocked: Gate C — terminal)*
+**Priority:** `medium`
 **Linked plan step:** PLAN.md Step 3
 
 **What to do:**
-Add `getEquipmentByTagId(tagId: string)` to the API layer (`src/features/equipment/api.ts` or equivalent). Fetch from network; if offline, queue a sync mutation via `PendingSyncStore`. The Code Blue enforcement call chain must be preserved — `classifyEmergencyEndpoint` before any queue write. Cache tables are deferred to Phase 3b — do not implement caching here.
+Author `docs/mobile/capacitor-kill-switch.md` (criteria, rollback, cross-repo
+sequencing with vettrack P3-7); execute cutover per Phase 6 go/no-go
+(`uk.vettrack.app` → `uk.vettrack.expo`); coordinate companion vettrack PR to
+remove Capacitor refs only after the written kill-switch.
+
+**Blocked by (Gate C):** written kill-switch doc + product go/no-go.
 
 **Acceptance criteria:**
-- [ ] `classifyEmergencyEndpoint` is called before any `PendingSyncStore` write
-- [ ] Queues sync mutation when offline
-- [ ] Tests cover both paths (online success, offline queue)
-- [ ] `pnpm contracts:gate` passes (no contracts changed)
-- [ ] Tests pass (full suite)
-
-**Files in scope:**
-- `apps/expo/src/features/equipment/api.ts` (create if not exists)
-- `tests/equipment-api.test.ts`
-
-**Files NOT in scope:**
-- Full `api.ts` port — only the `getEquipmentByTagId` function
-
-**Notes:**
-Do not add new emergency surface endpoints. If you discover that the equipment mutation type is missing from `@vettrack/contracts`, stop and flag it — do not add it without noting the required vettrack companion PR.
-
----
-
-### TASK-4: Equipment detail screen
-**Priority:** `high`
-**Linked plan step:** PLAN.md Step 4
-
-**What to do:**
-Create `apps/expo/app/equipment/[tagId].tsx`. Fetch the equipment record via the API from TASK-3. Display name, status, and last-scan timestamp. Provide a "Log scan" action that queues a mutation via `PendingSyncStore`. Show an offline banner when the device is offline. All copy through `t()`.
-
-**Acceptance criteria:**
-- [ ] Displays equipment name, status, last-scan timestamp
-- [ ] "Log scan" action queues a mutation (does not directly call API when offline)
-- [ ] Offline banner visible when device is offline
-- [ ] All copy keys in `locales/en.json` and `locales/he.json`
-- [ ] Tests cover: loaded state, offline state, log-scan action
-- [ ] Tests pass (full suite)
-- [ ] No TODO comments
-
-**Files in scope:**
-- `apps/expo/app/equipment/[tagId].tsx`
-- `apps/expo/locales/en.json`
-- `apps/expo/locales/he.json`
-- `tests/equipment-detail.test.tsx`
-
-**Files NOT in scope:**
-- NFC adapter, scan screen, API layer — completed in earlier tasks
-
----
-
-### TASK-5: Integration test — full scan → queue → replay flow
-**Priority:** `high`
-**Linked plan step:** PLAN.md Step 5
-
-**What to do:**
-Write `tests/integration/nfc-scan-offline-replay.test.ts` covering the end-to-end offline slice: NFC tag read → fetch equipment (cache miss) → queue mutation in `PendingSyncStore` → network restores → replay. Also assert that a Code Blue endpoint is blocked and never reaches the queue.
-
-**Acceptance criteria:**
-- [ ] Test covers offline queueing phase then network restoration for replay (offline-then-online flow)
-- [ ] Asserts Code Blue mutation is blocked (never written to SQLite)
-- [ ] Asserts normal equipment mutation queues successfully
-- [ ] Asserts replay removes the item from the pending queue
-- [ ] `pnpm test` green across the full suite
-- [ ] No TODO comments
-
-**Files in scope:**
-- `tests/integration/nfc-scan-offline-replay.test.ts`
-
-**Files NOT in scope:**
-- Implementation files — all completed in TASK-1 through TASK-4
+- [ ] `docs/mobile/capacitor-kill-switch.md` authored and reviewed
+- [ ] Cutover executed per go/no-go; rollback path documented
+- [ ] `/security-review` run; full gates green
 
 ---
 
 ## Blocked
 
-_(None)_
+_(See gated tasks above — TASK-H4 / H6 / H7 await their sign-off gates.)_
 
 ---
 
 ## Completed
 
-_(None yet — tasks added 2026-06-20)_
+### Phase 3 — NFC equipment scan vertical slice (H3) ✅ 2026-06
+Delivered per `docs/porting-status.md` §Phase 3 (75 tests, `tsc` clean). Covered
+the former TASK-1..5: NFC platform adapter (`apps/expo/src/lib/nfc-platform.ts`),
+scan screen (`apps/expo/app/(app)/scan.tsx`), equipment-scan API
+(`apps/expo/src/lib/api/equipment-scan.ts`), thin `sync-engine` + `use-sync`, and
+the offline scan→queue→replay flow. Code Blue online-only enforced.
+
+### Phase 4–5 — RN parity waves 1–4 (H5) ✅ 2026-06
+Equipment list/detail, actions (status/checkout/return/new), shift (home card +
+handoff), rooms, alerts. See `docs/mobile/rn-parity-matrix.md` + porting-status
+§Phase 4/5.
 
 ---
 
@@ -165,11 +113,9 @@ _(None yet — tasks added 2026-06-20)_
 
 Tasks spotted but out of scope for this sprint. Agents add here when they notice something.
 
-- TASK: Land Phase 2 VetTrackControl plugin on `main` with passing `vettrack-control-plugin.test.ts` (E-P1-4)
 - TASK: Mark `patients.ts` / `billing.ts` types as LEGACY (E-P2-1)
 - TASK: Add PR template checkbox for emergency/offline surface changes (E-P1-2)
 - TASK: Phase 3b — equipment/rooms cache tables in `PendingSyncStore`
-- TASK: Request / co-author `docs/mobile/rn-parity-matrix.md` in vettrack repo (E-P2-3)
 - TASK: Verify emergency-block telemetry parity with vettrack `api.ts` bounded enums before H4 (E-P2-4)
 
 ---
