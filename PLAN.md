@@ -121,20 +121,19 @@ Align `PLAN.md`, `TASKS.md`, `CLAUDE.md` with the true horizon status above;
 mark H5 exit in `docs/mobile/rn-parity-matrix.md`. Docs-only; validates the
 delivery pipeline. No frozen-doctrine risk.
 
-### Step 1 — H4: SSE realtime + native push — `blocked: Gate A`
+### Step 1 — H4: SSE realtime + native push — ✅ `done` (Gate A cleared, ADR-005)
 
-SSE client transport in `apps/expo/src/lib/realtime/` consuming
-`apps/expo/src/types/realtime-events.ts`; `expo-notifications` rewrite of push;
-register against monolith endpoint. Code Blue stays online-only (tests assert no
-emergency mutation reaches `PendingSyncStore`). Reuse
-`apps/expo/src/lib/offline-emergency-block.ts` + `offline-policy.ts`.
+Shipped in `apps/expo/src/lib/realtime/` + `src/lib/push/`. SSE client (backoff,
+monotonic resume, inbound-only), flag-gated native push, Code-Blue inbound
+safety test. Live push flag-off until vettrack P3-5. See
+[ADR-005](docs/adr/005-realtime-h4-sse-push.md) + porting-status §H4.
 
-### Step 2 — H6: cutover / coexistence banner — `blocked: Gate B`
+### Step 2 — H6: cutover / coexistence banner — ✅ `done` (Gate B cleared)
 
-In-app Expo-primary / Capacitor-sunset banner; all copy in
-`apps/expo/locales/{en,he}.json` via `t()`. Reinforce `vettrack://` deep-link
-collision handling (`apps/expo/src/lib/linking/deep-link-return.ts`). No
-Capacitor deletion here.
+Flag-gated, dismissible Expo-primary / Capacitor-sunset banner; copy in
+`apps/expo/locales/{en,he}.json` via `t.cutoverBanner.*`; mounted in
+`app/(app)/_layout.tsx`. Deep-link coexistence locked by regression tests in
+`tests/deep-link-return.test.ts`. No Capacitor deletion (that is H7).
 
 ### Step 3 — H7: Capacitor kill-switch retirement — `blocked: Gate C`
 

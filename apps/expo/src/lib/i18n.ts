@@ -797,6 +797,8 @@ const translations = {
     dismissAria: d.updateBanner.dismissAria,
   },
 
+  cutoverBanner: d.cutoverBanner,
+
   pageErrorBoundary: d.pageErrorBoundary,
 
   billingLedger: d.billingLedger,

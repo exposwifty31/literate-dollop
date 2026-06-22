@@ -1896,6 +1896,12 @@
     "seeWhatsNew": "ראה מה חדש",
     "dismissAria": "סגור הודעת עדכון"
   },
+  "cutoverBanner": {
+    "title": "אתה משתמש באפליקציית VetTrack החדשה",
+    "message": "זוהי כעת אפליקציית VetTrack הראשית. האפליקציה הקודמת תיסגר בקרוב — השאר את זו מותקנת.",
+    "dismiss": "הבנתי",
+    "dismissAria": "סגור הודעת מעבר"
+  },
   "pageErrorBoundary": {
     "defaultFallback": "הקטע הזה נכשל בטעינה",
     "tryAgain": "נסה שוב"

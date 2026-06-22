@@ -9,64 +9,11 @@
 
 ## In Progress
 
-### TASK-0: Doc reconciliation (Reach Horizon 7 — Step 0)
-**Priority:** `high`
-**Linked plan step:** PLAN.md Step 0
-
-**What to do:**
-Align `PLAN.md`, `TASKS.md`, and `CLAUDE.md` with the true horizon status
-(`docs/porting-status.md` + `docs/mobile/rn-parity-matrix.md`): H1–H3 + H5
-complete, H2 plugin landed, H4/H6/H7 remaining. Mark H5 exit in the parity
-matrix. Docs-only — validates the per-horizon delivery pipeline.
-
-**Acceptance criteria:**
-- [ ] PLAN.md describes the Reach Horizon 7 climb (not stale Phase 3)
-- [ ] TASKS.md Phase-3 NFC tasks moved to Completed; H4/H6/H7 seeded
-- [ ] CLAUDE.md Current Work + VetTrackControl trap corrected
-- [ ] `pnpm test` + tsc green (pipeline check)
+_(None — H4 and H6 merged; H7 awaits Gate C.)_
 
 ---
 
 ## Ready to Start (gated — see PLAN.md sign-off gates)
-
-### TASK-H4: SSE realtime + native push  *(blocked: Gate A)*
-**Priority:** `high`
-**Linked plan step:** PLAN.md Step 1
-
-**What to do:**
-SSE client transport in `apps/expo/src/lib/realtime/` consuming
-`apps/expo/src/types/realtime-events.ts`; `expo-notifications` rewrite of push;
-register against the monolith push endpoint. Code Blue stays online-only.
-
-**Blocked by (Gate A):**
-- Written SSE approval (Decision Record) resolving "No SSE before H6" vs "SSE at H4"
-- Monolith `POST /api/push-subscriptions/native` (vettrack P3-5) exists
-
-**Acceptance criteria:**
-- [ ] No emergency mutation reaches `PendingSyncStore` from any realtime/push path
-- [ ] SSE reconnect/resume (monotonic `id`/`outboxId`) + backoff tested
-- [ ] Push registration tested; `expo-notifications` noted as new package in PR
-- [ ] `/security-review` run; full gates green
-
----
-
-### TASK-H6: Cutover / coexistence banner  *(blocked: Gate B)*
-**Priority:** `medium`
-**Linked plan step:** PLAN.md Step 2
-
-**What to do:**
-In-app Expo-primary / Capacitor-sunset banner; all copy via `t()` in
-`apps/expo/locales/{en,he}.json`. Reinforce `vettrack://` deep-link collision
-handling (`apps/expo/src/lib/linking/deep-link-return.ts`). No Capacitor deletion.
-
-**Blocked by (Gate B):** product decision to message Expo as primary now.
-
-**Acceptance criteria:**
-- [ ] Banner renders with en/he copy (no inline strings); RTL respected
-- [ ] Deep-link collision handling test
-- [ ] Full gates green
-
----
 
 ### TASK-H7: Capacitor kill-switch retirement  *(blocked: Gate C — terminal)*
 **Priority:** `medium`
@@ -94,6 +41,20 @@ _(See gated tasks above — TASK-H4 / H6 / H7 await their sign-off gates.)_
 ---
 
 ## Completed
+
+### TASK-H6: Cutover / coexistence banner (H6) ✅ 2026-06-22
+Flag-gated, dismissible Expo-primary banner (`components/CutoverBanner.tsx` +
+`src/lib/cutover/*`), en/he copy via `t.cutoverBanner.*`, RTL-aware, mounted in
+`app/(app)/_layout.tsx`. Deep-link coexistence locked by regression tests. PR per
+loop. Gate B cleared.
+
+### TASK-H4: SSE realtime + native push (H4) ✅ 2026-06-22
+SSE client + flag-gated native push (`src/lib/realtime/*`, `src/lib/push/*`),
+ADR-005. Code-Blue inbound safety test-enforced; live push flag-off until vettrack
+P3-5. Gate A cleared.
+
+### TASK-0: Doc reconciliation (Reach Horizon 7 — Step 0) ✅ 2026-06-22
+Reconciled PLAN/TASKS/CLAUDE + parity matrix to true horizon status (PR #18).
 
 ### Phase 3 — NFC equipment scan vertical slice (H3) ✅ 2026-06
 Delivered per `docs/porting-status.md` §Phase 3 (75 tests, `tsc` clean). Covered

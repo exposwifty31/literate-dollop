@@ -1896,6 +1896,12 @@
     "seeWhatsNew": "see what's new",
     "dismissAria": "Dismiss update notification"
   },
+  "cutoverBanner": {
+    "title": "You're on the new VetTrack app",
+    "message": "This is now the primary VetTrack app. The previous app is being retired soon — keep this one installed.",
+    "dismiss": "Got it",
+    "dismissAria": "Dismiss migration notice"
+  },
   "pageErrorBoundary": {
     "defaultFallback": "This section failed to load",
     "tryAgain": "Try again"
