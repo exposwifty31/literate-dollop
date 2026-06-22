@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__railway__list_services",
+      "mcp__railway__list_projects",
+      "mcp__railway__get_logs",
+      "mcp__railway__whoami",
+      "mcp__Claude_Preview__preview_screenshot",
+      "mcp__computer-use__screenshot"
+    ]
+  }
+}

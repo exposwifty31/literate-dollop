@@ -81,5 +81,21 @@ Pre-ship verify: `bash scripts/eas-build-from-clean-tree.sh --verify-only` (from
 - **Parity audit:** `LITERATE_DOLLOP_PARITY_REPORT.md` lives in the vettrack monolith repo (`exposwifty31/vettrack`).
 - **Contracts bump discipline:** see [`docs/contracts-bump-runbook.md`](docs/contracts-bump-runbook.md). On **every PR touching `packages/contracts`**: run `pnpm contracts:gate` AND open a companion issue/PR in vettrack to bump the `github:` dep so both sides stay byte-identical.
 
+## Working doctrine (finish-driven agents)
+Every dev agent on this repo works by three principles:
+1. **Whole-codebase awareness across time** — know the *past* (git history, ADRs, prior
+   PRs, why decisions were made), the *present* (current branch + what is in flight), and
+   the *future* (roadmap in `docs/plans/*`, phase gates, deferred items). Orient before
+   acting.
+2. **Always work in context** — load and hold the relevant files/conventions before
+   editing; never operate blind on an isolated slice.
+3. **Driven to finish, not to write code** — optimize for *done*: gates green, tests
+   pass, types clean, PR landed, verified end-to-end. Code is the means, completion is
+   the goal; never report partial work as complete.
+
+Reusable persona: [`.agents/agents/finisher.md`](.agents/agents/finisher.md) (canonical,
+version-controlled). To spawn it as a Claude Code subagent, copy it to the gitignored
+`.claude/agents/finisher.md`.
+
 ## Skills
 `.agents/skills/expo/` — use for EAS, config plugins, Clerk RN patterns.
