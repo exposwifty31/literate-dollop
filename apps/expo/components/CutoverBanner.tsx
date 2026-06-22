@@ -3,6 +3,7 @@ import { I18nManager, Pressable, StyleSheet, Text, View } from "react-native";
 
 import {
   dismissCutoverBanner,
+  getCutoverBannerVariant,
   resolveCutoverBannerVisible,
 } from "@/lib/cutover/cutover-banner-state";
 import { t } from "@/lib/i18n";
@@ -29,6 +30,9 @@ export function CutoverBanner() {
   if (!visible) return null;
 
   const rowDirection = I18nManager.isRTL ? "row-reverse" : "row";
+  const retired = getCutoverBannerVariant() === "retired";
+  const title = retired ? t.cutoverBanner.retiredTitle : t.cutoverBanner.title;
+  const message = retired ? t.cutoverBanner.retiredMessage : t.cutoverBanner.message;
 
   function onDismiss() {
     setVisible(false);
@@ -38,8 +42,8 @@ export function CutoverBanner() {
   return (
     <View style={[styles.container, { flexDirection: rowDirection }]} accessibilityRole="alert">
       <View style={styles.textColumn}>
-        <Text style={styles.title}>{t.cutoverBanner.title}</Text>
-        <Text style={styles.message}>{t.cutoverBanner.message}</Text>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.message}>{message}</Text>
       </View>
       <Pressable
         onPress={onDismiss}

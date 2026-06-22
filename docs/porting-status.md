@@ -141,6 +141,26 @@ the transition; retirement is H7.
 
 ---
 
+## ✅ Horizon 7 — Capacitor kill-switch (Expo-side readiness complete)
+
+Per [ADR-006](adr/006-capacitor-kill-switch.md) + [kill-switch runbook](mobile/capacitor-kill-switch.md).
+Product go/no-go = GO (2026-06-22). Retirement is driven by a reversible env
+kill-switch; the destructive store + vettrack steps are explicit handoffs.
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **kill-switch flag** | `apps/expo/src/lib/cutover/cutover-config.ts` | `EXPO_PUBLIC_CAPACITOR_RETIRED` (default off; flipped after store cutover) |
+| **retired banner variant** | `components/CutoverBanner.tsx` + `locales/*` | `getCutoverBannerVariant()` → coexistence vs retired copy |
+| **kill-switch runbook** | `docs/mobile/capacitor-kill-switch.md` | criteria, ordered cutover, rollback, handoffs |
+| **ADR-006** | `docs/adr/006-capacitor-kill-switch.md` | reversible env kill-switch decision |
+
+**Exit gate:** kill-switch default/override + banner-variant tests; `tsc` clean.
+**Remaining (handoff — outside this repo):** EAS/App Store publish + Capacitor
+listing retirement; `EXPO_PUBLIC_CAPACITOR_RETIRED=true` flip post-cutover;
+vettrack Capacitor-path removal (P3-7). `app.config.ts` bundle stays `uk.vettrack.expo`.
+
+---
+
 ## ⏸ Deferred (with reason + port notes)
 
 These are entangled with the two heavy modules and/or need an RN rewrite or a

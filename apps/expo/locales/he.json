@@ -1899,6 +1899,8 @@
   "cutoverBanner": {
     "title": "אתה משתמש באפליקציית VetTrack החדשה",
     "message": "זוהי כעת אפליקציית VetTrack הראשית. האפליקציה הקודמת תיסגר בקרוב — השאר את זו מותקנת.",
+    "retiredTitle": "VetTrack עברה לכאן",
+    "retiredMessage": "האפליקציה הקודמת של VetTrack הוסרה משימוש. אפשר להסיר אותה — זו כעת אפליקציית VetTrack היחידה.",
     "dismiss": "הבנתי",
     "dismissAria": "סגור הודעת מעבר"
   },

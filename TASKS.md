@@ -15,22 +15,20 @@ _(None — H4 and H6 merged; H7 awaits Gate C.)_
 
 ## Ready to Start (gated — see PLAN.md sign-off gates)
 
-### TASK-H7: Capacitor kill-switch retirement  *(blocked: Gate C — terminal)*
-**Priority:** `medium`
-**Linked plan step:** PLAN.md Step 3
+_(None — H1–H7 Expo-side delivered. Remaining H7 steps are external handoffs;
+see below.)_
 
-**What to do:**
-Author `docs/mobile/capacitor-kill-switch.md` (criteria, rollback, cross-repo
-sequencing with vettrack P3-7); execute cutover per Phase 6 go/no-go
-(`uk.vettrack.app` → `uk.vettrack.expo`); coordinate companion vettrack PR to
-remove Capacitor refs only after the written kill-switch.
+---
 
-**Blocked by (Gate C):** written kill-switch doc + product go/no-go.
+## Handoffs (outside this repo — required to fully complete H7)
 
-**Acceptance criteria:**
-- [ ] `docs/mobile/capacitor-kill-switch.md` authored and reviewed
-- [ ] Cutover executed per go/no-go; rollback path documented
-- [ ] `/security-review` run; full gates green
+Per `docs/mobile/capacitor-kill-switch.md` §5:
+- **Store ops:** EAS/App Store/Play publish of the Expo build; retire the
+  Capacitor (`uk.vettrack.app`) listing.
+- **Release owner:** flip `EXPO_PUBLIC_CAPACITOR_RETIRED=true` after the store
+  cutover is live.
+- **vettrack maintainer (P3-7):** remove Capacitor `ios/`/`android/` paths after
+  the cutover (separate repo).
 
 ---
 
@@ -41,6 +39,11 @@ _(See gated tasks above — TASK-H4 / H6 / H7 await their sign-off gates.)_
 ---
 
 ## Completed
+
+### TASK-H7: Capacitor kill-switch retirement (H7, Expo-side) ✅ 2026-06-22
+Reversible `EXPO_PUBLIC_CAPACITOR_RETIRED` kill-switch + retired banner variant +
+`docs/mobile/capacitor-kill-switch.md` + ADR-006. Product go/no-go = GO. External
+store + vettrack steps handed off (see Handoffs). Gate C cleared.
 
 ### TASK-H6: Cutover / coexistence banner (H6) ✅ 2026-06-22
 Flag-gated, dismissible Expo-primary banner (`components/CutoverBanner.tsx` +

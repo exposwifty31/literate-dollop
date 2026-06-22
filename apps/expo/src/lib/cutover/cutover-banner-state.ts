@@ -7,9 +7,20 @@
  * locale store in `i18n.ts`).
  */
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { isCutoverBannerEnabled } from "@/lib/cutover/cutover-config";
+import { isCapacitorRetired, isCutoverBannerEnabled } from "@/lib/cutover/cutover-config";
 
 const DISMISS_KEY = "vt_cutover_banner_dismissed_v1";
+
+/**
+ * Which copy the banner shows:
+ * - `coexistence` — Capacitor still live; "this is now the primary app".
+ * - `retired` — H7 kill-switch on; "the previous app has been retired".
+ */
+export type CutoverBannerVariant = "coexistence" | "retired";
+
+export function getCutoverBannerVariant(): CutoverBannerVariant {
+  return isCapacitorRetired() ? "retired" : "coexistence";
+}
 
 /** Pure decision: visible when enabled and not dismissed. */
 export function computeCutoverBannerVisible(opts: { enabled: boolean; dismissed: boolean }): boolean {

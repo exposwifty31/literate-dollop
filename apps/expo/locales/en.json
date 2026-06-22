@@ -1899,6 +1899,8 @@
   "cutoverBanner": {
     "title": "You're on the new VetTrack app",
     "message": "This is now the primary VetTrack app. The previous app is being retired soon — keep this one installed.",
+    "retiredTitle": "VetTrack has moved here",
+    "retiredMessage": "The previous VetTrack app has been retired. You can uninstall it — this is now the only VetTrack app.",
     "dismiss": "Got it",
     "dismissAria": "Dismiss migration notice"
   },

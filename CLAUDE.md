@@ -107,19 +107,22 @@ Fixed. Do not introduce alternatives without a Decision Record in `docs/DECISION
 **Status:** in progress
 **Branch:** `claude/reach-horizon-7-0vqq5o` (per-horizon child branches → PR → `main`)
 
-**Horizons complete:** H1 (workspace/contracts/Clerk/PendingSyncStore), H2
-(VetTrackControl plugin — landed, 4/4 tests), H3 (NFC equipment scan slice — 75
-tests), H5 (RN parity waves 1–4: equipment, actions, shift, rooms, alerts).
+**Horizons complete (Expo-side):** H1–H7. H1 (workspace/contracts/Clerk/
+PendingSyncStore), H2 (VetTrackControl plugin, 4/4), H3 (NFC scan slice, 75
+tests), H4 (SSE realtime + flag-gated native push, ADR-005), H5 (RN parity waves
+1–4), H6 (cutover/coexistence banner), H7 (Capacitor kill-switch — reversible
+`EXPO_PUBLIC_CAPACITOR_RETIRED` flag + `docs/mobile/capacitor-kill-switch.md` +
+ADR-006). Product go/no-go = GO.
 
-**Remaining climb:** H4 (SSE realtime + native push) → H6 (cutover/coexistence
-banner) → H7 (Capacitor kill-switch retirement). Each is gated — see PLAN.md
-sign-off gates.
+**Remaining (external handoffs — not executable from this repo):** EAS/App Store
+publish; flip `EXPO_PUBLIC_CAPACITOR_RETIRED=true` post-store-cutover; vettrack
+Capacitor-path removal (P3-7). See `docs/mobile/capacitor-kill-switch.md` §5.
 
-**Out of scope right now (until their sign-off gate clears):**
-- SSE / push notification port (H4 — needs written SSE approval + monolith push endpoint)
+**Out of scope right now:**
+- Live native push registration — flag-off until vettrack `POST /api/push-subscriptions/native` (P3-5)
 - Full `api.ts` port (~1042 LOC) — scan-only API until parity matrix defines waves
 - ER/patient/hospitalization screens (June 2026 scope cut)
-- Capacitor cutover / retirement (H6–H7 — needs product go/no-go + kill-switch doc)
+- Flipping the Expo bundle id / store cutover (store ops handoff)
 
 ---
 
