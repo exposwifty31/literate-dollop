@@ -107,6 +107,40 @@ Still deferred: full `api.ts` surface, use-auth, equipment cache tables, QR came
 
 ---
 
+## ✅ Horizon 4 — Realtime (SSE) + native push (complete)
+
+Per [ADR-005](adr/005-realtime-h4-sse-push.md) (SSE approved at H4; "No SSE
+before H6" superseded). Transport is dependency-injected (testable without a
+native EventSource).
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **realtime-config** | `apps/expo/src/lib/realtime/realtime-config.ts` | feature flags (realtime on; native push off until vettrack P3-5) + stream-URL resolution |
+| **sse-client** | `apps/expo/src/lib/realtime/sse-client.ts` | backoff reconnect, monotonic Last-Event-ID resume; inbound-only (never enqueues) |
+| **event-source-connection** | `apps/expo/src/lib/realtime/event-source-connection.ts` | default EventSource transport seam (`react-native-sse` is the production swap) |
+| **push-registration** | `apps/expo/src/lib/push/push-registration.ts` | flag-gated; injected token provider (`expo-notifications` deferred seam) |
+
+**Exit gate:** +12 vitest tests (SSE, push, realtime Code-Blue safety); `tsc` clean.
+Deferred native deps: `react-native-sse`, `expo-notifications`. Live push stays
+flag-off until vettrack `POST /api/push-subscriptions/native` (P3-5).
+
+---
+
+## ✅ Horizon 6 — Cutover / coexistence banner (complete)
+
+| Item | destination | notes |
+|------|-------------|-------|
+| **cutover-config** | `apps/expo/src/lib/cutover/cutover-config.ts` | `EXPO_PUBLIC_CUTOVER_BANNER_ENABLED` (default on) |
+| **cutover-banner-state** | `apps/expo/src/lib/cutover/cutover-banner-state.ts` | visibility logic + persisted dismissal (AsyncStorage) |
+| **CutoverBanner** | `apps/expo/components/CutoverBanner.tsx` | RTL-aware banner; copy via `t.cutoverBanner.*`; mounted in `app/(app)/_layout.tsx` |
+| **i18n** | `apps/expo/locales/{en,he}.json` | `cutoverBanner` keys (en↔he parity) |
+
+**Exit gate:** banner state + en/he parity tests; deep-link coexistence regression
+tests (legacy `vettrack://` still routes). Capacitor not deleted — H6 only messages
+the transition; retirement is H7.
+
+---
+
 ## ⏸ Deferred (with reason + port notes)
 
 These are entangled with the two heavy modules and/or need an RN rewrite or a

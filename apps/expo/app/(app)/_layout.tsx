@@ -2,17 +2,21 @@ import { useAuth } from '@clerk/clerk-expo';
 import { Redirect, Stack } from 'expo-router';
 import { ActivityIndicator, Text, View } from 'react-native';
 
+import { CutoverBanner } from '@/components/CutoverBanner';
 import { isClerkActive } from '@/lib/auth/clerk-config';
 import { t } from '@/lib/i18n';
 import { buildSignInHref, usePendingDeepLinkReturn } from '@/lib/linking/deep-link-return';
 
 function AppStack() {
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="scan" options={{ title: t.scanScreen.title }} />
-      <Stack.Screen name="equipment/[id]" options={{ title: t.nav.equipment }} />
-    </Stack>
+    <View style={{ flex: 1 }}>
+      <CutoverBanner />
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="scan" options={{ title: t.scanScreen.title }} />
+        <Stack.Screen name="equipment/[id]" options={{ title: t.nav.equipment }} />
+      </Stack>
+    </View>
   );
 }
 

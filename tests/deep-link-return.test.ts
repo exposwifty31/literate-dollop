@@ -34,3 +34,24 @@ describe("deep-link-return (Phase 2 widget handoff)", () => {
     expect(resolvePostAuthHref(undefined)).toBe("/(app)/(tabs)");
   });
 });
+
+// H6 cutover: Capacitor (uk.vettrack.app) and Expo (uk.vettrack.expo) coexist
+// until the H7 kill-switch and may share the legacy `vettrack://` scheme. Lock
+// the coexistence routing contract so the cutover does not silently break
+// deep-links arriving from either build.
+describe("deep-link scheme coexistence (H6 Capacitor ↔ Expo)", () => {
+  it("routes the legacy vettrack:// scan link (host- and path-form) to /scan", () => {
+    expect(pathFromDeepLinkUrl("vettrack://scan")).toBe(SCAN_DEEP_LINK_PATH);
+    expect(pathFromDeepLinkUrl("vettrack:///scan")).toBe(SCAN_DEEP_LINK_PATH);
+  });
+
+  it("routes the new vettrack-expo:// scan link to /scan", () => {
+    expect(pathFromDeepLinkUrl("vettrack-expo://scan")).toBe(SCAN_DEEP_LINK_PATH);
+  });
+
+  it("ignores empty/scheme-only deep links without misrouting", () => {
+    expect(pathFromDeepLinkUrl("vettrack://")).toBeUndefined();
+    expect(pathFromDeepLinkUrl(undefined)).toBeUndefined();
+    expect(pathFromDeepLinkUrl("")).toBeUndefined();
+  });
+});
