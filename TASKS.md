@@ -66,6 +66,11 @@ scan screen (`apps/expo/app/(app)/scan.tsx`), equipment-scan API
 (`apps/expo/src/lib/api/equipment-scan.ts`), thin `sync-engine` + `use-sync`, and
 the offline scan→queue→replay flow. Code Blue online-only enforced.
 
+### TASK-E-P2-1: Mark legacy types ✅ 2026-06-23
+Added `@deprecated LEGACY` JSDoc to `HospitalizationStatus` (patients.ts) and
+`BillingLedgerStatus` (billing.ts) — both cut from June 2026 scope. TypeScript
+will now surface any new usages as deprecation warnings.
+
 ### Phase 4–5 — RN parity waves 1–4 (H5) ✅ 2026-06
 Equipment list/detail, actions (status/checkout/return/new), shift (home card +
 handoff), rooms, alerts. See `docs/mobile/rn-parity-matrix.md` + porting-status
@@ -76,8 +81,6 @@ handoff), rooms, alerts. See `docs/mobile/rn-parity-matrix.md` + porting-status
 ## Backlog
 
 Tasks spotted but out of scope for this sprint. Agents add here when they notice something.
-
-- TASK: Mark `patients.ts` / `billing.ts` types as LEGACY (E-P2-1)
 - TASK: Add PR template checkbox for emergency/offline surface changes (E-P1-2)
 - TASK: Phase 3b — equipment/rooms cache tables in `PendingSyncStore`
 - TASK: Verify emergency-block telemetry parity with vettrack `api.ts` bounded enums before H4 (E-P2-4)
