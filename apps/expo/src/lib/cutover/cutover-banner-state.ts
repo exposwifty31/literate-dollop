@@ -18,6 +18,7 @@ const DISMISS_KEY = "vt_cutover_banner_dismissed_v1";
  */
 export type CutoverBannerVariant = "coexistence" | "retired";
 
+/** Which copy variant the banner should show (driven by the H7 kill-switch). */
 export function getCutoverBannerVariant(): CutoverBannerVariant {
   return isCapacitorRetired() ? "retired" : "coexistence";
 }
@@ -27,6 +28,7 @@ export function computeCutoverBannerVisible(opts: { enabled: boolean; dismissed:
   return opts.enabled && !opts.dismissed;
 }
 
+/** Whether the user has previously dismissed the banner (persisted). */
 export async function isCutoverBannerDismissed(): Promise<boolean> {
   try {
     return (await AsyncStorage.getItem(DISMISS_KEY)) === "1";
@@ -35,6 +37,7 @@ export async function isCutoverBannerDismissed(): Promise<boolean> {
   }
 }
 
+/** Persist the user's dismissal so the banner does not reappear next launch. */
 export async function dismissCutoverBanner(): Promise<void> {
   try {
     await AsyncStorage.setItem(DISMISS_KEY, "1");

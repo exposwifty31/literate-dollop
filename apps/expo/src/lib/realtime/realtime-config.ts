@@ -21,11 +21,13 @@ const REALTIME_STREAM_PATH = "/api/realtime/stream";
 /** Monolith native push subscription endpoint (vettrack P3-5). */
 export const NATIVE_PUSH_SUBSCRIPTION_ENDPOINT = "/api/push-subscriptions/native";
 
+/** Parse a boolean from an env string (`"true"`/`"1"` → true), else `fallback`. */
 function envFlag(value: string | undefined, fallback: boolean): boolean {
   if (value === undefined || value === "") return fallback;
   return value === "true" || value === "1";
 }
 
+/** Read the realtime flags from `process.env` (the single env-read site). */
 function readEnvFlags(): RealtimeFlags {
   return {
     realtimeEnabled: envFlag(process.env.EXPO_PUBLIC_REALTIME_ENABLED, true),
@@ -41,15 +43,18 @@ export function setRealtimeFlagsForTests(overrides: Partial<RealtimeFlags> | nul
   testOverrides = overrides;
 }
 
+/** Resolve the effective realtime flags (env, with any test overrides applied). */
 export function getRealtimeFlags(): RealtimeFlags {
   const base = readEnvFlags();
   return testOverrides ? { ...base, ...testOverrides } : base;
 }
 
+/** Whether the SSE realtime transport is enabled. */
 export function isRealtimeEnabled(): boolean {
   return getRealtimeFlags().realtimeEnabled;
 }
 
+/** Whether live native push registration is enabled (off until vettrack P3-5). */
 export function isNativePushEnabled(): boolean {
   return getRealtimeFlags().nativePushEnabled;
 }
