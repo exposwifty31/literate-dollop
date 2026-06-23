@@ -40,6 +40,11 @@ export interface RegisterNativePushOptions {
   getToken: PushTokenProvider;
 }
 
+/**
+ * Register this device's native push token with the monolith. No-ops (returns
+ * `disabled`) while the flag is off; otherwise obtains a token via the injected
+ * provider and POSTs it, mapping every outcome to a `RegisterPushResult`.
+ */
 export async function registerNativePush(
   options: RegisterNativePushOptions,
 ): Promise<RegisterPushResult> {

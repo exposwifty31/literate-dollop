@@ -67,6 +67,7 @@ export interface RealtimeClient {
   getLastEventId(): string | undefined;
 }
 
+/** Exponential reconnect delay for `attempt` (1-based), capped at `maxMs`, optional jitter. */
 function computeBackoff(attempt: number, opts: Required<BackoffOptions>): number {
   const exp = Math.min(opts.maxMs, opts.baseMs * 2 ** Math.max(0, attempt - 1));
   if (!opts.jitter) return exp;
@@ -87,6 +88,11 @@ function nextLastEventId(current: string | undefined, incoming: string | undefin
   return incoming;
 }
 
+/**
+ * Create an SSE realtime client over an injected connection factory. Manages
+ * connect/reconnect (exponential backoff), monotonic `Last-Event-ID` resume,
+ * and JSON frame dispatch. Call `start()` to connect and `stop()` to tear down.
+ */
 export function createRealtimeClient(options: RealtimeClientOptions): RealtimeClient {
   const backoff: Required<BackoffOptions> = {
     baseMs: options.backoff?.baseMs ?? 1000,
@@ -100,6 +106,7 @@ export function createRealtimeClient(options: RealtimeClientOptions): RealtimeCl
   let stopped = true;
   let lastEventId: string | undefined;
 
+  /** Cancel any pending reconnect timer. */
   function clearReconnectTimer(): void {
     if (reconnectTimer !== null) {
       clearTimeout(reconnectTimer);
@@ -107,6 +114,7 @@ export function createRealtimeClient(options: RealtimeClientOptions): RealtimeCl
     }
   }
 
+  /** Advance the resume token and dispatch a parsed frame (malformed → onError). */
   function handleFrame(frame: RawSseFrame): void {
     lastEventId = nextLastEventId(lastEventId, frame.id);
     if (!frame.data) return;
@@ -120,6 +128,7 @@ export function createRealtimeClient(options: RealtimeClientOptions): RealtimeCl
     options.onEvent(parsed);
   }
 
+  /** Schedule the next reconnect attempt with exponential backoff. */
   function scheduleReconnect(): void {
     if (stopped) return;
     clearReconnectTimer();
@@ -131,6 +140,7 @@ export function createRealtimeClient(options: RealtimeClientOptions): RealtimeCl
     }, delay);
   }
 
+  /** Open a connection (resolving fresh auth headers); reconnect on failure. */
   async function connect(): Promise<void> {
     if (stopped) return;
     let headers: Record<string, string>;
@@ -163,12 +173,14 @@ export function createRealtimeClient(options: RealtimeClientOptions): RealtimeCl
   }
 
   return {
+    /** Open the stream and begin dispatching events (no-op if already started). */
     async start(): Promise<void> {
       if (!stopped) return;
       stopped = false;
       attempt = 0;
       await connect();
     },
+    /** Close the stream and cancel any pending reconnect. */
     stop(): void {
       stopped = true;
       clearReconnectTimer();
@@ -177,6 +189,7 @@ export function createRealtimeClient(options: RealtimeClientOptions): RealtimeCl
         connection = null;
       }
     },
+    /** Highest event id observed so far (the resume token). */
     getLastEventId(): string | undefined {
       return lastEventId;
     },

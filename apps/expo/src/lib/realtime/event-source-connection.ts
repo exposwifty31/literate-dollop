@@ -27,6 +27,7 @@ type EventSourceCtor = new (
   init?: { headers?: Record<string, string>; withCredentials?: boolean },
 ) => EventSourceLike;
 
+/** Safely read a string field off an unknown DOM/EventSource event object. */
 function readField(event: unknown, field: string): string | undefined {
   if (event && typeof event === "object" && field in event) {
     const value = (event as Record<string, unknown>)[field];

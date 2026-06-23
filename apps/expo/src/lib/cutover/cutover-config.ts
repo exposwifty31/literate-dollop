@@ -20,11 +20,13 @@ export interface CutoverFlags {
   capacitorRetired: boolean;
 }
 
+/** Parse a boolean from an env string (`"true"`/`"1"` → true), else `fallback`. */
 function envFlag(value: string | undefined, fallback: boolean): boolean {
   if (value === undefined || value === "") return fallback;
   return value === "true" || value === "1";
 }
 
+/** Read the cutover flags from `process.env` (the single env-read site). */
 function readEnvFlags(): CutoverFlags {
   return {
     bannerEnabled: envFlag(process.env.EXPO_PUBLIC_CUTOVER_BANNER_ENABLED, true),
@@ -39,11 +41,13 @@ export function setCutoverFlagsForTests(overrides: Partial<CutoverFlags> | null)
   testOverrides = overrides;
 }
 
+/** Resolve the effective cutover flags (env, with any test overrides applied). */
 export function getCutoverFlags(): CutoverFlags {
   const base = readEnvFlags();
   return testOverrides ? { ...base, ...testOverrides } : base;
 }
 
+/** Whether the cutover/coexistence banner is enabled. */
 export function isCutoverBannerEnabled(): boolean {
   return getCutoverFlags().bannerEnabled;
 }
