@@ -6,6 +6,11 @@ on:
     paths:
       - "packages/contracts/**"
 
+# One run per PR branch; newer pushes cancel in-flight runs.
+concurrency:
+  group: contracts-review-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   review:
     runs-on: ubuntu-latest
