@@ -19,7 +19,9 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
       - run: bash scripts/ci/contracts-gate.sh
       - run: pnpm --filter @vettrack/contracts exec tsc --noEmit
       - run: pnpm --filter vettrack-expo exec tsc --noEmit
-      - run: pnpm test
+      - run: pnpm test -- --coverage
+      - run: pnpm --filter vettrack-expo test

@@ -5,6 +5,19 @@ export default defineConfig({
   test: {
     include: ["tests/**/*.test.ts"],
     environment: "node",
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "lcov"],
+      include: ["apps/expo/src/**", "packages/contracts/src/**"],
+      // Seeded just below the measured baseline (stmts/lines 41.64, branches
+      // 69.45, functions 80.72) so CI ratchets coverage up without breaking today.
+      thresholds: {
+        statements: 41,
+        lines: 41,
+        branches: 69,
+        functions: 80,
+      },
+    },
   },
   resolve: {
     alias: {
