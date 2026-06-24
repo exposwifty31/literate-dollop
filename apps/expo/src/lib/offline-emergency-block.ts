@@ -71,9 +71,7 @@ export async function recordEmergencyBlockLocally(
   await writeBuffer(current);
 }
 
-export async function _readEmergencyBlockBufferForTests(): Promise<
-  readonly LocalBufferEntry[]
-> {
+export async function _readEmergencyBlockBufferForTests(): Promise<readonly LocalBufferEntry[]> {
   return readBuffer();
 }
 

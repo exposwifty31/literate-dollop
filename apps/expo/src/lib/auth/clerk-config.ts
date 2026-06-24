@@ -30,8 +30,7 @@ const apiUrl = process.env.EXPO_PUBLIC_API_URL?.trim() ?? "";
  */
 export function clerkApiEnvMismatchWarning(): string | null {
   if (!clerkPublishableKey || !apiUrl) return null;
-  const targetsProductionApi =
-    apiUrl.includes("vettrack.uk") && !apiUrl.includes("staging");
+  const targetsProductionApi = apiUrl.includes("vettrack.uk") && !apiUrl.includes("staging");
   const usesTestClerk = clerkPublishableKey.startsWith("pk_test_");
   if (targetsProductionApi && usesTestClerk) {
     return (

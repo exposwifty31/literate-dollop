@@ -36,10 +36,7 @@ export async function getAllPendingSync() {
   return store.getAllPendingSync();
 }
 
-export async function updatePendingSync(
-  id: number,
-  patch: Partial<PendingSync>,
-): Promise<void> {
+export async function updatePendingSync(id: number, patch: Partial<PendingSync>): Promise<void> {
   const store = await getPendingSyncStore();
   await store.updatePendingSync(id, patch);
 }

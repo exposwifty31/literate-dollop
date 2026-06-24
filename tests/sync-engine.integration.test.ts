@@ -22,7 +22,10 @@ describe("sync-engine integration", () => {
   });
 
   it("enqueue scan → processQueue → row removed", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response("{}", { status: 200 })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("{}", { status: 200 })),
+    );
     const { setAuthStateRef, processQueue } = await import("@/lib/sync-engine");
     const { setAuthHeaderProvider } = await import("@/lib/auth/get-auth-headers");
     const netinfo = await import("@react-native-community/netinfo");

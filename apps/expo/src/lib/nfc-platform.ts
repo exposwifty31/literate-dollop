@@ -29,7 +29,10 @@ function ndefTextFromDecoded(decoded: unknown): string {
   return "";
 }
 
-function parseNdefPayload(payload: NfcReadPayload, records: NdefRecord[] | undefined): NfcReadPayload {
+function parseNdefPayload(
+  payload: NfcReadPayload,
+  records: NdefRecord[] | undefined,
+): NfcReadPayload {
   if (!records?.length) return payload;
   for (const record of records) {
     if (record.tnf === Ndef.TNF_WELL_KNOWN && record.type) {
@@ -38,9 +41,7 @@ function parseNdefPayload(payload: NfcReadPayload, records: NdefRecord[] | undef
         const url = Ndef.uri.decodePayload(toUint8Array(record.payload));
         if (url) payload.url = url;
       } else if (type === "T") {
-        const text = ndefTextFromDecoded(
-          Ndef.text.decodePayload(toUint8Array(record.payload)),
-        );
+        const text = ndefTextFromDecoded(Ndef.text.decodePayload(toUint8Array(record.payload)));
         if (text) {
           payload.text = text;
         }

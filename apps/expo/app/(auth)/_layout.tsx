@@ -1,10 +1,10 @@
-import { useAuth } from '@clerk/clerk-expo';
-import { Redirect, Slot, useLocalSearchParams } from 'expo-router';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { useAuth } from "@clerk/clerk-expo";
+import { Redirect, Slot, useLocalSearchParams } from "expo-router";
+import { ActivityIndicator, Text, View } from "react-native";
 
-import { isClerkActive } from '@/lib/auth/clerk-config';
-import { t } from '@/lib/i18n';
-import { resolvePostAuthHref, usePendingDeepLinkReturn } from '@/lib/linking/deep-link-return';
+import { isClerkActive } from "@/lib/auth/clerk-config";
+import { t } from "@/lib/i18n";
+import { resolvePostAuthHref, usePendingDeepLinkReturn } from "@/lib/linking/deep-link-return";
 
 function AuthLayoutWithClerk() {
   const { isSignedIn, isLoaded } = useAuth();
@@ -13,7 +13,7 @@ function AuthLayoutWithClerk() {
 
   if (!isLoaded) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 12 }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 12 }}>
         <ActivityIndicator />
         <Text>{t.auth.guard.loadingApp}</Text>
       </View>

@@ -31,7 +31,10 @@ function makeFakeFactory() {
   return { factory, connections };
 }
 
-function frame(id: string | undefined, event: Partial<RealtimeEvent>): { id?: string; data: string } {
+function frame(
+  id: string | undefined,
+  event: Partial<RealtimeEvent>,
+): { id?: string; data: string } {
   return {
     id,
     data: JSON.stringify({ type: "EQUIPMENT_STAGED", payload: {}, timestamp: "t", ...event }),

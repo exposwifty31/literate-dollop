@@ -17,7 +17,11 @@ describe("nfc-platform", () => {
 
   it("readNfcOnce extracts text from NDEF text records", async () => {
     const equipmentId = "abc-123";
-    const textPayload = [2, ..."en".split("").map((c) => c.charCodeAt(0)), ...equipmentId.split("").map((c) => c.charCodeAt(0))];
+    const textPayload = [
+      2,
+      ..."en".split("").map((c) => c.charCodeAt(0)),
+      ...equipmentId.split("").map((c) => c.charCodeAt(0)),
+    ];
 
     const nfc = await import("react-native-nfc-manager");
     nfc.default.isSupported = vi.fn(async () => true);
@@ -42,7 +46,11 @@ describe("nfc-platform", () => {
 
   it("readNfcOnce extracts text when NDEF type is a byte array", async () => {
     const equipmentId = "abc-123";
-    const textPayload = [2, ..."en".split("").map((c) => c.charCodeAt(0)), ...equipmentId.split("").map((c) => c.charCodeAt(0))];
+    const textPayload = [
+      2,
+      ..."en".split("").map((c) => c.charCodeAt(0)),
+      ...equipmentId.split("").map((c) => c.charCodeAt(0)),
+    ];
 
     const nfc = await import("react-native-nfc-manager");
     nfc.default.isSupported = vi.fn(async () => true);

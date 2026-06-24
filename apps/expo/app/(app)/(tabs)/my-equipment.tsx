@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import { useColorScheme } from "@/components/useColorScheme";
@@ -75,9 +68,7 @@ function MyEquipmentRow({
               {item.checkedOutLocation ?? item.location}
             </Text>
           ) : null}
-          {checkedOutAt ? (
-            <Text style={styles.rowMeta}>{checkedOutAt}</Text>
-          ) : null}
+          {checkedOutAt ? <Text style={styles.rowMeta}>{checkedOutAt}</Text> : null}
         </View>
       </View>
       <View style={[styles.statusPill, { backgroundColor: pillColor }]}>

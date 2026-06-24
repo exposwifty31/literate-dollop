@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -101,10 +94,7 @@ export default function UpdateStatusScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
-      <ScrollView
-        contentContainerStyle={styles.content}
-        keyboardShouldPersistTaps="handled"
-      >
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={[styles.equipmentName, { color: colors.text }]}>{equipment.name}</Text>
         <Text style={[styles.sectionLabel, { color: colors.text + "99" }]}>
           {t.equipmentDetail.statusLabel}
@@ -128,15 +118,8 @@ export default function UpdateStatusScreen() {
               accessibilityRole="radio"
               accessibilityState={{ checked: isSelected }}
             >
-              <View
-                style={[
-                  styles.radioOuter,
-                  { borderColor: isSelected ? color : "#9ca3af" },
-                ]}
-              >
-                {isSelected && (
-                  <View style={[styles.radioInner, { backgroundColor: color }]} />
-                )}
+              <View style={[styles.radioOuter, { borderColor: isSelected ? color : "#9ca3af" }]}>
+                {isSelected && <View style={[styles.radioInner, { backgroundColor: color }]} />}
               </View>
               <View style={[styles.statusDot, { backgroundColor: color }]} />
               <Text style={[styles.statusLabelText, { color: isSelected ? color : colors.text }]}>
@@ -146,9 +129,7 @@ export default function UpdateStatusScreen() {
           );
         })}
 
-        {saveError ? (
-          <Text style={styles.saveError}>{saveError}</Text>
-        ) : null}
+        {saveError ? <Text style={styles.saveError}>{saveError}</Text> : null}
       </ScrollView>
 
       <View
@@ -162,13 +143,13 @@ export default function UpdateStatusScreen() {
           style={[styles.secondaryBtn, { borderColor: colors.text + "33" }]}
           accessibilityRole="button"
         >
-          <Text style={[styles.secondaryBtnText, { color: colors.text }]}>
-            {t.common.cancel}
-          </Text>
+          <Text style={[styles.secondaryBtnText, { color: colors.text }]}>{t.common.cancel}</Text>
         </Pressable>
 
         <Pressable
-          onPress={() => { void handleSave(); }}
+          onPress={() => {
+            void handleSave();
+          }}
           disabled={saving || !selected}
           style={({ pressed }) => [
             styles.primaryBtn,

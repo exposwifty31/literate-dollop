@@ -9,8 +9,7 @@ export function pathFromDeepLinkUrl(url: string | null | undefined): string | un
   if (!url) return undefined;
 
   const parsed = Linking.parse(url);
-  const normalizedPath =
-    parsed.path?.replace(/^\//, "") || parsed.hostname || undefined;
+  const normalizedPath = parsed.path?.replace(/^\//, "") || parsed.hostname || undefined;
 
   if (normalizedPath === "scan") {
     return SCAN_DEEP_LINK_PATH;

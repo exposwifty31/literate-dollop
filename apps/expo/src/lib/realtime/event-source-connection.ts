@@ -54,7 +54,10 @@ export const eventSourceConnectionFactory: RealtimeConnectionFactory = (
   source.addEventListener("open", () => callbacks.onOpen?.());
   source.addEventListener("error", (event) => callbacks.onError(event));
   source.addEventListener("message", (event) => {
-    callbacks.onFrame({ id: readField(event, "lastEventId"), data: readField(event, "data") ?? "" });
+    callbacks.onFrame({
+      id: readField(event, "lastEventId"),
+      data: readField(event, "data") ?? "",
+    });
   });
 
   return {

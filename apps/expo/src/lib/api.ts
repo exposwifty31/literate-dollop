@@ -6,12 +6,7 @@ import {
 } from "@/lib/offline-emergency-block";
 import { OfflineEmergencyMutationBlockedError } from "@/lib/offline-policy";
 import { addPendingSync } from "@/lib/offline/pending-sync-queue";
-import {
-  isNetworkError,
-  isOfflineResponse,
-  isOnline,
-  OfflineResponseError,
-} from "@/lib/network";
+import { isNetworkError, isOfflineResponse, isOnline, OfflineResponseError } from "@/lib/network";
 
 const BASE_HEADERS: Record<string, string> = {
   "Content-Type": "application/json",
@@ -42,9 +37,7 @@ function resolveApiUrl(path: string): string {
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-async function buildRequestHeaders(
-  init: RequestInit = {},
-): Promise<Record<string, string>> {
+async function buildRequestHeaders(init: RequestInit = {}): Promise<Record<string, string>> {
   const auth = await getAuthHeaders();
   return {
     ...BASE_HEADERS,

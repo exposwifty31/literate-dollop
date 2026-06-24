@@ -17,15 +17,11 @@ describe("@vettrack/contracts emergency shapes", () => {
   });
 
   it("normalizeEmergencyPathname strips trailing slashes", () => {
-    expect(normalizeEmergencyPathname("/api/code-blue/sessions/")).toBe(
-      "/api/code-blue/sessions",
-    );
+    expect(normalizeEmergencyPathname("/api/code-blue/sessions/")).toBe("/api/code-blue/sessions");
   });
 
   it("classifyEmergencyEndpointFromManifest blocks mutations only", () => {
-    expect(
-      classifyEmergencyEndpointFromManifest("/api/code-blue/sessions", "POST"),
-    ).toBe("start");
+    expect(classifyEmergencyEndpointFromManifest("/api/code-blue/sessions", "POST")).toBe("start");
     expect(
       classifyEmergencyEndpointFromManifest("/api/code-blue/sessions/active", "GET"),
     ).toBeNull();

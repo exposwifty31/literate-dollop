@@ -122,9 +122,7 @@ export function resolveAllowRegistryEntry(op: {
   const method = op.method.toUpperCase();
   return offlineAllowProducers.find(
     (entry) =>
-      entry.pendingType === op.type &&
-      entry.method === method &&
-      entry.pathPattern.test(pathname),
+      entry.pendingType === op.type && entry.method === method && entry.pathPattern.test(pathname),
   );
 }
 

@@ -1,12 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import { useColorScheme } from "@/components/useColorScheme";
@@ -19,8 +12,14 @@ import type { Alert, AlertType } from "@/types/equipment";
 const ALERT_TYPE_META: Record<AlertType, { label: string; badgeLabel: string }> = {
   issue: { label: t.alerts.types.issue.label, badgeLabel: t.alerts.types.issue.badgeLabel },
   overdue: { label: t.alerts.types.overdue.label, badgeLabel: t.alerts.types.overdue.badgeLabel },
-  sterilization_due: { label: t.alerts.types.sterilization_due.label, badgeLabel: t.alerts.types.sterilization_due.badgeLabel },
-  inactive: { label: t.alerts.types.inactive.label, badgeLabel: t.alerts.types.inactive.badgeLabel },
+  sterilization_due: {
+    label: t.alerts.types.sterilization_due.label,
+    badgeLabel: t.alerts.types.sterilization_due.badgeLabel,
+  },
+  inactive: {
+    label: t.alerts.types.inactive.label,
+    badgeLabel: t.alerts.types.inactive.badgeLabel,
+  },
 };
 
 const BADGE_SEVERITY_COLORS: Record<AlertType, string> = {

@@ -18,17 +18,16 @@ export async function patchEquipmentStatus(
 }
 
 export async function checkoutEquipment(id: string): Promise<QuickScanToggleResult> {
-  return request<QuickScanToggleResult>(
-    `/api/equipment/${encodeURIComponent(id)}/checkout`,
-    { method: "POST" },
-  );
+  return request<QuickScanToggleResult>(`/api/equipment/${encodeURIComponent(id)}/checkout`, {
+    method: "POST",
+  });
 }
 
 export async function returnEquipment(id: string): Promise<QuickScanToggleResult> {
-  return request<QuickScanToggleResult>(
-    `/api/equipment/${encodeURIComponent(id)}/return`,
-    { method: "POST", body: JSON.stringify({ isPluggedIn: false }) },
-  );
+  return request<QuickScanToggleResult>(`/api/equipment/${encodeURIComponent(id)}/return`, {
+    method: "POST",
+    body: JSON.stringify({ isPluggedIn: false }),
+  });
 }
 
 export async function createEquipment(data: CreateEquipmentRequest): Promise<Equipment> {

@@ -287,4 +287,3 @@ export interface ShiftCompletionResult {
   to: string;
   users: ShiftCompletionUser[];
 }
-

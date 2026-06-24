@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { useColorScheme } from "@/components/useColorScheme";
@@ -45,11 +38,7 @@ export default function RoomDetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Pressable
-        onPress={() => router.back()}
-        style={styles.backButton}
-        accessibilityRole="button"
-      >
+      <Pressable onPress={() => router.back()} style={styles.backButton} accessibilityRole="button">
         <Text style={[styles.backText, { color: colors.tint }]}>{t.common.back}</Text>
       </Pressable>
 
