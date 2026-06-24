@@ -54,7 +54,7 @@ describe("EquipmentDetailScreen", () => {
     expect(screen.getByText(t.equipmentDetail.loadFailed)).toBeTruthy();
   });
 
-  it("renders the equipment name and status, and navigates to scan", async () => {
+  it("renders the equipment name and resolved status label", async () => {
     const equipment = buildEquipment();
     mockedFetch.mockResolvedValue(equipment);
 
@@ -67,27 +67,31 @@ describe("EquipmentDetailScreen", () => {
     // Resolved status label (Hebrew default locale — referenced via the same
     // helper the screen uses, never hardcoded copy).
     expect(screen.getByText(statusLabel(equipment.status))).toBeTruthy();
+  });
 
-    const scanButton = screen.getByText(t.nav.equipmentScan);
-    expect(scanButton).toBeTruthy();
+  it("navigates to the scan screen when the scan button is pressed", async () => {
+    mockedFetch.mockResolvedValue(buildEquipment());
+
+    render(<EquipmentDetailScreen />);
+
+    const scanButton = await waitFor(() => screen.getByText(t.nav.equipmentScan));
 
     fireEvent.press(scanButton);
     expect(mockedRouter.push).toHaveBeenCalledWith("/scan");
   });
 
   it("renders the checked-out banner when checkedOutByEmail is set", async () => {
+    const checkedOutByEmail = "vet@clinic.test";
     const equipment = buildEquipment({
       checkedOutById: "user-9",
-      checkedOutByEmail: "vet@clinic.test",
+      checkedOutByEmail,
     });
     mockedFetch.mockResolvedValue(equipment);
 
     render(<EquipmentDetailScreen />);
 
     await waitFor(() => {
-      expect(
-        screen.getByText(t.equipmentDetail.checkedOutBy(equipment.checkedOutByEmail!)),
-      ).toBeTruthy();
+      expect(screen.getByText(t.equipmentDetail.checkedOutBy(checkedOutByEmail))).toBeTruthy();
     });
   });
 });

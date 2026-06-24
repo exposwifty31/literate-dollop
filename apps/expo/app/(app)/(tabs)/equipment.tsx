@@ -116,7 +116,10 @@ export default function EquipmentScreen() {
       } else {
         setData(result);
       }
-    } catch {
+    } catch (error) {
+      // Surface every failure with context — append (load-more) failures have no
+      // visible error state, so without this they would vanish silently.
+      console.error("Failed to load equipment list", { q, status, page, append, error });
       if (!append) setError(t.equipmentList.errors.loadFailed);
     } finally {
       setLoading(false);
