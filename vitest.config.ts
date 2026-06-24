@@ -35,6 +35,10 @@ export default defineConfig({
         __dirname,
         "tests/mocks/react-native-nfc-manager.ts",
       ),
+      "@/components/useColorScheme": path.resolve(
+        __dirname,
+        "tests/mocks/use-color-scheme.ts",
+      ),
     },
   },
 });
