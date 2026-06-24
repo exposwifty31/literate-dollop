@@ -1,11 +1,11 @@
-import { useAuth } from '@clerk/clerk-expo';
-import { Redirect, Stack } from 'expo-router';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { useAuth } from "@clerk/clerk-expo";
+import { Redirect, Stack } from "expo-router";
+import { ActivityIndicator, Text, View } from "react-native";
 
-import { CutoverBanner } from '@/components/CutoverBanner';
-import { isClerkActive } from '@/lib/auth/clerk-config';
-import { t } from '@/lib/i18n';
-import { buildSignInHref, usePendingDeepLinkReturn } from '@/lib/linking/deep-link-return';
+import { CutoverBanner } from "@/components/CutoverBanner";
+import { isClerkActive } from "@/lib/auth/clerk-config";
+import { t } from "@/lib/i18n";
+import { buildSignInHref, usePendingDeepLinkReturn } from "@/lib/linking/deep-link-return";
 
 function AppStack() {
   return (
@@ -26,7 +26,7 @@ function AppLayoutWithClerk() {
 
   if (!isLoaded) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 12 }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 12 }}>
         <ActivityIndicator />
         <Text>{t.auth.guard.loadingApp}</Text>
       </View>

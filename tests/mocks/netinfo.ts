@@ -1,4 +1,7 @@
-type NetInfoListener = (state: { isConnected: boolean; isInternetReachable: boolean | null }) => void;
+type NetInfoListener = (state: {
+  isConnected: boolean;
+  isInternetReachable: boolean | null;
+}) => void;
 
 let connected = true;
 const listeners = new Set<NetInfoListener>();
@@ -19,10 +22,7 @@ export default {
     isConnected: connected,
     isInternetReachable: connected ? true : false,
   }),
-  addEventListener: (
-    listenerOrType: string | NetInfoListener,
-    maybeListener?: NetInfoListener,
-  ) => {
+  addEventListener: (listenerOrType: string | NetInfoListener, maybeListener?: NetInfoListener) => {
     const listener =
       typeof listenerOrType === "function" ? listenerOrType : (maybeListener as NetInfoListener);
     return addListener(listener);

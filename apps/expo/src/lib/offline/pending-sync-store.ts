@@ -4,10 +4,7 @@ import type {
   PendingSyncStructuredError,
   PendingSyncType,
 } from "@vettrack/contracts";
-import {
-  DEAD_LETTER_RETENTION_MS,
-  PENDING_SYNC_SCHEMA_VERSION,
-} from "@vettrack/contracts";
+import { DEAD_LETTER_RETENTION_MS, PENDING_SYNC_SCHEMA_VERSION } from "@vettrack/contracts";
 import { PENDING_SYNC_SCHEMA_SQL } from "@/lib/offline/pending-sync-sql";
 
 export type SqlRunResult = {
@@ -89,11 +86,7 @@ function materializeRow(op: PendingSyncCreateInput): Omit<PendingSync, "id"> {
   };
 }
 
-const DEDUP_SYNC_TYPES = new Set<PendingSyncType>([
-  "checkout",
-  "return",
-  "return_with_charge",
-]);
+const DEDUP_SYNC_TYPES = new Set<PendingSyncType>(["checkout", "return", "return_with_charge"]);
 
 export class PendingSyncStore {
   constructor(private readonly db: SqlExecutor) {}

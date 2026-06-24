@@ -10,11 +10,12 @@ describe("equipment-list API helpers", () => {
   });
 
   it("fetchEquipmentList builds correct URL with no params", async () => {
-    const fetchMock = vi.fn(async () =>
-      new Response(
-        JSON.stringify({ items: [], total: 0, page: 1, pageSize: 25, hasMore: false }),
-        { status: 200 },
-      ),
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({ items: [], total: 0, page: 1, pageSize: 25, hasMore: false }),
+          { status: 200 },
+        ),
     );
     vi.stubGlobal("fetch", fetchMock);
 
@@ -29,11 +30,12 @@ describe("equipment-list API helpers", () => {
   });
 
   it("fetchEquipmentList appends search and status query params", async () => {
-    const fetchMock = vi.fn(async () =>
-      new Response(
-        JSON.stringify({ items: [], total: 0, page: 1, pageSize: 25, hasMore: false }),
-        { status: 200 },
-      ),
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({ items: [], total: 0, page: 1, pageSize: 25, hasMore: false }),
+          { status: 200 },
+        ),
     );
     vi.stubGlobal("fetch", fetchMock);
 
@@ -48,11 +50,12 @@ describe("equipment-list API helpers", () => {
   });
 
   it("fetchEquipmentList omits status param when status is 'all'", async () => {
-    const fetchMock = vi.fn(async () =>
-      new Response(
-        JSON.stringify({ items: [], total: 0, page: 1, pageSize: 25, hasMore: false }),
-        { status: 200 },
-      ),
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({ items: [], total: 0, page: 1, pageSize: 25, hasMore: false }),
+          { status: 200 },
+        ),
     );
     vi.stubGlobal("fetch", fetchMock);
 
@@ -64,9 +67,7 @@ describe("equipment-list API helpers", () => {
   });
 
   it("fetchMyEquipment calls GET /api/equipment/my", async () => {
-    const fetchMock = vi.fn(async () =>
-      new Response(JSON.stringify([]), { status: 200 }),
-    );
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify([]), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
 
     const { fetchMyEquipment } = await import("@/lib/api/equipment-list");
@@ -79,11 +80,12 @@ describe("equipment-list API helpers", () => {
 
   it("fetchEquipmentById calls GET /api/equipment/:id", async () => {
     const equipmentId = "test-eq-123";
-    const fetchMock = vi.fn(async () =>
-      new Response(
-        JSON.stringify({ id: equipmentId, name: "Test", status: "ok", createdAt: "" }),
-        { status: 200 },
-      ),
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({ id: equipmentId, name: "Test", status: "ok", createdAt: "" }),
+          { status: 200 },
+        ),
     );
     vi.stubGlobal("fetch", fetchMock);
 

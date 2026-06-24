@@ -121,9 +121,7 @@ export default function ShiftHandoffScreen() {
             )}
           </View>
 
-          {saveError ? (
-            <Text style={styles.saveErrorText}>{saveError}</Text>
-          ) : null}
+          {saveError ? <Text style={styles.saveErrorText}>{saveError}</Text> : null}
 
           <Pressable
             accessibilityRole="button"

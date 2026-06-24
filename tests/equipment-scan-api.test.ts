@@ -16,7 +16,12 @@ describe("equipment-scan api contract", () => {
     await store.init();
     await setPendingSyncStoreForTests(store);
     setForcedOfflineForTests(true);
-    vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("Failed to fetch"); }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new TypeError("Failed to fetch");
+      }),
+    );
   });
 
   afterEach(() => {

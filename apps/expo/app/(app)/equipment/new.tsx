@@ -115,9 +115,7 @@ export default function NewEquipmentScreen() {
             returnKeyType="next"
             accessibilityLabel={t.newEquipment.fields.name.label}
           />
-          {errors.name ? (
-            <Text style={styles.fieldError}>{errors.name}</Text>
-          ) : null}
+          {errors.name ? <Text style={styles.fieldError}>{errors.name}</Text> : null}
         </View>
 
         <View style={styles.fieldGroup}>
@@ -167,9 +165,7 @@ export default function NewEquipmentScreen() {
         </View>
 
         <View style={styles.fieldGroup}>
-          <Text style={[styles.label, { color: colors.text }]}>
-            {t.equipmentDetail.location}
-          </Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t.equipmentDetail.location}</Text>
           <TextInput
             style={[styles.input, inputBase]}
             placeholder={t.newEquipment.fields.location.placeholder}
@@ -178,7 +174,9 @@ export default function NewEquipmentScreen() {
             onChangeText={setField("location")}
             autoCapitalize="sentences"
             returnKeyType="done"
-            onSubmitEditing={() => { void handleSave(); }}
+            onSubmitEditing={() => {
+              void handleSave();
+            }}
             accessibilityLabel={t.equipmentDetail.location}
           />
         </View>
@@ -186,7 +184,9 @@ export default function NewEquipmentScreen() {
         {saveError ? <Text style={styles.saveError}>{saveError}</Text> : null}
 
         <Pressable
-          onPress={() => { void handleSave(); }}
+          onPress={() => {
+            void handleSave();
+          }}
           disabled={saving}
           style={({ pressed }) => [
             styles.saveBtn,

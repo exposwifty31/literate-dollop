@@ -7,10 +7,7 @@ import {
   updatePendingSync,
 } from "@/lib/offline/pending-sync-queue";
 import { isOnline } from "@/lib/network";
-import {
-  notifySyncPaused,
-  notifySyncPermanentFailure,
-} from "@/lib/sync-ui-seam";
+import { notifySyncPaused, notifySyncPermanentFailure } from "@/lib/sync-ui-seam";
 
 const MAX_RETRIES = PENDING_SYNC_MAX_RETRIES;
 const RETRY_DELAYS_MS = [2000, 5000, 10000];
@@ -142,7 +139,11 @@ async function processQueueBody(): Promise<void> {
 
       if (result === "success" || result === "conflict") {
         consecutiveFailures = 0;
-      } else if (result === "auth_halt" || result === "permission_error" || result === "client_error") {
+      } else if (
+        result === "auth_halt" ||
+        result === "permission_error" ||
+        result === "client_error"
+      ) {
         consecutiveFailures = 0;
       } else if (result === "transient_failure") {
         consecutiveFailures++;
@@ -233,7 +234,8 @@ async function processSingleItemWithRetry(item: PendingSync): Promise<ItemResult
     }
 
     if (isOnline()) {
-      const base = RETRY_DELAYS_MS[currentRetries - 1] ?? RETRY_DELAYS_MS[RETRY_DELAYS_MS.length - 1];
+      const base =
+        RETRY_DELAYS_MS[currentRetries - 1] ?? RETRY_DELAYS_MS[RETRY_DELAYS_MS.length - 1];
       await sleep(jitteredDelay(base));
     } else {
       return "transient_failure";

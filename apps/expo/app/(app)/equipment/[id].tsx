@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -119,10 +112,7 @@ export default function EquipmentDetailScreen() {
   return (
     <ScrollView
       style={{ backgroundColor: colors.background }}
-      contentContainerStyle={[
-        styles.content,
-        { paddingBottom: Math.max(insets.bottom, 24) },
-      ]}
+      contentContainerStyle={[styles.content, { paddingBottom: Math.max(insets.bottom, 24) }]}
     >
       <View style={styles.header}>
         <Text style={[styles.name, { color: colors.text }]}>{equipment.name}</Text>
@@ -176,9 +166,7 @@ export default function EquipmentDetailScreen() {
         ) : null}
       </View>
 
-      {actionError ? (
-        <Text style={styles.actionErrorText}>{actionError}</Text>
-      ) : null}
+      {actionError ? <Text style={styles.actionErrorText}>{actionError}</Text> : null}
 
       <View style={styles.actionsRow}>
         <Pressable
@@ -212,7 +200,9 @@ export default function EquipmentDetailScreen() {
         <Pressable
           accessibilityRole="button"
           disabled={actionLoading}
-          onPress={() => { void handleAction("return"); }}
+          onPress={() => {
+            void handleAction("return");
+          }}
           style={({ pressed }) => [
             styles.button,
             { backgroundColor: "#0891b2", opacity: actionLoading || pressed ? 0.7 : 1 },
@@ -228,7 +218,9 @@ export default function EquipmentDetailScreen() {
         <Pressable
           accessibilityRole="button"
           disabled={actionLoading}
-          onPress={() => { void handleAction("checkout"); }}
+          onPress={() => {
+            void handleAction("checkout");
+          }}
           style={({ pressed }) => [
             styles.button,
             { backgroundColor: "#16a34a", opacity: actionLoading || pressed ? 0.7 : 1 },

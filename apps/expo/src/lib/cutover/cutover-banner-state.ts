@@ -24,7 +24,10 @@ export function getCutoverBannerVariant(): CutoverBannerVariant {
 }
 
 /** Pure decision: visible when enabled and not dismissed. */
-export function computeCutoverBannerVisible(opts: { enabled: boolean; dismissed: boolean }): boolean {
+export function computeCutoverBannerVisible(opts: {
+  enabled: boolean;
+  dismissed: boolean;
+}): boolean {
   return opts.enabled && !opts.dismissed;
 }
 

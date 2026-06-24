@@ -27,9 +27,7 @@ describe("shift API", () => {
       },
     };
 
-    const fetchMock = vi.fn(async () =>
-      new Response(JSON.stringify(mockShift), { status: 200 }),
-    );
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify(mockShift), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
 
     const { fetchCurrentShift } = await import("@/lib/api/shift");
@@ -43,8 +41,8 @@ describe("shift API", () => {
   });
 
   it("fetchCurrentShift returns null on 404", async () => {
-    const fetchMock = vi.fn(async () =>
-      new Response(JSON.stringify({ error: "Not found" }), { status: 404 }),
+    const fetchMock = vi.fn(
+      async () => new Response(JSON.stringify({ error: "Not found" }), { status: 404 }),
     );
     vi.stubGlobal("fetch", fetchMock);
 

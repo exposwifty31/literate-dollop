@@ -52,15 +52,21 @@ function getContractsDiff(): string {
   try {
     return execFileSync(
       "git",
-      ["diff", `${BASE}...HEAD`, "--", "packages/contracts/src/", "packages/contracts/package.json"],
-      { cwd: process.cwd(), encoding: "utf8" }
+      [
+        "diff",
+        `${BASE}...HEAD`,
+        "--",
+        "packages/contracts/src/",
+        "packages/contracts/package.json",
+      ],
+      { cwd: process.cwd(), encoding: "utf8" },
     ).trim();
   } catch {
     // If the base branch doesn't exist locally, diff against HEAD
     return execFileSync(
       "git",
       ["diff", "HEAD~1...HEAD", "--", "packages/contracts/src/", "packages/contracts/package.json"],
-      { cwd: process.cwd(), encoding: "utf8" }
+      { cwd: process.cwd(), encoding: "utf8" },
     ).trim();
   }
 }
@@ -179,12 +185,15 @@ diff -u ~/literate-dollop/packages/contracts/src/pending-sync.ts \\
     }
 
     if (OUT_FILE) {
-      const content = outputChunks.join("") + `\n\n---\n_Run ID: ${runId} · ${new Date().toISOString()}_\n`;
+      const content =
+        outputChunks.join("") + `\n\n---\n_Run ID: ${runId} · ${new Date().toISOString()}_\n`;
       writeFileSync(OUT_FILE, content, "utf8");
       console.log(`\n[contracts-review] Output written to ${OUT_FILE}`);
     }
 
-    console.log("\n[contracts-review] Done. Paste the PR body above into the vettrack companion PR.");
+    console.log(
+      "\n[contracts-review] Done. Paste the PR body above into the vettrack companion PR.",
+    );
   } catch (err) {
     if (err instanceof CursorAgentError) {
       console.error(`\n[contracts-review] Startup failed: ${err.message}`);

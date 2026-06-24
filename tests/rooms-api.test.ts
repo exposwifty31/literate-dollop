@@ -36,9 +36,7 @@ describe("rooms API", () => {
         inUseCount: 2,
       },
     ];
-    const fetchMock = vi.fn(
-      async () => new Response(JSON.stringify(mockRooms), { status: 200 }),
-    );
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify(mockRooms), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
 
     const { fetchRoomsList } = await import("@/lib/api/rooms");
@@ -58,9 +56,7 @@ describe("rooms API", () => {
       createdAt: "2024-01-01T00:00:00Z",
       updatedAt: "2024-01-01T00:00:00Z",
     };
-    const fetchMock = vi.fn(
-      async () => new Response(JSON.stringify(mockRoom), { status: 200 }),
-    );
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify(mockRoom), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
 
     const { fetchRoomById } = await import("@/lib/api/rooms");

@@ -13,46 +13,49 @@ function parseOptions(raw: string): Array<{ matcher: string; value: string }> {
 }
 
 export function interpolate(template: string, params: TranslationParams = {}): string {
-  return template.replace(PLACEHOLDER_RE, (_match, key: string, type?: string, optionsRaw?: string) => {
-    const value = params[key];
-    if (value === undefined) return _match;
+  return template.replace(
+    PLACEHOLDER_RE,
+    (_match, key: string, type?: string, optionsRaw?: string) => {
+      const value = params[key];
+      if (value === undefined) return _match;
 
-    if (!type) return String(value);
+      if (!type) return String(value);
 
-    const options = parseOptions(optionsRaw ?? "");
-    const strVal = String(value);
+      const options = parseOptions(optionsRaw ?? "");
+      const strVal = String(value);
 
-    if (type === "plural") {
-      const num = typeof value === "number" ? value : Number(value);
-      let matched: string | undefined;
-      for (const opt of options) {
-        if (opt.matcher.startsWith("=") && Number(opt.matcher.slice(1)) === num) {
-          matched = opt.value;
-          break;
+      if (type === "plural") {
+        const num = typeof value === "number" ? value : Number(value);
+        let matched: string | undefined;
+        for (const opt of options) {
+          if (opt.matcher.startsWith("=") && Number(opt.matcher.slice(1)) === num) {
+            matched = opt.value;
+            break;
+          }
+          if (opt.matcher === "one" && num === 1) {
+            matched = opt.value;
+            break;
+          }
         }
-        if (opt.matcher === "one" && num === 1) {
-          matched = opt.value;
-          break;
+        if (matched === undefined) {
+          matched = options.find((o) => o.matcher === "other" || o.matcher === "*")?.value;
         }
+        // ICU `#` token inside a plural branch: substitute with the numeric
+        // value of the plural variable so end users don't see a literal `#`.
+        return matched !== undefined ? matched.replace(/#/g, String(num)) : strVal;
       }
-      if (matched === undefined) {
-        matched = options.find((o) => o.matcher === "other" || o.matcher === "*")?.value;
-      }
-      // ICU `#` token inside a plural branch: substitute with the numeric
-      // value of the plural variable so end users don't see a literal `#`.
-      return matched !== undefined ? matched.replace(/#/g, String(num)) : strVal;
-    }
 
-    if (type === "select") {
-      for (const opt of options) {
-        if (opt.matcher === strVal) return opt.value;
+      if (type === "select") {
+        for (const opt of options) {
+          if (opt.matcher === strVal) return opt.value;
+        }
+        const other = options.find((o) => o.matcher === "other" || o.matcher === "*");
+        return other?.value ?? strVal;
       }
-      const other = options.find((o) => o.matcher === "other" || o.matcher === "*");
-      return other?.value ?? strVal;
-    }
 
-    return strVal;
-  });
+      return strVal;
+    },
+  );
 }
 
 export function resolve(dict: TranslationDictionary, keyPath: string): string | undefined {

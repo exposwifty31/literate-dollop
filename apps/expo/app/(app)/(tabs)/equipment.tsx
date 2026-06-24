@@ -102,34 +102,30 @@ export default function EquipmentScreen() {
   const [error, setError] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const load = useCallback(
-    async (q: string, status: string, page: number, append: boolean) => {
+  const load = useCallback(async (q: string, status: string, page: number, append: boolean) => {
+    if (append) {
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+      setError(null);
+    }
+    try {
+      const result = await fetchEquipmentList({ q, status, page, limit: PAGE_SIZE });
       if (append) {
-        setLoadingMore(true);
+        setData((prev) => (prev ? { ...result, items: [...prev.items, ...result.items] } : result));
       } else {
-        setLoading(true);
-        setError(null);
+        setData(result);
       }
-      try {
-        const result = await fetchEquipmentList({ q, status, page, limit: PAGE_SIZE });
-        if (append) {
-          setData((prev) =>
-            prev
-              ? { ...result, items: [...prev.items, ...result.items] }
-              : result,
-          );
-        } else {
-          setData(result);
-        }
-      } catch {
-        if (!append) setError(t.equipmentList.errors.loadFailed);
-      } finally {
-        setLoading(false);
-        setLoadingMore(false);
-      }
-    },
-    [],
-  );
+    } catch (error) {
+      // Surface every failure with context — append (load-more) failures have no
+      // visible error state, so without this they would vanish silently.
+      console.error("Failed to load equipment list", { q, status, page, append, error });
+      if (!append) setError(t.equipmentList.errors.loadFailed);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -225,7 +221,7 @@ export default function EquipmentScreen() {
                 <Text style={[styles.emptyText, { color: colors.text }]}>
                   {t.equipmentList.empty.message}
                 </Text>
-                {(query || statusFilter !== "all") ? (
+                {query || statusFilter !== "all" ? (
                   <Text style={styles.emptyHint}>{t.equipmentList.empty.filteredHint}</Text>
                 ) : (
                   <Text style={styles.emptyHint}>{t.equipmentList.empty.emptyHint}</Text>
@@ -235,11 +231,7 @@ export default function EquipmentScreen() {
           }
           ListFooterComponent={
             loadingMore ? (
-              <ActivityIndicator
-                size="small"
-                color={colors.tint}
-                style={styles.footerSpinner}
-              />
+              <ActivityIndicator size="small" color={colors.tint} style={styles.footerSpinner} />
             ) : data?.total !== undefined ? (
               <Text style={styles.paginationText}>
                 {t.equipmentList.paginationCount(

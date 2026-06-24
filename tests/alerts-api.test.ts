@@ -27,8 +27,8 @@ describe("alerts API helper", () => {
       },
     ];
 
-    const fetchMock = vi.fn(async () =>
-      new Response(JSON.stringify({ items: mockItems, total: 2 }), { status: 200 }),
+    const fetchMock = vi.fn(
+      async () => new Response(JSON.stringify({ items: mockItems, total: 2 }), { status: 200 }),
     );
     vi.stubGlobal("fetch", fetchMock);
 
@@ -45,7 +45,12 @@ describe("alerts API helper", () => {
   });
 
   it("fetchAlerts propagates network errors", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => { throw new Error("Network error"); }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("Network error");
+      }),
+    );
 
     const { fetchAlerts } = await import("@/lib/api/alerts");
     await expect(fetchAlerts()).rejects.toThrow();

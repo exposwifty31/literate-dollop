@@ -4,7 +4,12 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'packages/contracts/**'
+      - "packages/contracts/**"
+
+# One run per PR branch; newer pushes cancel in-flight runs.
+concurrency:
+  group: contracts-review-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   review:

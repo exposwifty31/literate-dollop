@@ -65,7 +65,11 @@ export interface HomeDashboardPulse {
   scansToday: number;
 }
 
-export type RecommendationSuggestionType = "OVERDUE_WARNING" | "START_NOW" | "OVERLOADED" | "PICK_FROM_QUEUE";
+export type RecommendationSuggestionType =
+  | "OVERDUE_WARNING"
+  | "START_NOW"
+  | "OVERLOADED"
+  | "PICK_FROM_QUEUE";
 
 export interface RecommendationSuggestion {
   type: RecommendationSuggestionType;

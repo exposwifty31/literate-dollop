@@ -1,0 +1,14 @@
+node_modules
+.expo
+dist
+coverage
+pnpm-lock.yaml
+**/*.json
+apps/expo/android
+apps/expo/ios
+packages/contracts/**
+
+# Prose docs and agent tooling: Prettier reflows hand-formatted Markdown
+# (tables, ASCII, deliberate wrapping). Format code, not prose.
+**/*.md
+.agents

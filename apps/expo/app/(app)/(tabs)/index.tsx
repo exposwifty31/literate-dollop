@@ -63,12 +63,13 @@ function ShiftSummaryCard() {
   // openShiftSession === null means a shift window exists but no active session to hand off.
   const hasSession = shift != null && shift.openShiftSession !== null;
 
-  const startTime = hasSession && shift.openShiftSession
-    ? new Date(shift.openShiftSession.startedAt).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : null;
+  const startTime =
+    hasSession && shift.openShiftSession
+      ? new Date(shift.openShiftSession.startedAt).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : null;
 
   const unreturnedCount = shift ? shift.unreturned.length : 0;
 

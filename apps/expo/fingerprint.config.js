@@ -21,10 +21,7 @@ const config = {
       source.id === "rncoreAutolinkingConfig:android" ||
       source.id === "rncoreAutolinkingConfig:ios"
     ) {
-      return chunk.replace(
-        /node_modules\/\.pnpm\/[^/]+\/node_modules\//g,
-        "node_modules/",
-      );
+      return chunk.replace(/node_modules\/\.pnpm\/[^/]+\/node_modules\//g, "node_modules/");
     }
 
     return chunk;

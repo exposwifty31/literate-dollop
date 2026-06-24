@@ -19,21 +19,14 @@ export type SystemRole = "Admin" | "User";
  * Clinical authority roles. Covers the full range of clinical identity a user
  * may carry, including "student". Enforcement of clinical ceilings is Phase 2B.
  */
-export type ClinicalRole =
-  | "vet"
-  | "senior_technician"
-  | "technician"
-  | "student";
+export type ClinicalRole = "vet" | "senior_technician" | "technician" | "student";
 
 /**
  * Roles that may appear as an active shift-assignable clinical authority.
  * Intentionally excludes "admin" (system role, no clinical shift) and
  * "student" (students are never elevated to shift authority).
  */
-export type ActiveShiftRole =
-  | "vet"
-  | "senior_technician"
-  | "technician";
+export type ActiveShiftRole = "vet" | "senior_technician" | "technician";
 
 /**
  * Resolved effective clinical role after authority evaluation.

@@ -79,7 +79,10 @@ function computeBackoff(attempt: number, opts: Required<BackoffOptions>): number
  * (monotonic). Non-numeric ids replace any non-numeric current token but never
  * regress past a numeric one.
  */
-function nextLastEventId(current: string | undefined, incoming: string | undefined): string | undefined {
+function nextLastEventId(
+  current: string | undefined,
+  incoming: string | undefined,
+): string | undefined {
   if (incoming === undefined || incoming === "") return current;
   if (current === undefined) return incoming;
   const a = Number(current);

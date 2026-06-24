@@ -12,6 +12,9 @@ node_modules/
 .pnpm-store/
 package-lock.json
 
+# test coverage
+coverage/
+
 # Expo
 .expo/
 dist/

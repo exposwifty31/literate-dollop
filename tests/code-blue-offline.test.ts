@@ -79,24 +79,18 @@ describe("code-blue never enqueued in pendingSync", () => {
     resetPendingSyncStoreForTests();
   });
 
-  it.each(EMERGENCY_CASES)(
-    "addPendingSync choke point rejects $label",
-    async ({ url, method }) => {
-      await expect(addPendingSync(pendingSyncOp(url, method))).rejects.toBeInstanceOf(
-        OfflineEmergencyMutationBlockedError,
-      );
-      expect(await getAllPendingSync()).toEqual([]);
-    },
-  );
+  it.each(EMERGENCY_CASES)("addPendingSync choke point rejects $label", async ({ url, method }) => {
+    await expect(addPendingSync(pendingSyncOp(url, method))).rejects.toBeInstanceOf(
+      OfflineEmergencyMutationBlockedError,
+    );
+    expect(await getAllPendingSync()).toEqual([]);
+  });
 
   it.each(EMERGENCY_CASES)(
     "api.request() rejects $label on network error without enqueueing",
     async ({ url, method, endpointClass }) => {
       setForcedOfflineForTests(true);
-      vi.stubGlobal(
-        "fetch",
-        vi.fn().mockRejectedValue(new TypeError("Failed to fetch")),
-      );
+      vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
 
       const { request } = await import("@/lib/api");
 

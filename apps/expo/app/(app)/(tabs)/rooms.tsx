@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import { useColorScheme } from "@/components/useColorScheme";
@@ -111,7 +104,7 @@ export default function RoomsScreen() {
               textColor={colors.text}
               badgeBackgroundColor={colors.text + "1a"}
               badgeTextColor={colors.text}
-              onPress={() => router.push({ pathname: '/rooms/[id]', params: { id: item.id } })}
+              onPress={() => router.push({ pathname: "/rooms/[id]", params: { id: item.id } })}
             />
           )}
           onRefresh={load}

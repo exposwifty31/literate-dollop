@@ -83,7 +83,10 @@ export function createTestSqlExecutor(): SqlExecutor {
         return { lastInsertRowId: row.id as number, changes: 1 };
       }
 
-      if (normalized.includes("SET status = 'pending'") && normalized.includes("status = 'processing'")) {
+      if (
+        normalized.includes("SET status = 'pending'") &&
+        normalized.includes("status = 'processing'")
+      ) {
         let changes = 0;
         for (const row of rows) {
           if (row.status === "processing") {
@@ -174,14 +177,19 @@ export function createTestSqlExecutor(): SqlExecutor {
         ) as T[];
       }
 
-      if (normalized.includes("WHERE status = 'pending'") && normalized.includes("client_timestamp")) {
+      if (
+        normalized.includes("WHERE status = 'pending'") &&
+        normalized.includes("client_timestamp")
+      ) {
         return rows
           .filter((row) => row.status === "pending")
           .sort((a, b) => Number(a.client_timestamp) - Number(b.client_timestamp)) as T[];
       }
 
       if (normalized.includes("WHERE status = 'processing'")) {
-        return rows.filter((row) => row.status === "processing").map((row) => ({ id: row.id })) as T[];
+        return rows
+          .filter((row) => row.status === "processing")
+          .map((row) => ({ id: row.id })) as T[];
       }
 
       throw new Error(`Unsupported getAll SQL in test executor: ${normalized}`);

@@ -25,10 +25,7 @@ export type EquipmentBoardUnitRow = {
     readsInWindow?: number;
   };
   evidenceConflict?: {
-    type:
-      | "rfid_overrides_human_location"
-      | "ambiguous_rfid_location"
-      | "custody_location_mismatch";
+    type: "rfid_overrides_human_location" | "ambiguous_rfid_location" | "custody_location_mismatch";
     action: "confirm_location" | "return" | "open_detail";
     message: string;
   };

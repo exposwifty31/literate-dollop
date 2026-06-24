@@ -1,8 +1,7 @@
 import type { ExpoConfig, ConfigContext } from "expo/config";
 
 const APP_ENV = process.env.APP_ENV ?? "development";
-const EAS_PROJECT_ID =
-  process.env.EAS_PROJECT_ID ?? "5ec536d8-f991-4779-88d7-c1b7fa595cb5";
+const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID ?? "5ec536d8-f991-4779-88d7-c1b7fa595cb5";
 const APPLE_TEAM_ID = process.env.APPLE_TEAM_ID;
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
@@ -22,8 +21,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     associatedDomains: ["applinks:vettrack.uk"],
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
-      NFCReaderUsageDescription:
-        "VetTrack reads equipment NFC tags to record scans and checkout.",
+      NFCReaderUsageDescription: "VetTrack reads equipment NFC tags to record scans and checkout.",
     },
   },
   android: {
