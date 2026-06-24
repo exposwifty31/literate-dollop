@@ -2,6 +2,10 @@
 
 **This repo is the source of truth** for VetTrack mobile strategy, `@vettrack/contracts`, Expo CI, and Phases 1–6.
 
+Use the clone at `~/literate-dollop` as the canonical local working copy. If another
+copy exists at `~/Documents/literate-dollop`, treat it as disposable/stale unless
+you intentionally need to recover uncommitted work from it.
+
 The production Capacitor app lives in **local** `~/vettrack` ([`exposwifty31/vettrack`](https://github.com/exposwifty31/vettrack) on GitHub; GitLab is declared canonical but GitHub `origin` is ahead in practice — treat GitHub as primary until P0-1 resolves). Use it read-only for port references.
 
 ## Stack
@@ -41,11 +45,30 @@ scripts/ci/             contracts-gate.sh
 ## Commands
 
 ```bash
-pnpm install --frozen-lockfile
+pnpm install
 pnpm contracts:gate
 pnpm --filter vettrack-expo start
 pnpm --filter vettrack-expo exec tsc --noEmit
 ```
+
+## Git sync rule
+
+Keep GitHub and the canonical local clone in lockstep after every meaningful fix,
+refactor, or documentation update:
+
+```bash
+cd ~/literate-dollop
+git status --short --branch
+git pull --ff-only
+pnpm install
+pnpm --filter vettrack-expo typecheck
+git add .gitignore README.md package.json pnpm-workspace.yaml plugins/vettrack-control/withVetTrackControl.js docs/mobile/redesign
+git commit -m "docs: update Expo local workflow"
+git push origin main
+```
+
+Do not commit local secrets or generated native folders. `apps/expo/.env`,
+`apps/expo/ios/`, `apps/expo/android/`, and `.codex/` are local-only.
 
 ## Local development
 
@@ -54,11 +77,69 @@ cp apps/expo/.env.example apps/expo/.env
 pnpm --filter vettrack-expo start
 ```
 
-Use a **development build** (not Expo Go) for NFC, push, or custom native code:
+Required local env for production-like mobile auth and iOS signing:
+
+```env
+EXPO_PUBLIC_API_URL=https://vettrack.uk
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
+APPLE_TEAM_ID=87F5G378M6
+```
+
+Use a **development build** for NFC, push, the Control Widget, or any custom native
+code:
 
 ```bash
 cd apps/expo && eas build --profile development --platform ios
 ```
+
+For a clean local iOS regeneration:
+
+```bash
+cd ~/literate-dollop/apps/expo
+rm -rf ios
+pnpm exec expo prebuild --platform ios
+```
+
+### Running on a physical iPhone
+
+`pnpm ios` may choose an iPad simulator by default. To target your iPhone, connect
+and trust the device, enable Developer Mode on the phone, then run:
+
+```bash
+cd ~/literate-dollop/apps/expo
+pnpm exec expo run:ios --device
+```
+
+When prompted, choose the physical iPhone. You can also pass the device name:
+
+```bash
+pnpm exec expo run:ios --device "Dan's iPhone"
+```
+
+If Xcode reports stale simulator/toolchain warnings, clear DerivedData and retry:
+
+```bash
+rm -rf ~/Library/Developer/Xcode/DerivedData/VetTrack-*
+pnpm exec expo run:ios --device
+```
+
+### Expo Go support
+
+Expo Go is useful only for JS/UI preview work that avoids native-only features. The
+full VetTrack mobile app uses `expo-dev-client`, `react-native-nfc-manager`, and a
+custom Control Widget config plugin, so NFC, widgets, and any native module not
+included in Expo Go require a development build.
+
+To try the app in Expo Go for non-native UI checks:
+
+```bash
+cd ~/literate-dollop/apps/expo
+pnpm exec expo start --go --lan
+```
+
+Scan the QR code with Expo Go. If a screen imports NFC/native-only code and fails in
+Expo Go, use the development build instead; that is expected until the app has
+explicit Expo-Go-safe fallbacks.
 
 ### Phase 3 NFC testing
 
@@ -93,6 +174,18 @@ See [docs/plans/mobile-strategy-master.md](docs/plans/mobile-strategy-master.md)
 | 2 | VetTrackControl config plugin |
 | 3 | NFC equipment scan vertical slice (in progress) |
 | 6 | Capacitor kill-switch decision |
+
+## Native redesign refactor brief
+
+Future UI refactor work must start from these committed design documents:
+
+- [Capacitor UI audit](docs/mobile/redesign/00-capacitor-ui-audit.md)
+- [Native mobile design brief](docs/mobile/redesign/01-design-brief.md)
+
+The redesign is approval-gated: produce design artifacts first, then implement only
+after the look is approved. The direction is RTL/Hebrew-first, equipment-first,
+forest-green + ivory brand, full status taxonomy, real offline/sync states, and a
+native mobile evolution of the old Capacitor app rather than a reinvention.
 
 ## Agent context
 

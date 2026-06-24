@@ -2,6 +2,7 @@
 
 # Superpowers plugin ephemeral local state (brainstorm servers, video frames, PIDs)
 /.superpowers/
+.codex/
 
 # Agent harness / eval artifacts (local-only; not source)
 /gan-harness/
