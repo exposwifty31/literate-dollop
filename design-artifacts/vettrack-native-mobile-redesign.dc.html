@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VetTrack Native Mobile Redesign Preview</title>
+    <style>
+      :root {
+        --green-700: #1e4a25;
+        --green-600: #1e7a32;
+        --green-50: #e9f4ea;
+        --bg: #f6f7fb;
+        --surface: #ffffff;
+        --border: #d8dce6;
+        --border-strong: #bcc2d4;
+        --text: #111a12;
+        --text-2: #2e394d;
+        --text-3: #5a6884;
+        --ok: #16a34a;
+        --issue: #dc2626;
+        --maintenance: #d97706;
+        --sterilized: #2563eb;
+        --critical: #b91c1c;
+        --attention: #c2410c;
+        --offline-bg: #fef3c7;
+        --offline-text: #78350f;
+        --emergency-bg: #0c0c0c;
+        --emergency-surface: #18181b;
+        --emergency-accent: #ef4444;
+        --emergency-amber: #fbbf24;
+        --shadow-card: 0 1px 3px rgb(15 23 42 / 0.08);
+        font-family: "Plus Jakarta Sans", "Heebo", "Noto Sans Hebrew", system-ui, sans-serif;
+        color: var(--text);
+        background: var(--bg);
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      .canvas {
+        min-height: 100vh;
+        padding: 28px;
+        background:
+          linear-gradient(90deg, rgb(30 74 37 / 0.05) 1px, transparent 1px),
+          linear-gradient(180deg, rgb(30 74 37 / 0.05) 1px, transparent 1px),
+          var(--bg);
+        background-size: 28px 28px;
+      }
+      .hero {
+        max-width: 1180px;
+        margin: 0 auto 24px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        gap: 24px;
+        align-items: end;
+      }
+      h1, h2, h3, p { margin: 0; }
+      h1 {
+        font-size: 40px;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        max-width: 760px;
+        text-wrap: balance;
+      }
+      .lede {
+        margin-top: 12px;
+        max-width: 760px;
+        color: var(--text-2);
+        font-size: 16px;
+        line-height: 1.55;
+      }
+      .spec {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: var(--shadow-card);
+      }
+      .spec dl {
+        display: grid;
+        grid-template-columns: 116px 1fr;
+        gap: 8px 12px;
+        margin: 0;
+        font-size: 13px;
+      }
+      .spec dt { color: var(--text-3); }
+      .spec dd { margin: 0; color: var(--text); font-weight: 650; }
+      .section {
+        max-width: 1180px;
+        margin: 0 auto 28px;
+      }
+      .section-title {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+      .section-title h2 { font-size: 22px; line-height: 1.2; }
+      .section-title p { color: var(--text-3); font-size: 13px; max-width: 620px; line-height: 1.45; }
+      .tokens {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+      .token-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        box-shadow: var(--shadow-card);
+      }
+      .swatches { display: flex; gap: 8px; margin: 10px 0 12px; }
+      .swatch { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgb(17 26 18 / 0.12); }
+      .token-card h3 { font-size: 14px; margin-bottom: 5px; }
+      .token-card p { font-size: 12px; line-height: 1.45; color: var(--text-3); }
+      .components {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 12px;
+      }
+      .component {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        box-shadow: var(--shadow-card);
+      }
+      .component h3 { font-size: 14px; margin-bottom: 10px; }
+      .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      .btn {
+        min-height: 44px;
+        border-radius: 12px;
+        padding: 0 15px;
+        border: 1px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 750;
+      }
+      .btn.primary { background: var(--green-700); color: white; }
+      .btn.secondary { color: var(--green-700); border-color: var(--border-strong); background: white; }
+      .btn.destructive { background: var(--critical); color: white; }
+      .btn.ghost { color: var(--text-2); background: transparent; }
+      .pill {
+        min-height: 28px;
+        border-radius: 999px;
+        padding: 5px 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 750;
+        border: 1px solid transparent;
+      }
+      .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+      .ok { color: #166534; background: #f0faf2; border-color: #a7f3bd; }
+      .issue { color: #7f1d1d; background: #fff1f1; border-color: #fca5a5; }
+      .maintenance { color: #78350f; background: #fffbeb; border-color: #fcd34d; }
+      .sterilized { color: #1e40af; background: #eff6ff; border-color: #93c5fd; }
+      .critical { color: #7f1d1d; background: #fff1f1; border-color: #b91c1c; }
+      .attention { color: #7c2d12; background: #fff7ed; border-color: #fed7aa; }
+      .phone-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 18px;
+        align-items: start;
+      }
+      .phone-block {
+        display: grid;
+        gap: 8px;
+      }
+      .caption {
+        color: var(--text-2);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .caption strong { color: var(--text); }
+      .phone {
+        width: 300px;
+        height: 648px;
+        margin-inline: auto;
+        border-radius: 38px;
+        padding: 12px;
+        background: #101510;
+        box-shadow: 0 10px 28px rgb(15 23 42 / 0.14);
+      }
+      .screen {
+        direction: rtl;
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        border-radius: 29px;
+        background: var(--bg);
+        border: 1px solid rgb(255 255 255 / 0.2);
+        display: flex;
+        flex-direction: column;
+      }
+      .safe-top {
+        height: 42px;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        padding-bottom: 8px;
+        color: var(--text-3);
+        font: 700 11px ui-monospace, "DM Mono", monospace;
+      }
+      .header {
+        padding: 0 16px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .header-title { font-size: 20px; font-weight: 800; line-height: 1.15; }
+      .icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        display: grid;
+        place-items: center;
+        color: var(--green-700);
+        font-weight: 900;
+      }
+      .content {
+        flex: 1;
+        overflow: hidden;
+        padding: 0 14px 86px;
+      }
+      .tabbar {
+        position: absolute;
+        inset-inline: 0;
+        bottom: 0;
+        height: 78px;
+        background: rgb(255 255 255 / 0.97);
+        border-top: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        align-items: center;
+        padding: 10px 8px 18px;
+      }
+      .tab {
+        min-width: 0;
+        display: grid;
+        place-items: center;
+        gap: 3px;
+        color: var(--text-3);
+        font-size: 9px;
+        font-weight: 700;
+      }
+      .tab.active { color: var(--green-700); }
+      .scan-fab {
+        position: absolute;
+        bottom: 45px;
+        left: 50%;
+        width: 62px;
+        height: 62px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: var(--green-700);
+        color: white;
+        display: grid;
+        place-items: center;
+        font-size: 24px;
+        border: 5px solid var(--bg);
+        box-shadow: 0 6px 12px rgb(30 74 37 / 0.25);
+      }
+      .banner {
+        margin: 0 14px 10px;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-size: 12px;
+        line-height: 1.35;
+        font-weight: 700;
+      }
+      .banner.offline { background: var(--offline-bg); color: var(--offline-text); border: 1px solid #d97706; }
+      .banner.emergency { background: var(--emergency-bg); color: #f4f4f5; border: 1px solid var(--emergency-accent); }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: var(--shadow-card);
+      }
+      .stat-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .stat {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 9px 8px;
+      }
+      .num {
+        font-family: "DM Mono", ui-monospace, monospace;
+        font-size: 19px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .stat span { display: block; margin-top: 5px; font-size: 10px; color: var(--text-3); font-weight: 750; }
+      .search {
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        color: var(--text-3);
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
+      .chips { display: flex; gap: 7px; overflow: hidden; margin-bottom: 12px; }
+      .chip {
+        white-space: nowrap;
+        min-height: 34px;
+        border-radius: 999px;
+        padding: 8px 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        font-size: 12px;
+        font-weight: 750;
+      }
+      .chip.active { background: var(--green-50); color: var(--green-700); border-color: #b8d9bd; }
+      .equipment-row {
+        min-height: 78px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 9px;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .equipment-row h3 { font-size: 15px; line-height: 1.25; margin-bottom: 5px; }
+      .meta { color: var(--text-3); font-size: 11px; line-height: 1.45; }
+      .sheet {
+        position: absolute;
+        inset-inline: 0;
+        bottom: 0;
+        background: var(--surface);
+        border-radius: 18px 18px 0 0;
+        border-top: 1px solid var(--border);
+        padding: 10px 16px 24px;
+        box-shadow: 0 -8px 18px rgb(15 23 42 / 0.1);
+      }
+      .handle {
+        width: 42px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--border-strong);
+        margin: 0 auto 14px;
+      }
+      .sheet h3 { font-size: 18px; margin-bottom: 10px; }
+      .action-row {
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--border);
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .skeleton {
+        height: 16px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #eef1f6, #f8fafc, #eef1f6);
+        margin: 8px 0;
+      }
+      .dark-screen { background: #0d1f0e; color: #ece9e0; }
+      .dark-screen .card, .dark-screen .stat, .dark-screen .search, .dark-screen .chip, .dark-screen .icon-btn {
+        background: #111e12;
+        border-color: #274629;
+        color: #ece9e0;
+      }
+      .dark-screen .meta, .dark-screen .tab, .dark-screen .safe-top { color: #aab7a8; }
+      .dark-screen .tabbar { background: #111e12; border-color: #274629; }
+      .dark-screen .scan-fab { border-color: #0d1f0e; background: #3a9650; }
+      .footer-note {
+        max-width: 1180px;
+        margin: 0 auto;
+        color: var(--text-3);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      @media (max-width: 780px) {
+        .canvas { padding: 18px; }
+        .hero { grid-template-columns: 1fr; }
+        h1 { font-size: 31px; }
+        .section-title { display: block; }
+        .section-title p { margin-top: 6px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="canvas">
+      <section class="hero">
+        <div>
+          <h1>VetTrack native mobile redesign preview</h1>
+          <p class="lede">Phase 1 design artifact for reviewing the future Expo UI before implementation. RTL/Hebrew is treated as primary; visible copy is represented as i18n key labels so implementation can stay `t()`-driven.</p>
+        </div>
+        <aside class="spec">
+          <dl>
+            <dt>Register</dt><dd>Product UI</dd>
+            <dt>Primary user</dt><dd>Clinic staff on shift</dd>
+            <dt>Theme</dt><dd>Forest green + ivory</dd>
+            <dt>Runtime target</dt><dd>Expo Router, iOS + Android</dd>
+            <dt>Scope</dt><dd>Equipment-first, no production code</dd>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Design System Direction</h2>
+          <p>Mobile tokens evolve the existing VetTrack web brand and remove Expo-starter blue. Status colors are first-class, including critical and needs_attention.</p>
+        </div>
+        <div class="tokens">
+          <article class="token-card">
+            <h3>Brand + surfaces</h3>
+            <div class="swatches">
+              <span class="swatch" style="background:#1e4a25"></span><span class="swatch" style="background:#1e7a32"></span><span class="swatch" style="background:#e9f4ea"></span><span class="swatch" style="background:#f6f7fb"></span><span class="swatch" style="background:#fff"></span>
+            </div>
+            <p>Primary actions, active navigation, selected filters, content background, and sheets/cards.</p>
+          </article>
+          <article class="token-card">
+            <h3>Status taxonomy</h3>
+            <div class="swatches">
+              <span class="swatch" style="background:#16a34a"></span><span class="swatch" style="background:#dc2626"></span><span class="swatch" style="background:#d97706"></span><span class="swatch" style="background:#2563eb"></span><span class="swatch" style="background:#b91c1c"></span><span class="swatch" style="background:#c2410c"></span>
+            </div>
+            <p>ok, issue, maintenance, sterilized, critical, needs_attention. No collapsing critical states to info.</p>
+          </article>
+          <article class="token-card">
+            <h3>Type + density</h3>
+            <p>Display 28/34, title 22/28, headline 17/22, body 15/22, subhead 13/18, caption 12/16. DM Mono for counts, timers, IDs.</p>
+          </article>
+          <article class="token-card">
+            <h3>Motion + safety</h3>
+            <p>120-220ms state feedback, sheet present, scan transitions, sync queued-to-synced, return undo. Reduced motion keeps all state visible.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Core Components</h2>
+          <p>Specimens for implementation vocabulary: 44-48px targets, restrained elevation, clear state variants, RTL-safe leading/trailing structure.</p>
+        </div>
+        <div class="components">
+          <article class="component">
+            <h3>Buttons</h3>
+            <div class="row">
+              <span class="btn primary">common.save</span>
+              <span class="btn secondary">common.cancel</span>
+              <span class="btn destructive">common.remove</span>
+              <span class="btn ghost">common.more</span>
+            </div>
+          </article>
+          <article class="component">
+            <h3>Status pills</h3>
+            <div class="row">
+              <span class="pill ok">status.ok</span><span class="pill issue">status.issue</span><span class="pill maintenance">status.maintenance</span><span class="pill sterilized">status.sterilized</span><span class="pill critical">status.critical</span><span class="pill attention">status.needs_attention</span>
+            </div>
+          </article>
+          <article class="component">
+            <h3>Banners</h3>
+            <div class="banner offline">common.offline.banner · syncQueue.pending</div>
+            <div class="banner emergency">emergency.offlineBlocked · equipmentNfc.onlineRequired</div>
+          </article>
+          <article class="component">
+            <h3>Skeletons</h3>
+            <div class="skeleton" style="width:70%"></div>
+            <div class="skeleton" style="width:95%;height:52px;border-radius:12px"></div>
+            <div class="skeleton" style="width:82%;height:52px;border-radius:12px"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Screen Mockup Canvas</h2>
+          <p>Representative visual states for every Expo route. Each caption calls out the route, primary states, gestures, and implementation notes.</p>
+        </div>
+        <div class="phone-grid">
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div><div class="header-title">auth.signIn.title</div><p class="meta">auth.signIn.subtitle</p></div><div class="icon-btn">✓</div></div>
+              <div class="content" style="display:grid;align-content:center;gap:12px">
+                <div class="card" style="display:grid;gap:10px">
+                  <div class="search">auth.email.label</div>
+                  <div class="search">auth.password.label</div>
+                  <span class="btn primary">auth.signIn.submit</span>
+                  <span class="btn secondary">auth.dev.continueWithoutClerk</span>
+                </div>
+              </div>
+              <div class="sheet"><div class="handle"></div><h3>onboarding.scan.stepTitle</h3><p class="meta">onboarding.scan.stepBody · steps 1-3 as paged bottom sheet</p><div class="action-row">onboarding.next <span>←</span></div></div>
+            </div></div>
+            <p class="caption"><strong>Sign in + onboarding</strong> · `(auth)/sign-in.tsx`; submitting/error/dev states; native keyboard avoidance and bottom-sheet walkthrough.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div><div class="header-title">today.title</div><p class="meta">today.shift.active</p></div><div class="icon-btn">!</div></div>
+              <div class="banner emergency">emergency.activeMirror · emergency.viewStatus</div>
+              <div class="content">
+                <div class="card" style="margin-bottom:12px;background:var(--green-700);color:white">
+                  <p class="meta" style="color:#d8f3dd">shift.startedAt</p><div class="num" style="font-size:34px">03:42</div><p style="font-size:13px;margin-top:8px">shift.itemsOut · shift.scansToday</p>
+                </div>
+                <div class="stat-strip"><div class="stat"><div class="num">4</div><span>alerts.critical</span></div><div class="stat"><div class="num">12</div><span>equipment.out</span></div><div class="stat"><div class="num">86%</div><span>rooms.ready</span></div><div class="stat"><div class="num">2</div><span>sync.pending</span></div></div>
+                <div class="card"><h3>today.primaryScan.title</h3><p class="meta">today.primaryScan.hint</p></div>
+              </div>
+              <div class="scan-fab">⌁</div><nav class="tabbar"><span class="tab active">nav.today</span><span class="tab">nav.equipment</span><span class="tab">nav.myEquipment</span><span class="tab">nav.rooms</span><span class="tab">nav.alerts</span><span class="tab">nav.admin</span></nav>
+            </div></div>
+            <p class="caption"><strong>Today / app frame</strong> · active/no-shift/offline/urgent counts; persistent banner zone priority: emergency, offline/sync, cutover.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div class="header-title">equipmentList.title</div><div class="icon-btn">＋</div></div>
+              <div class="content">
+                <div class="search">equipmentList.search.placeholder</div>
+                <div class="stat-strip"><div class="stat"><div class="num" style="color:var(--attention)">7</div><span>equipmentList.stats.attention</span></div><div class="stat"><div class="num">18</div><span>equipmentList.stats.inUse</span></div><div class="stat"><div class="num" style="color:var(--ok)">54</div><span>status.ok</span></div><div class="stat"><div class="num">92%</div><span>equipmentList.stats.uptime</span></div></div>
+                <div class="chips"><span class="chip active">status.all</span><span class="chip">status.critical</span><span class="chip">status.maintenance</span><span class="chip">status.sterilized</span></div>
+                <div class="card equipment-row"><div><h3>equipment.name</h3><p class="meta">equipment.roomName · equipment.lastScan.relative · eq-vent-1</p></div><span class="pill critical">status.critical</span></div>
+                <div class="card equipment-row"><div><h3>equipment.name</h3><p class="meta">equipment.location · equipment.checkedOutDuration</p></div><span class="pill attention">status.needs_attention</span></div>
+                <div class="card equipment-row"><div><h3>equipment.name</h3><p class="meta">equipment.roomName · equipment.lastScan.relative</p></div><span class="pill ok">status.ok</span></div>
+              </div>
+              <div class="scan-fab">⌁</div><nav class="tabbar"><span class="tab">nav.today</span><span class="tab active">nav.equipment</span><span class="tab">nav.myEquipment</span><span class="tab">nav.rooms</span><span class="tab">nav.alerts</span><span class="tab">nav.admin</span></nav>
+            </div></div>
+            <p class="caption"><strong>Equipment list</strong> · KPI strip, sticky filters, rich rows, search-empty/error/offline/loading-more; swipe actions and long-press bulk.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div><div class="header-title">myEquipment.title</div><p class="meta">myEquipment.checkedOutCount</p></div><div class="icon-btn">↩</div></div>
+              <div class="content">
+                <div class="banner offline">sync.localStatePending · common.viewQueue</div>
+                <div class="card equipment-row"><div><h3>equipment.name</h3><p class="meta">myEquipment.heldSince · equipment.location</p></div><span class="pill critical">status.critical</span></div>
+                <div class="card equipment-row" style="transform:translateX(-28px);border-color:#a7f3bd"><div><h3>equipment.name</h3><p class="meta">myEquipment.swipeReturn.hint</p></div><span class="pill ok">status.ok</span></div>
+              </div>
+              <div class="sheet"><div class="handle"></div><h3>myEquipment.returnAllConfirm.title</h3><p class="meta">myEquipment.returnAllConfirm.message</p><div class="row"><span class="btn primary">myEquipment.returnAllConfirm.confirm</span><span class="btn secondary">common.cancel</span></div></div>
+            </div></div>
+            <p class="caption"><strong>My Equipment</strong> · held-since priority, swipe-to-return, undo toast, Return All confirm, empty/error states.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div class="icon-btn">›</div><div style="flex:1"><div class="header-title">equipmentDetail.title</div><p class="meta">equipmentDetail.id</p></div><div class="icon-btn">⋯</div></div>
+              <div class="content">
+                <div class="card" style="margin-bottom:12px"><div class="row" style="justify-content:space-between"><span class="pill maintenance">status.maintenance</span><span class="meta">equipmentDetail.checkedOutBy</span></div><h3 style="font-size:18px;margin-top:10px">equipment.name</h3><p class="meta">equipment.serial · equipment.manufacturer · equipment.location</p></div>
+                <div class="chips"><span class="chip active">equipmentDetail.tabs.details</span><span class="chip">equipmentDetail.tabs.activity</span></div>
+                <div class="card"><div class="action-row">equipmentDetail.confirmInRoom <span>44px</span></div><div class="action-row">equipmentDetail.reportIssue <span>!</span></div><div class="action-row">equipmentDetail.printQr <span>⌗</span></div></div>
+              </div>
+              <div class="sheet"><div class="handle"></div><h3>equipmentUpdateStatus.title</h3><div class="row"><span class="pill ok">status.ok</span><span class="pill issue">status.issue</span><span class="pill maintenance">status.maintenance</span></div></div>
+            </div></div>
+            <p class="caption"><strong>Equipment detail + update status</strong> · sticky header, details/activity tabs, tools sheet, pending-sync/conflict/sync-failed inline states.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div class="header-title">equipmentNew.title</div><div class="icon-btn">⌁</div></div>
+              <div class="content" style="display:grid;gap:10px">
+                <div class="card" style="display:grid;gap:8px"><h3>equipmentNew.sections.identity</h3><div class="search">equipmentNew.name.label</div><div class="search">equipmentNew.serial.label</div><div class="search">equipmentNew.nfcTag.label</div></div>
+                <div class="card" style="display:grid;gap:8px"><h3>equipmentNew.sections.location</h3><div class="search">equipmentNew.room.label</div><div class="search">equipmentNew.status.label</div></div>
+                <span class="btn primary">equipmentNew.save</span>
+              </div>
+            </div></div>
+            <p class="caption"><strong>New equipment</strong> · grouped form, validation, scan-to-prefill, save error, native pickers; no new dependency required.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div class="header-title">rooms.title</div><div class="icon-btn">⌕</div></div>
+              <div class="content">
+                <div class="search">rooms.search.placeholder</div>
+                <div class="card" style="margin-bottom:9px"><div class="row" style="justify-content:space-between"><h3>rooms.name</h3><span class="num">86%</span></div><div class="skeleton" style="height:8px;background:#d7eadb"></div><p class="meta">rooms.availableCount · rooms.staleCount</p></div>
+                <div class="card" style="margin-bottom:9px"><div class="row" style="justify-content:space-between"><h3>rooms.name</h3><span class="num" style="color:var(--maintenance)">62%</span></div><div class="skeleton" style="height:8px;background:#fde7bd"></div><p class="meta">rooms.needsSweep</p></div>
+              </div>
+              <div class="scan-fab">⌁</div><nav class="tabbar"><span class="tab">nav.today</span><span class="tab">nav.equipment</span><span class="tab">nav.myEquipment</span><span class="tab active">nav.rooms</span><span class="tab">nav.alerts</span><span class="tab">nav.admin</span></nav>
+            </div></div>
+            <p class="caption"><strong>Rooms list + detail</strong> · availability bars mirror in RTL, stale indicators, room detail sweep action, skeleton/empty/error.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div class="header-title">alerts.title</div><div class="icon-btn">!</div></div>
+              <div class="banner offline">alerts.staleDataBanner</div>
+              <div class="content">
+                <div class="chips"><span class="chip active">alerts.filters.critical</span><span class="chip">alerts.filters.unclaimed</span></div>
+                <div class="card equipment-row"><div><h3>alerts.item.title</h3><p class="meta">alerts.item.room · alerts.item.age</p></div><span class="pill critical">alerts.severity.critical</span></div>
+                <div class="card"><div class="action-row">alerts.claimCta <span>48px</span></div></div>
+              </div>
+              <div class="scan-fab">⌁</div><nav class="tabbar"><span class="tab">nav.today</span><span class="tab">nav.equipment</span><span class="tab">nav.myEquipment</span><span class="tab">nav.rooms</span><span class="tab active">nav.alerts</span><span class="tab">nav.admin</span></nav>
+            </div></div>
+            <p class="caption"><strong>Alerts</strong> · severity groups, claim action, stale-data inline banner, empty and error+retry.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div class="icon-btn">›</div><div class="header-title">shiftHandoff.title</div><div></div></div>
+              <div class="content">
+                <div class="card" style="margin-bottom:12px;background:var(--green-50)"><p class="meta">shiftHandoff.summary</p><div class="num" style="font-size:30px;color:var(--green-700)">3</div><p class="meta">shiftHandoff.unreturnedCount</p></div>
+                <div class="card equipment-row"><div><h3>equipment.name</h3><p class="meta">myEquipment.heldSince</p></div><span class="pill attention">status.needs_attention</span></div>
+                <span class="btn primary" style="width:100%;margin-top:10px">shiftHandoff.confirmEnd</span>
+              </div>
+            </div></div>
+            <p class="caption"><strong>Shift handoff</strong> · unreturned list, confirm, success reward state, 409 already-ended, no-shift, error.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen dark-screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div class="header-title">scanScreen.title</div><div class="icon-btn">⌁</div></div>
+              <div class="content" style="display:grid;align-content:center;gap:12px;text-align:center">
+                <div style="font-size:76px;color:#3a9650">⌁</div>
+                <h3>scanScreen.scanning</h3>
+                <p class="meta">scanScreen.resolvedLabel · scanScreen.queuedTitle · scanScreen.syncedTitle · scanScreen.failedTitle</p>
+                <span class="btn primary">scanScreen.scanCta</span>
+              </div>
+              <div class="banner offline">scanScreen.queuedTitle · sync.pending</div>
+            </div></div>
+            <p class="caption"><strong>NFC scan</strong> · idle/scanning/resolved/submitting/success/queued/synced/failed/unsupported; haptics and honest queued state.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div class="header-title">account.title</div><div class="icon-btn">☰</div></div>
+              <div class="content">
+                <div class="card" style="margin-bottom:10px"><h3>account.identity.name</h3><p class="meta">account.identity.role · no raw email inline</p></div>
+                <div class="card"><div class="action-row">account.locale.title <span>he / en</span></div><div class="action-row">account.syncQueue.title <span class="pill maintenance">2</span></div><div class="action-row">account.version.title <span>1.0.0</span></div><div class="action-row">account.signOut <span>←</span></div></div>
+              </div>
+              <div class="scan-fab">⌁</div><nav class="tabbar"><span class="tab">nav.today</span><span class="tab">nav.equipment</span><span class="tab">nav.myEquipment</span><span class="tab">nav.rooms</span><span class="tab">nav.alerts</span><span class="tab active">nav.admin</span></nav>
+            </div></div>
+            <p class="caption"><strong>Account / settings</strong> · replaces auth-debug; locale, sync queue, help, version, sign out; identity with designed privacy treatment.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div class="header-title">notFoundPage.title</div><div class="icon-btn">?</div></div>
+              <div class="content" style="display:grid;align-content:center;gap:14px;text-align:center">
+                <div style="font-size:54px;color:var(--green-700)">⌗</div>
+                <h3>notFoundPage.message</h3>
+                <p class="meta">deepLink.openingEquipment · nfcEntry.resolving</p>
+                <span class="btn primary">notFoundPage.backToToday</span>
+              </div>
+            </div></div>
+            <p class="caption"><strong>Not found + transitional states</strong> · unknown route, opening equipment deep-link/NFC resolver, back to Today.</p>
+          </article>
+
+          <article class="phone-block">
+            <div class="phone"><div class="screen">
+              <div class="safe-top">09:41</div>
+              <div class="header"><div class="header-title">emergency.entry.title</div><div class="icon-btn" style="background:#0c0c0c;color:#ef4444;border-color:#ef4444">!</div></div>
+              <div class="content">
+                <div class="card" style="background:#0c0c0c;color:#f4f4f5;border-color:#ef4444"><p class="meta" style="color:#fbbf24">emergency.statusMirror</p><h3 style="font-size:20px;margin-top:8px">emergency.activeTitle</h3><p style="font-size:13px;line-height:1.4;margin-top:8px">emergency.readOnlyMobileNote</p></div>
+                <div class="banner emergency" style="margin:12px 0">emergency.offlineBlocked · never queued offline</div>
+                <span class="btn destructive" style="width:100%">emergency.onlineRequiredCta</span>
+              </div>
+            </div></div>
+            <p class="caption"><strong>Emergency surface</strong> · mobile entry/status/blocked states only. No phone port of the web Code Blue console; offline emergency mutations are blocked.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Route Coverage</h2>
+          <p>Every route from the brief is accounted for. Some are combined in one phone frame when the implementation should share a native surface, such as a sheet over a detail screen.</p>
+        </div>
+        <div class="components">
+          <article class="component"><h3>Auth + root</h3><p class="meta">`app/_layout.tsx`: splash/font/RTL readiness · `app/+html.tsx`: no native UI · `app/+not-found.tsx`: not-found frame · `(auth)/_layout.tsx` + `(auth)/sign-in.tsx`: auth frame and onboarding sheet.</p></article>
+          <article class="component"><h3>App frame</h3><p class="meta">`(app)/_layout.tsx`: auth guard and banner priority · `(tabs)/_layout.tsx`: tab bar, scan FAB, stack headers, safe-area behavior.</p></article>
+          <article class="component"><h3>Tabs</h3><p class="meta">`index.tsx`: Today · `equipment.tsx`: equipment list · `my-equipment.tsx`: custody list · `rooms.tsx`: rooms list · `alerts.tsx`: grouped alerts · `auth.tsx`: Account/Settings.</p></article>
+          <article class="component"><h3>Stacks + sheets</h3><p class="meta">`scan.tsx`: NFC state machine · `equipment/[id].tsx`: detail · `equipment/[id]/update-status.tsx`: status sheet · `equipment/new.tsx`: grouped form · `rooms/[id].tsx`: room detail · `shift/handoff.tsx`: handoff.</p></article>
+          <article class="component"><h3>Cross-cutting states</h3><p class="meta">Emergency entry/status/blocked states, offline queue states, slow network skeletons, stale data banners, conflict/sync-failed, and deep-link/NFC resolving.</p></article>
+        </div>
+      </section>
+
+      <p class="footer-note">Implementation notes: use Expo Router native stacks and tabs, `useSafeAreaInsets`, existing `expo-symbols` icon surface, no new npm package required for this design direction. The dark sample maps to the existing forest-dark theme, not a separate visual language.</p>
+    </main>
+  </body>
+</html>
