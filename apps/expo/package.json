@@ -6,6 +6,8 @@
   "private": true,
   "dependencies": {
     "@clerk/clerk-expo": "^2.19.19",
+    "@expo-google-fonts/heebo": "^0.4.2",
+    "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-community/netinfo": "^12.0.1",
     "@vettrack/contracts": "workspace:*",
@@ -56,7 +58,9 @@
   "expo": {
     "doctor": {
       "reactNativeDirectoryCheck": {
-        "exclude": ["react-native-nfc-manager"],
+        "exclude": [
+          "react-native-nfc-manager"
+        ],
         "listUnknownPackages": false
       }
     }

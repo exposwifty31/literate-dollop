@@ -1,3 +1,15 @@
+import {
+  Heebo_400Regular,
+  Heebo_500Medium,
+  Heebo_600SemiBold,
+  Heebo_700Bold,
+} from "@expo-google-fonts/heebo";
+import {
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 import { useFonts } from "expo-font";
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -29,6 +41,14 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
+    Heebo_400Regular,
+    Heebo_500Medium,
+    Heebo_600SemiBold,
+    Heebo_700Bold,
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
