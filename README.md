@@ -73,7 +73,7 @@ Do not commit local secrets or generated native folders. `apps/expo/.env`,
 ## Local development
 
 ```bash
-cd apps/expo/.env.example apps/expo/.env
+cp apps/expo/.env.example apps/expo/.env
 pnpm --filter vettrack-expo start
 ```
 
