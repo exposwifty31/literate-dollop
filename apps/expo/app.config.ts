@@ -3,7 +3,7 @@ import type { ExpoConfig, ConfigContext } from "expo/config";
 const DEFAULT_EAS_PROJECT_ID = "5ec536d8-f991-4779-88d7-c1b7fa595cb5";
 const IOS_ASSOCIATED_DOMAINS = ["applinks:vettrack.uk"];
 export const LOCAL_DEVELOPMENT_IOS_CAPABILITY_STRIP_PLUGIN =
-  "./plugins/with-local-development-ios-capability-strip";
+  "./plugins/with-local-development-ios-capability-strip.ts";
 
 export function shouldUseProvisionedIosCapabilities(): boolean {
   return (
